@@ -1,0 +1,41 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "motahidoon",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8123",
+        "--directory",
+        "motahidoon-site/motahidoon-site"
+      ],
+      "port": 8123
+    },
+    {
+      "name": "motahidoon-v1",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8124",
+        "--directory",
+        "_v1"
+      ],
+      "port": 8124
+    },
+    {
+      "name": "motahidoon-app",
+      "runtimeExecutable": "php",
+      "runtimeArgs": [
+        "-S",
+        "127.0.0.1:8130",
+        "-t",
+        "motahidoon-app/public",
+        "motahidoon-app/serve.php"
+      ],
+      "port": 8130
+    }
+  ]
+}
