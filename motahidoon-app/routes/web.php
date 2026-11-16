@@ -1,0 +1,28 @@
+<?php
+
+use App\Http\Controllers\Site\AboutController;
+use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Site\PillarController;
+use App\Http\Controllers\Site\ReportController;
+use Illuminate\Support\Facades\Route;
+
+/*
+| الواجهة العامة.
+| مسارات حقيقية بدل pillar.html?id= — مكسب أرشفة بلا كلفة، إذ لا روابط
+| منشورة بعد. و/reports بلا معرّف يقود إلى التقرير الحالي، كما كان
+| ?id=report تماماً.
+*/
+Route::get('/', HomeController::class)->name('home');
+Route::get('/about', AboutController::class)->name('about');
+Route::get('/p/{slug}', PillarController::class)->name('pillar');
+Route::get('/reports', ReportController::class)->name('reports');
+Route::get('/reports/{slug}', ReportController::class)->name('report');
+
+/* مسار تطوير فقط: يخدم شجرة المحتوى العربية لمدقّق سلامة النصوص
+   (tools/verify-strings.js). لا يُسجَّل خارج البيئة المحلية. */
+if (app()->environment('local')) {
+    Route::get('/__content.json', fn () => response()->file(
+        resource_path('content/site.ar.json'),
+        ['Content-Type' => 'application/json; charset=utf-8']
+    ))->name('dev.content');
+}
