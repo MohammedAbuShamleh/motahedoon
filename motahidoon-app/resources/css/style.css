@@ -1602,40 +1602,48 @@ html.is-ltr .ftl__axis::before { transform-origin: 0 50%; }
   display: flex; flex-direction: column;
   position: relative;
 }
+/* تحسين: بطاقات الصفّ الواحد بارتفاع أطولها — حوافّها العليا فوق الخطّ
+   على مستوى واحد، والسفلى تحته كذلك، بدل خطّ متكسّر */
+.ftl__text, .is-down .ftl__text { align-self: stretch; }
+.ftl__text > .ftl__card { flex: 1; }
 
-/* البطاقة: ورقية في بند وحبرية في البند الذي يليه — من اللوحة المقفلة
-   وحدها. الورقية: ورق وشعرة رمادية ووسم زيتوني. الحبرية: حبر ونصّ ورقي
-   ووسم أخضر. الأحمر لا يدخل البطاقات (خطّ لا مساحة). */
-.ftl__card {
-  display: flex; flex-direction: column; align-items: center; gap: .4rem;
-  padding: clamp(.8rem, 1.3vw, 1.05rem) clamp(.55rem, 1vw, .85rem);
-  border: var(--line) solid var(--rule);
-  border-radius: var(--r);
-  background: var(--bg);
-  color: var(--ink);
-}
+/* البطاقة: هيئة واحدة رسمية لكل البنود — ورق بشعرة رمادية وحافّة علوية
+   زيتونية تثبّتها، ورقم في مربّع زيتوني ممتلئ، والعنوان، ثم المؤسسات
+   تحت شعرة فاصلة. بلا تناوب لوني: التناوب في الموضع وحده (فوق/تحت). */
+.ftl__card,
 .is-ink .ftl__card {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--bg);
+  display: flex; flex-direction: column; align-items: center; gap: .55rem;
+  padding: clamp(.9rem, 1.4vw, 1.15rem) clamp(.6rem, 1vw, .9rem);
+  border: var(--line) solid var(--rule);
+  border-top: 3px solid var(--olive);
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 12px 30px -24px rgba(26,26,26,.45);
 }
-.ftl__n {
-  padding: .22em .75em;
-  border-radius: 999px;
+.ftl__n,
+.is-ink .ftl__n {
+  display: grid; place-items: center;
+  inline-size: 2.1rem; aspect-ratio: 1;
+  padding: 0;
+  border-radius: 7px;
   background: var(--olive); color: var(--bg);
-  font-size: .78rem; font-weight: 800; letter-spacing: .08em; line-height: 1.2;
+  font-size: .8rem; font-weight: 800; letter-spacing: .04em; line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-.is-ink .ftl__n { background: var(--green); }
 .ftl__t {
   font-weight: 800; font-size: clamp(.9rem, 1.12vw, 1.02rem);
   line-height: 1.45; text-wrap: balance;
 }
-.ftl__o {
+.ftl__o,
+.is-ink .ftl__o {
+  margin-top: auto;
+  padding-top: .55rem;
+  border-top: var(--line) solid var(--rule);
+  align-self: stretch;
   font-size: .76rem; line-height: 1.6; color: var(--ink-72);
   text-wrap: balance;
 }
-.is-ink .ftl__o { color: var(--on-ink); }
 
 /* السيقان: شعرة رأسية تصل البند بالخطّ — تنمو من الخطّ نحو البند */
 .ftl__text::after,
@@ -1651,31 +1659,33 @@ html.is-ltr .ftl__axis::before { transform-origin: 0 50%; }
 .ftl__media::after { inset-block-start: calc(var(--stem) * -1); transform-origin: 50% 0; }
 .is-down .ftl__media::after { inset-block: auto calc(var(--stem) * -1); transform-origin: 50% 100%; }
 
-/* العقدة على الخطّ */
-.ftl__dot {
+/* العقدة على الخطّ: معيّن زيتوني بحلقة ورقية — اللغة نفسها في شريط
+   المجالات تحت الافتتاحية */
+.ftl__dot,
+.is-ink .ftl__dot {
   position: relative; z-index: 1;
-  inline-size: .8rem; block-size: .8rem; border-radius: 50%;
-  background: var(--bg);
-  border: 2px solid var(--olive);
+  inline-size: .62rem; block-size: .62rem;
+  background: var(--olive);
+  border: 0;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px rgba(92,91,52,.45);
+  transform: rotate(45deg);
 }
-/* عقدة البند الحبري ممتلئة — صدى البطاقة على الخطّ */
-.is-ink .ftl__dot { background: var(--ink); border-color: var(--ink); }
 
-.ftl__media {
+/* الصورة: مربّع لطيف بإطار ورقي وشعرة رمادية */
+.ftl__media,
+.is-ink .ftl__media {
   position: relative;
   display: grid; place-items: center;
   inline-size: var(--disc); aspect-ratio: 1;
-  border-radius: 50%;
+  border-radius: var(--r);
   background: var(--paper);
-  box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--rule);
+  box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--rule), 0 14px 30px -22px rgba(26,26,26,.5);
 }
-/* حلقة البند الحبري خضراء: اللون الثاني في البند الملوّن */
-.is-ink .ftl__media { box-shadow: 0 0 0 4px var(--paper), 0 0 0 6px var(--green); }
 .ftl__media img {
   inline-size: 100%; block-size: 100%; object-fit: cover;
-  border-radius: 50%;
+  border-radius: var(--r);
 }
-/* مجال بلا غلاف: رمزه في الدائرة */
+/* مجال بلا غلاف: رمزه في المربّع */
 .ftl__media .ico { font-size: calc(var(--disc) * .42); color: var(--olive); }
 
 /* لا تغيير عند المرور: البنود ثابتة الهيئة؛ التركيز بلوحة المفاتيح وحده
@@ -1688,7 +1698,7 @@ html.is-ltr .ftl__axis::before { transform-origin: 0 50%; }
 html.js-reveal .ftl:not(.is-in) .ftl__axis::before { transform: scaleX(0); }
 html.js-reveal .ftl:not(.is-in) .ftl__text::after,
 html.js-reveal .ftl:not(.is-in) .ftl__media::after { transform: scaleY(0); }
-html.js-reveal .ftl:not(.is-in) .ftl__dot { transform: scale(0); }
+html.js-reveal .ftl:not(.is-in) .ftl__dot { transform: rotate(45deg) scale(0); }
 
 /* القطع تُرسم تباعاً بسرعة ثابتة (linear) فتبدو خطّاً واحداً يمتدّ */
 .ftl.is-in .ftl__axis::before { transition: transform .22s linear calc(.15s + var(--i) * .22s); }
@@ -1738,7 +1748,7 @@ html.is-ltr .ftl.is-in .ftl__axis::after { animation-name: ftl-run-ltr; }
   }
   .ftl__media, .is-down .ftl__media { grid-row: 1; grid-column: 1; margin: 0; align-self: center; }
   .ftl__text, .is-down .ftl__text { grid-row: 1; grid-column: 2; padding: 0; align-self: center; }
-  .ftl__card { align-items: flex-start; }
+  .ftl__card, .is-ink .ftl__card { align-items: flex-start; }
   /* المحور يصير العقدة وحدها على الخطّ الرأسي، بمحاذاة منتصف الدائرة */
   .ftl__axis {
     position: absolute; margin: 0;

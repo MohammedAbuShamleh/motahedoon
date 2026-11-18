@@ -171,17 +171,12 @@ export function Fields({ pillars }: { pillars: Pillar[] }) {
      الدائرية في الأخرى. المجال بلا غلاف تحمل دائرته رمزه، لا صورة بديلة
      (الفجوة تُسدّ من اللوحة لا هنا). عدد الأعمدة مشتقّ من البيانات. */
   return (
-    <section className="band ftl-band" id="fields">
-      <div className="sheet reveal">
-        <div className="sheet__main">
-          <h2 className="h-sec">{U("مجالات العمل")}</h2>
-        </div>
-        <aside className="sheet__aside">
-          <Mark n={ord(3)} label={U("مجالات العمل")} />
-          <div className="facts">
-            <Fact value={String(pillars.length)} label={U("مجالات دائمة")} />
-          </div>
-        </aside>
+    <section className="band sec ftl-band" id="fields">
+      <div className="sec__in reveal">
+        <SectionHead
+          title={U("مجالات العمل")}
+          side={<Fact value={String(pillars.length)} label={U("مجالات دائمة")} />}
+        />
       </div>
 
       <div className="ftl reveal">
@@ -217,6 +212,8 @@ export function Fields({ pillars }: { pillars: Pillar[] }) {
     </section>
   );
 }
+
+/* «من الميدان» صار معرضاً في Gallery.tsx (FieldGallery). */
 
 /* ---------- لمحة أثر ----------
    القسم الوحيد المؤرَّخ في الرئيسية، ويحمل ختمه. قسم داكن ببطاقة لكلّ
