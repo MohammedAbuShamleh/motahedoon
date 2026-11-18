@@ -1,8 +1,9 @@
 import { Layout } from "@/app/Layout";
 import { Hero } from "@/features/home/Hero";
 import {
-  About, AreasStrip, Fields, Filmstrip, Impact, Partners, Reports, Support,
+  About, AreasStrip, Fields, Impact, Partners, Reports, Support,
 } from "@/features/home/sections";
+import { FieldGallery } from "@/features/home/Gallery";
 import type { ReportCard } from "@/features/home/sections";
 import type { Founding, Identity, Partner, Pillar, Report } from "@/types";
 
@@ -29,7 +30,7 @@ export default function Home({
       <About identity={identity} founding={founding} governance={governance} photo={fieldPhotos[1] ?? fieldPhotos[0] ?? null} />
       <Partners partners={partners} />
       <Fields pillars={pillars} />
-      <Filmstrip photos={fieldPhotos} />
+      <FieldGallery photos={fieldPhotos} />
       {currentReport && <Impact report={currentReport} count={metricsCount} />}
       <Reports reports={reports} reportFile={currentReport?.reportFile ?? null} />
       <Support />

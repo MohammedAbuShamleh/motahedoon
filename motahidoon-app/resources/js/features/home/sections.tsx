@@ -218,36 +218,6 @@ export function Fields({ pillars }: { pillars: Pillar[] }) {
   );
 }
 
-/* ---------- من الميدان ----------
-   صور كبيرة، تمرير أفقي، بلا تعليق لكل صورة — لا يُخترع وصف ولا يُذكر
-   موقع. حاوية تمرير يمكن بلوغها بلوحة المفاتيح، ومرنة لأي عدد. */
-export function Filmstrip({ photos }: { photos: string[] }) {
-  const U = useU();
-  if (!photos.length) return null;
-  return (
-    <section className="band band--tight film" id="field">
-      <div className="sheet">
-        <div className="sheet__main">
-          <h2 className="h-sec">{U("من الميدان")}</h2>
-        </div>
-        <aside className="sheet__aside">
-          <Mark label={U("توثيق")} />
-          <div className="facts">
-            <Fact value={String(photos.length)} label={U("صور معتمدة")} />
-          </div>
-        </aside>
-      </div>
-      <div className="film__strip" tabIndex={0} role="group" aria-label={U("من الميدان")}>
-        {photos.map((src) => (
-          <figure className="film__f" key={src}>
-            <img src={`/${src}`} alt={U("من التوثيق الميداني للتجمع")} loading="lazy" />
-          </figure>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 /* ---------- لمحة أثر ----------
    القسم الوحيد المؤرَّخ في الرئيسية، ويحمل ختمه. قسم داكن ببطاقة لكلّ
    مؤشّر: رقم ترتيب محفور في ركنها، والقيمة كما كُتبت حرفياً (لا جمع ولا
