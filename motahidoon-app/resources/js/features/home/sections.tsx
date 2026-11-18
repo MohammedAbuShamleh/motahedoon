@@ -90,54 +90,66 @@ export function AreasStrip({ pillars }: { pillars: Pillar[] }) {
   );
 }
 
-/* ---------- من نحن ---------- */
+/* ---------- من نحن ----------
+   عمودان: النصّ من جهة بدء السطر، وصورة ميدانية في دائرة من جهة نهايته.
+   المحتوى كما كان حرفاً بحرف (العنوان، فقرة التأسيس، الرؤية والرسالة،
+   سنة التأسيس، خانة الحوكمة، رابط التعريف الكامل) — التغيير في التخطيط وحده.
+   بلا صورة لا عمود للصورة: التخطيط مشتقّ من البيانات لا مفترَض. */
 export function About({
-  identity, founding, governance,
+  identity, founding, governance, photo,
 }: {
   identity: Identity;
   founding: Founding;
   governance: string | null;
+  photo: string | null;
 }) {
   const U = useU();
   const path = usePath();
   return (
-    <Band
-      id="about"
-      main={
-        <>
-          <h2 className="h-sec">{U("من نحن")}</h2>
-          <div className="prose body-lg" style={{ marginTop: "1.75rem" }}>
+    <section className={photo ? "band about" : "band about about--solo"} id="about">
+      <div className="about__in reveal">
+        <div className="about__text">
+          <Mark n={ord(1)} label={U("من نحن")} />
+          <h2 className="h-sec about__title">{U("من نحن")}</h2>
+          {/* شعرة حمراء تنتهي بالنقطة المعيّنية — من استعمالات الأحمر المعدودة */}
+          <span className="about__rule" aria-hidden="true" />
+
+          <div className="prose body-lg about__lead">
             {founding.story.slice(0, 1).map((p) => (
               <p key={p}><Nums text={p} /></p>
             ))}
           </div>
 
-          <div className="statements">
+          <div className="statements about__statements">
             <Statement label={U("الرؤية")} value={identity.vision} />
             <Statement label={U("الرسالة")} value={identity.mission} />
           </div>
 
-          <p style={{ marginTop: "clamp(1.75rem,3vw,2.5rem)" }}>
-            <Link className="btn btn--ghost" href={path("/about")}>
-              {U("التعريف الكامل")}
-            </Link>
-          </p>
-        </>
-      }
-      aside={
-        <>
-          <Mark n={ord(1)} label={U("من نحن")} />
-          {founding.year
-            ? <div className="facts"><Fact value={founding.year} label={U("سنة التأسيس")} /></div>
-            : <Slot label={U("سنة التأسيس")} />}
-          <div style={{ marginTop: "1.5rem" }}>
+          <div className="about__meta">
+            {founding.year
+              ? <div className="facts"><Fact value={founding.year} label={U("سنة التأسيس")} /></div>
+              : <Slot label={U("سنة التأسيس")} />}
             {governance
               ? <Filled label={U("الحوكمة واتخاذ القرار")} value={governance} />
               : <Slot label={U("الحوكمة واتخاذ القرار")} />}
           </div>
-        </>
-      }
-    />
+
+          <p className="about__cta">
+            <Link className="btn btn--ghost" href={path("/about")}>
+              {U("التعريف الكامل")}
+            </Link>
+          </p>
+        </div>
+
+        {photo && (
+          <figure className="about__media" aria-hidden="true">
+            <span className="about__dots" />
+            <span className="about__ring" />
+            <img src={`/${photo}`} alt="" loading="lazy" decoding="async" width={560} height={560} />
+          </figure>
+        )}
+      </div>
+    </section>
   );
 }
 

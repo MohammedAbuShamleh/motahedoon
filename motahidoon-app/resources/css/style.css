@@ -882,6 +882,104 @@ html.is-ltr .hero__bar { transform-origin: left; }
 
 }
 
+/* =====================================================================
+   من نحن — عمودان: النصّ من جهة بدء السطر، وصورة ميدانية في دائرة من
+   جهة نهايته يؤطّرها قوس زيتوني عريض وحلقة شعرية. الأحمر في خطّ العنوان
+   وحده (خطّ لا مساحة)؛ القوس زيتوني لأن الحلقة العريضة مساحة لا خطّ.
+   الزخرفة هندسية بحتة: شبكة نقاط وحلقات — لا تجسيد.
+   ===================================================================== */
+.about__in {
+  width: min(100% - var(--edge) * 2, var(--wrap));
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+.about--solo .about__in { grid-template-columns: minmax(0, 1fr); }
+
+.about__text .mark { display: flex; align-items: baseline; gap: .6rem; margin: 0 0 .9rem; }
+.about__title { margin: 0; }
+
+/* شعرة حمراء قصيرة تنتهي بالنقطة المعيّنية */
+.about__rule {
+  position: relative; display: block;
+  width: 4.5rem; height: 2px;
+  margin-top: clamp(.9rem, 1.6vw, 1.2rem);
+  background: var(--red);
+}
+.about__rule::after {
+  content: ""; position: absolute; top: 50%; inset-inline-end: -11px;
+  width: 7px; height: 7px; margin-top: -3.5px;
+  background: var(--red); transform: rotate(45deg);
+}
+
+.about__lead { margin-top: clamp(1.4rem, 2.6vw, 2rem); }
+.about__lead p { text-align: justify; }
+
+/* أخصّ من .statements العامّة التي تأتي بعدها في الملف */
+.about .about__statements {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: clamp(1.25rem, 2.6vw, 2rem);
+  margin-top: clamp(1.8rem, 3.4vw, 2.6rem);
+}
+.about .about__statements .statement__v { font-size: clamp(1.05rem, .6vw + .9rem, 1.3rem); }
+
+.about__meta {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: clamp(1rem, 2.4vw, 2rem);
+  margin-top: clamp(1.6rem, 3vw, 2.2rem);
+  padding-top: clamp(1rem, 2vw, 1.3rem);
+  border-top: var(--line) solid var(--rule);
+}
+.about__meta > * { margin: 0 !important; }
+.about__meta .facts { display: flex; }
+.about__meta .fact { display: flex; align-items: baseline; gap: .5rem; }
+.about__meta .fact__v { font-size: clamp(1.4rem, 2vw, 1.85rem); }
+.about__meta .fact__l { margin-top: 0; }
+
+.about__cta { margin: clamp(1.6rem, 3vw, 2.2rem) 0 0; }
+
+/* ---------- الصورة في الدائرة ---------- */
+.about__media {
+  position: relative; margin: 0;
+  justify-self: center;
+  width: min(100%, 31rem); aspect-ratio: 1;
+}
+/* حلقة شعرية خارجية — المدار */
+.about__media::before {
+  content: ""; position: absolute; inset: 0;
+  border-radius: 50%;
+  border: var(--line) solid var(--rule);
+}
+.about__media img {
+  position: absolute; inset: 10%; z-index: 1;
+  width: 80%; height: 80%;
+  border-radius: 50%; object-fit: cover;
+}
+/* قوس زيتوني عريض يلفّ الصورة، وفتحته نحو النصّ (جهة بدء السطر) */
+.about__ring {
+  position: absolute; inset: 5%; z-index: 2;
+  border-radius: 50%;
+  border: clamp(12px, 1.5vw, 19px) solid var(--olive);
+  border-inline-start-color: transparent;
+  transform: rotate(-24deg);
+}
+html.is-ltr .about__ring { transform: rotate(24deg); }
+/* شبكة نقاط في الركن العلوي — هندسة لا زخرفة حيّة */
+.about__dots {
+  position: absolute; top: -3%; inset-inline-end: -5%; z-index: 0;
+  width: 24%; aspect-ratio: 1;
+  background-image: radial-gradient(var(--olive) 1.3px, transparent 1.7px);
+  background-size: 14px 14px;
+  opacity: .4;
+}
+
+@media (max-width: 900px) {
+  .about__in { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .about__media { order: -1; width: min(78%, 22rem); }
+}
+
 /* الصورة الكبيرة التي تتنفس — عرض كامل، وشارة تعليق على ركنها */
 .plate { padding-block: 0; position: relative; }
 .plate__img {

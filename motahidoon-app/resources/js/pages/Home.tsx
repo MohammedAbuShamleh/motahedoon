@@ -26,7 +26,7 @@ export default function Home({
     <Layout active="home">
       <Hero pillars={pillars} partnerCount={partners.length} />
       <AreasStrip pillars={pillars} />
-      <About identity={identity} founding={founding} governance={governance} />
+      <About identity={identity} founding={founding} governance={governance} photo={fieldPhotos[1] ?? fieldPhotos[0] ?? null} />
       <Partners partners={partners} />
       <Fields pillars={pillars} />
       <Filmstrip photos={fieldPhotos} />
