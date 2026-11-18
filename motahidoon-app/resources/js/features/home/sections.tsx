@@ -2,6 +2,7 @@
    الترتيب والأصناف ومواضع الخانات المحجوزة كما هي، فـstyle.css يسري
    بلا تعديل حرف. */
 
+import { useState } from "react";
 import { Link } from "@inertiajs/react";
 import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
@@ -20,21 +21,71 @@ function usePath(): (p: string) => string {
 }
 
 /* ---------- شريط المجالات تحت الافتتاحية ---------- */
+/* شريط إخباري: بطاقات مربّعة بعرض الصفحة، والسيل ينساب بلا توقّف وتلتحم
+   نهايته ببدايته. إن كانت المجالات ثلاثة أو أقل يثبت الشريط بلا حركة —
+   العدد مشتقّ من البيانات لا مفترَض. */
+const AREAS_VISIBLE = 3;
+
 export function AreasStrip({ pillars }: { pillars: Pillar[] }) {
   const U = useU();
   const path = usePath();
+  const n = pillars.length;
+  const flows = n > AREAS_VISIBLE;
+
+  /* عنصر يصله التركيز بلوحة المفاتيح: يتوقف السيل ويُجلب العنصر إلى المنظور */
+  const [focused, setFocused] = useState<number | null>(null);
+
+  /* ثلاث نسخ لا اثنتان: البطاقة مربّع ثابت الضلع وعدد الظاهر منها يتبع
+     عرض الشاشة، فعلى الشاشات العريضة جداً قد تقصر نسختان عن ملء المنظور
+     أثناء الدوران فتنكشف فجوة. السيل يُزيح نسخة واحدة (ثلث الشريط). */
+  const items = flows ? [...pillars, ...pillars, ...pillars] : pillars;
+  const rtl = typeof document !== "undefined" && document.documentElement.dir === "rtl";
+  const manual = focused !== null
+    ? { transform: `translateX(${(focused * 100) / (3 * n) * (rtl ? 1 : -1)}%)` }
+    : {};
+
+  const cls = [
+    "band band--flush band--noline areas",
+    flows && "areas--flow",
+    focused !== null && "is-manual",
+  ].filter(Boolean).join(" ");
+
   return (
-    <nav className="band band--flush band--noline areas" aria-label={U("مجالات العمل")}>
-      <ul className="areas__row">
-        {pillars.map((p) => (
-          <li key={p.id}>
-            <Link className="areas__a" href={path(`/p/${p.id}`)}>
-              <Icon id={p.id} />
-              <span>{p.short}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <nav
+      className={cls}
+      aria-label={U("مجالات العمل")}
+      style={{ "--n": n } as React.CSSProperties}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(null);
+      }}
+    >
+      <div className="areas__in">
+        <p className="areas__label" aria-hidden="true">{U("مجالات العمل")}</p>
+
+        <div className="areas__view">
+          <ul className="areas__row" style={manual}>
+            {items.map((p, i) => {
+              const copy = i >= n;
+              return (
+                <li key={`${p.id}-${i}`} {...(copy ? { "aria-hidden": true } : {})}>
+                  <Link
+                    className="areas__a"
+                    href={path(`/p/${p.id}`)}
+                    tabIndex={copy ? -1 : undefined}
+                    onFocus={copy ? undefined : () => setFocused(i)}
+                  >
+                    <span className="areas__top">
+                      <span className="areas__badge"><Icon id={p.id} /></span>
+                      <small className="areas__n">{p.num}</small>
+                    </span>
+                    <span className="areas__name">{p.short}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
     </nav>
   );
 }

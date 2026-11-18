@@ -1011,35 +1011,140 @@ html.is-ltr .hero__bar { transform-origin: left; }
 .film__strip::-webkit-scrollbar-track { background: var(--rule); border-radius: 7px; }
 
 /* =====================================================================
-   شريط المجالات — أيقونات وأسماء، ثابت بلا حركة
+   شريط المجالات — شريط إخباري أسود: عنوان في الوسط، وسيل ينساب بثلاثة في المنظور
    ===================================================================== */
 
 .areas {
-  background: var(--olive);
-  border-block: var(--line) solid rgba(252,252,250,.14);
+  position: relative;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-block: var(--line) solid var(--rule-ink);
+  /* ضلع البطاقة المربّعة؛ عدد الظاهر منها يتبع عرض الصفحة */
+  --tile: clamp(7.5rem, 22vw, 14.6rem);
+  --gap: clamp(.6rem, 1.3vw, 1.1rem);
 }
-.areas__row {
-  width: min(100% - var(--edge) * 2, var(--wrap));
-  margin-inline: auto;
+.areas__in {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(50%, 9.5rem), 1fr));
-  gap: var(--line);
-  background: rgba(252,252,250,.16);
+  grid-template-columns: minmax(0, 1fr);
+  padding-block: clamp(1rem, 1.8vw, 1.4rem) clamp(1.4rem, 2.6vw, 2rem);
 }
-.areas__row li { display: flex; background: var(--olive); min-width: 0; }
+
+/* العنوان: صغير في وسط الشريط أعلاه، بين شعرتين تتلاشيان */
+.areas__label {
+  margin: 0 0 clamp(.9rem, 1.6vw, 1.2rem);
+  display: flex; align-items: center; justify-content: center;
+  gap: .7rem;
+  color: var(--bg);
+  font-size: clamp(.9rem, 1.1vw, .98rem); font-weight: 800; letter-spacing: .04em;
+  white-space: nowrap;
+  /* خطّ أحمر قصير تحت الكلمة: لمسة الختم، خطّ لا مساحة */
+  padding-block-end: .5rem;
+  background: linear-gradient(var(--red), var(--red)) 50% 100% / 1.4rem 2px no-repeat;
+}
+.areas__label::before,
+.areas__label::after {
+  content: "";
+  inline-size: clamp(2rem, 4.5vw, 3.5rem); block-size: var(--line);
+  background: linear-gradient(to right, rgba(252,252,250,0), rgba(252,252,250,.3));
+}
+.areas__label::after,
+html[dir="rtl"] .areas__label::before { transform: scaleX(-1); }
+html[dir="rtl"] .areas__label::after { transform: none; }
+
+/* المنظور: نافذة في الوسط بعرض ثلاث بطاقات. clip لا hidden كي لا
+   يمرّره التركيز خلسةً، وتلاشٍ رقيق على الحافتين */
+.areas__view {
+  inline-size: calc(100% - clamp(1.5rem, 4vw, 3rem));
+  margin-inline: auto;
+  overflow: hidden; overflow: clip;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+}
+
+.areas__row {
+  display: flex; inline-size: max-content;
+  margin: 0; padding: 0; list-style: none;
+}
+.areas__row li {
+  inline-size: calc(var(--tile) + var(--gap));
+  padding-inline: calc(var(--gap) / 2);
+  display: flex; min-width: 0; flex: none;
+}
+.areas:not(.areas--flow) .areas__row { inline-size: 100%; justify-content: center; }
+
+/* الانسياب: ثلث الشريط (نسخة كاملة من المجالات) في n×5 ثوانٍ — نحو
+   خمس ثوانٍ لمرور كل بطاقة: يُقرأ ولا يُلاحَق */
+.areas--flow .areas__row {
+  animation: areas-flow calc(var(--n) * 5s) linear infinite;
+  will-change: transform;
+}
+@keyframes areas-flow { to { transform: translateX(calc(-100% / 3)); } }
+@keyframes areas-flow-rtl { to { transform: translateX(calc(100% / 3)); } }
+html[dir="rtl"] .areas--flow .areas__row { animation-name: areas-flow-rtl; }
+
+/* التركيز بلوحة المفاتيح: يقف السيل ويُوضع العنصر في المنظور بانتقال */
+.areas.is-manual .areas__row {
+  animation: none;
+  transition: transform .6s cubic-bezier(.22,.61,.36,1);
+}
+
+/* البطاقة: بانحناء الموقع الواحد (--r)، حدّها شعرة محايدة، شارة مقوّسة
+   للرمز في البداية، والرقم في النهاية، والاسم في القاع.
+   الألوان من اللوحة المقفلة وحدها: الحبري والورق. */
 .areas__a {
   flex: 1;
-  display: flex; flex-direction: column; align-items: center;
-  gap: .55rem; text-align: center;
-  padding: clamp(1.35rem, 2.6vw, 2rem) clamp(.6rem, 1.3vw, 1rem);
-  text-decoration: none; color: rgba(252,252,250,.86);
-  font-size: .9rem; font-weight: 700; line-height: 1.45;
-  text-wrap: balance;
-  transition: background-color .2s ease, color .2s ease;
+  aspect-ratio: 1;
+  display: flex; flex-direction: column; justify-content: space-between;
+  /* هامش داخلي نحو ٧٪ من ضلع البطاقة: النص قريب من الحافة ولا يلتصق بها */
+  padding: calc(var(--tile) * .07);
+  border: var(--line) solid var(--rule-ink);
+  border-radius: var(--r);
+  background: rgba(252,252,250,.03);
+  text-align: start; text-decoration: none; color: var(--bg);
+  transition: border-color .35s ease, background-color .35s ease;
 }
-.areas__a .ico { font-size: 2.1rem; flex: none; }
-.areas__a:hover { background: rgba(252,252,250,.09); color: var(--bg); }
-.areas :focus-visible { outline-color: var(--red-soft); outline-offset: -4px; }
+.areas__top {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem;
+}
+
+/* الشارة المقوّسة: قبّة أعلاها وقاعدة مستوية، بورقٍ شفيف على الحبري */
+.areas__badge {
+  display: grid; place-items: center;
+  inline-size: clamp(2.4rem, 4.2vw, 3.4rem);
+  aspect-ratio: 1 / 1.08;
+  border-radius: 999px 999px var(--r-sm) var(--r-sm);
+  background: rgba(252,252,250,.08);
+  color: var(--bg);
+}
+/* الرمز يشغل وسط مربّع الرسم وحده، فيُعطى عرض الشارة كاملاً ليظهر بحجمه */
+.areas__badge .ico { font-size: clamp(2.4rem, 4.2vw, 3.4rem); flex: none; }
+/* المعيّن الحاوي لا يُرسم في هذا الشريط: الرمز وحده داخل الشارة */
+.areas .ico__f { display: none; }
+
+.areas__n {
+  padding: .3em .7em;
+  border-radius: 999px;
+  background: rgba(252,252,250,.07);
+  font-size: .68rem; font-weight: 800; letter-spacing: .1em; line-height: 1;
+  color: var(--on-ink);
+  font-variant-numeric: tabular-nums;
+}
+.areas__name {
+  font-size: clamp(.78rem, 1.25vw, 1.08rem); font-weight: 800; line-height: 1.5;
+  text-wrap: balance;
+}
+
+/* المرور: الحدّ يتّضح والأرضية تفتح قليلاً، بلا حركة ولا قفز */
+.areas__a:hover {
+  border-color: rgba(252,252,250,.32);
+  background: rgba(252,252,250,.055);
+}
+.areas :focus-visible { outline-color: var(--red-soft); outline-offset: 3px; }
+
+/* على الهاتف يضيق العرض فيحتاج النص ارتفاعاً أكثر */
+@media (max-width: 720px) {
+  .areas__n { font-size: .58rem; padding: .3em .55em; }
+}
 
 /* =====================================================================
    المؤسسات الشريكة — لا تخطيط يفترض عدداً
@@ -1606,8 +1711,7 @@ html[dir="ltr"] .film::after {
 
 /* أيقونة المجال: دوران طفيف للمعيّن عند المرور — من هندسة الشعار */
 .ico__f { transform-origin: 50% 50%; transition: transform .45s cubic-bezier(.22,.61,.36,1); }
-.field__link:hover .ico__f,
-.areas__a:hover .ico__f { transform: rotate(45deg); }
+.field__link:hover .ico__f { transform: rotate(45deg); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -1622,6 +1726,9 @@ html[dir="ltr"] .film::after {
     transition-delay: 0s !important;
   }
   .ico__f { transform: none !important; }
+  /* بلا انسياب: النسخة المكرّرة وزرّ الإيقاف يُخفيان، والمنظور يُمرَّر باليد */
+  .areas__view { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .areas__row li[aria-hidden="true"] { display: none; }
 }
 
 /* =====================================================================
@@ -1653,6 +1760,15 @@ html[dir="ltr"] .film::after {
   .band--dark .fig__v, .band--dark .fig__u, .band--dark .fig__l,
   .band--dark .h-sec, .band--dark .seal__k, .band--dark .seal__v,
   .band--dark .bullets li { color: #000 !important; }
+
+  /* شريط المجالات: كل المجالات على الورق، بلا حركة ولا نسخ ولا أرضية سوداء */
+  .areas { background: #fff !important; color: #000 !important; }
+  .areas__in { grid-template-columns: 1fr; }
+  .areas__label, .areas__row li[aria-hidden="true"] { display: none !important; }
+  .areas__view { -webkit-mask-image: none; mask-image: none; }
+  .areas__row { animation: none !important; transform: none !important; flex-wrap: wrap; inline-size: 100% !important; }
+  .areas__row li { inline-size: auto !important; flex: 1 1 30%; border: 0 !important; }
+  .areas__a, .areas__a .ico, .areas__n { color: #000 !important; }
 
   /* المطويّات تحمل متن التقرير — تُفتح كلها على الورق */
   details > summary { display: none; }
