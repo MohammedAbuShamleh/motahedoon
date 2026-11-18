@@ -7,7 +7,7 @@ import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
 import { Icon } from "@/components/Icon";
 import {
-  Band, Fact, Filled, Mark, Seal, Section, SectionHead, Slot, Statement,
+  Fact, Filled, Seal, Section, SectionHead, Slot, Statement,
 } from "@/components/primitives";
 import type { Founding, Identity, Partner, Pillar, Report } from "@/types";
 
@@ -275,75 +275,135 @@ export function Reports({
 }) {
   const U = useU();
   const path = usePath();
+  const { org } = useSite();
+  const [cur, ...rest] = reports;
   return (
-    <Band
+    <Section
       id="reports"
-      main={
-        <>
-          <h2 className="h-sec">{U("التقارير")}</h2>
-          <div className="reports stagger">
-            {reports.map((r, i) => (
-              <article className={i === 0 ? "report report--current" : "report"} key={r.id}>
-                <div>
-                  <p className="report__k">
-                    {i === 0 ? `${U("أحدث تقرير")} · ` : ""}{r.label}
-                  </p>
-                  <h3 className="report__t">{r.reportTitle}</h3>
-                  <p className="report__r">{r.range}</p>
-                </div>
-                <Link className="btn btn--ghost" href={path(`/reports/${r.id}`)}>
-                  {U("عرض الإنجازات")}
-                </Link>
-              </article>
-            ))}
-          </div>
-        </>
+      head={
+        <SectionHead
+          title={U("التقارير")}
+          side={
+            <>
+              {reportFile
+                ? <a className="btn btn--ghost" href={`/${reportFile}`}>{U("ملف PDF")}</a>
+                : <Slot label={U("ملف التقرير PDF")} />}
+              <Fact value={String(reports.length)} label={U("تقارير منشورة")} />
+              {/* رابط الأرشيف — تسمية واجهة قائمة ومترجمة، لا نصّ جديد */}
+              <Link className="shead__more" href={path("/reports")}>{U("الإنجازات الكاملة")}</Link>
+            </>
+          }
+        />
       }
-      aside={
-        <>
-          <Mark n={ord(5)} label={U("التقارير")} />
-          <div className="facts">
-            <Fact value={String(reports.length)} label={U("تقارير منشورة")} />
+    >
+      {/* الأحدث: بطاقة إصدار — غلاف وثيقة مرسوم (من بيانات التقرير وحدها:
+          شعار التجمع واسمه المختصر والفترة) مائلاً على لوح زيتوني، وبجانبه
+          الوسم والعنوان والمدى والإجراءات. الأسطر الرمادية زخرفة لا نصّ. */}
+      {cur && (
+        <article className="rfeat">
+          <div className="rfeat__cover" aria-hidden="true">
+            <span className="rfeat__stack">
+              <span className="rfeat__sheet">
+                <span className="rfeat__band">
+                  <img src={`/${org.logoMark}`} alt="" />
+                  <span>{org.shortName}</span>
+                </span>
+                <span className="rfeat__period">{cur.label}</span>
+                <span className="rfeat__lines"><i /><i /><i /><i /><i /></span>
+              </span>
+            </span>
           </div>
-          <div style={{ marginTop: "1.5rem" }}>
-            {reportFile
-              ? <p><a className="btn btn--ghost" href={`/${reportFile}`}>{U("ملف PDF")}</a></p>
-              : <Slot label={U("ملف التقرير PDF")} />}
+          <div className="rfeat__body">
+            <p className="rfeat__k">
+              <span className="rfeat__badge">{U("أحدث تقرير")}</span>
+              {cur.label}
+            </p>
+            <h3 className="rfeat__t">{cur.reportTitle}</h3>
+            <p className="rfeat__r">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></svg>
+              {cur.range}
+            </p>
+            <div className="rfeat__actions">
+              <Link className="btn rfeat__go" href={path(`/reports/${cur.id}`)}>{U("عرض الإنجازات")}</Link>
+              {reportFile && <a className="btn btn--ghost" href={`/${reportFile}`}>{U("ملف PDF")}</a>}
+            </div>
           </div>
-        </>
-      }
-    />
+        </article>
+      )}
+
+      {/* الأرشيف: سجلّ صفوف بأعمدة ثابتة — الفترة، العنوان، المدى، الرابط */}
+      {rest.length > 0 && (
+        <ol className="rlog">
+          {rest.map((r) => (
+            <li key={r.id}>
+              <Link className="rlog__a" href={path(`/reports/${r.id}`)}>
+                <span className="rlog__ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>
+                </span>
+                <span className="rlog__k">{r.label}</span>
+                <span className="rlog__t">{r.reportTitle}</span>
+                <span className="rlog__r">{r.range}</span>
+                <span className="rlog__go">{U("عرض الإنجازات")}</span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      )}
+    </Section>
   );
 }
 
-/* ---------- الدعم والتواصل ---------- */
+/* ---------- الدعم والتواصل ----------
+   لوح واحد بنصفين: التواصل ورقياً (البريد والهاتف والعنوان صفوفاً بمربّعات
+   زيتونية)، والدعم حبرياً (رابط الدعم، وكود QR في إطار بزوايا كإطار المسح).
+   الحقل الفارغ يظهر خانة محجوزة ولا يُخفى ولا يُملأ ببديل. */
+function ContactRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | null }) {
+  return (
+    <li className="sup__row">
+      <span className="sup__ico" aria-hidden="true">{icon}</span>
+      {value ? <Filled label={label} value={value} /> : <Slot label={label} />}
+    </li>
+  );
+}
+
 export function Support() {
   const U = useU();
   const { donors: d, contact: c } = useSite();
   return (
-    <Band
-      id="support"
-      main={
-        <>
-          <h2 className="h-sec">{U("الدعم والتواصل")}</h2>
-          <div className="slots--row" style={{ marginTop: "clamp(2rem,4vw,3rem)" }}>
+    <Section id="support" head={<SectionHead title={U("الدعم والتواصل")} />}>
+      <div className="sup">
+        <section className="sup__reach" aria-label={U("التواصل")}>
+          <ul className="sup__list">
+            <ContactRow icon={<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg>} label={U("البريد")} value={c.email} />
+            <ContactRow icon={<svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>} label={U("الهاتف")} value={c.phone} />
+            <ContactRow icon={<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" /><circle cx="12" cy="9" r="2.5" /></svg>} label={U("العنوان")} value={c.address} />
+          </ul>
+        </section>
+
+        <section className="sup__give" aria-label={U("رابط الدعم")}>
+          <div className="sup__donate">
+            <span className="sup__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
+            </span>
             {d.donateUrl
-              ? <p><a className="btn btn--green" href={d.donateUrl} target="_blank" rel="noopener">{d.donateLabel}</a></p>
+              ? <a className="btn btn--light" href={d.donateUrl} target="_blank" rel="noopener">{d.donateLabel}</a>
               : <Slot label={U("رابط الدعم")} />}
-            {d.donateQr
-              ? <figure><img src={`/${d.donateQr}`} alt={U("كود QR للدعم")} /></figure>
-              : <Slot label={U("كود QR")} />}
           </div>
-        </>
-      }
-      aside={
-        <>
-          <Mark n={ord(6)} label={U("الدعم والتواصل")} />
-          {c.email ? <Filled label={U("البريد")} value={c.email} /> : <Slot label={U("البريد")} />}
-          {c.phone ? <Filled label={U("الهاتف")} value={c.phone} /> : <Slot label={U("الهاتف")} />}
-          {c.address ? <Filled label={U("العنوان")} value={c.address} /> : <Slot label={U("العنوان")} />}
-        </>
-      }
-    />
+          <figure className="sup__qr">
+            <span className="sup__frame">
+              {d.donateQr
+                ? <img src={`/${d.donateQr}`} alt={U("كود QR للدعم")} />
+                : (
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" /><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3" />
+                  </svg>
+                )}
+            </span>
+            {!d.donateQr && <figcaption><Slot label={U("كود QR")} /></figcaption>}
+          </figure>
+        </section>
+      </div>
+    </Section>
   );
 }

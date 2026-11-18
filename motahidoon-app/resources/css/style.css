@@ -1932,28 +1932,265 @@ html.js-reveal .reveal:not(.is-in) .impact__col { opacity: 0; transform: transla
 .figs--dense .fig__v { --fit: clamp(15rem, 26vw, 20rem); }
 
 /* =====================================================================
-   التقارير — أرشيف، لا عنصر واحد
+   التقارير — إصدار أحدث مُبرَز، وسجلّ للأرشيف
+   الأحدث بطاقة إصدار: غلاف وثيقة مرسوم مائل على لوح زيتوني في جهة البدء
+   (هيئة الألواح المائلة في الموقع)، والتفاصيل والإجراءات بجانبه. الأقدم
+   صفوف سجلّ بأعمدة ثابتة بين شعرات. ألوان اللوحة وحدها؛ الأحمر خطّ.
    ===================================================================== */
 
-.reports { margin-top: clamp(2rem, 4vw, 3rem); display: grid; gap: 1rem; }
-.report {
+.rfeat {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1.25rem clamp(1.5rem, 3vw, 2.5rem);
-  align-items: center;
-  padding: clamp(1.5rem, 3vw, 2.25rem);
+  grid-template-columns: clamp(13rem, 24vw, 17rem) minmax(0, 1fr);
+  align-items: stretch;
   border: var(--line) solid var(--rule);
   border-radius: var(--r);
   background: var(--paper);
+  overflow: hidden;
+  box-shadow: 0 22px 48px -40px rgba(26,26,26,.5);
 }
-.report--current { border-color: rgba(92,91,52,.34); }
-.report__k {
-  margin: 0 0 .5rem; font-size: .74rem; font-weight: 700;
-  letter-spacing: .16em; color: var(--olive);
+
+/* لوح الغلاف */
+.rfeat__cover {
+  display: grid; place-items: center;
+  padding: clamp(1.9rem, 3.4vw, 2.6rem) 1rem;
+  background: rgba(92,91,52,.08);
+  border-inline-end: var(--line) solid var(--rule);
 }
-.report__t { margin: 0; font-size: 1.06rem; font-weight: 800; line-height: 1.5; }
-.report__r { margin: .5rem 0 0; font-size: .92rem; color: var(--ink-72); }
-@media (max-width: 620px) { .report { grid-template-columns: minmax(0, 1fr); } }
+.rfeat__stack { position: relative; display: block; }
+/* لوح زيتوني مائل خلف الورقة، بزاوية عكس زاويتها */
+.rfeat__stack::before {
+  content: ""; position: absolute; inset: 0;
+  border-radius: 8px;
+  background: rgba(92,91,52,.24);
+  transform: rotate(4deg) translate(-6%, 3%);
+}
+html.is-ltr .rfeat__stack::before { transform: rotate(-4deg) translate(6%, 3%); }
+
+/* الورقة: غلاف التقرير */
+.rfeat__sheet {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  inline-size: clamp(8.75rem, 13vw, 10.75rem); aspect-ratio: 3 / 4;
+  background: var(--paper);
+  border: var(--line) solid var(--rule);
+  border-radius: 6px;
+  box-shadow: 0 16px 30px -18px rgba(26,26,26,.45);
+  transform: rotate(-3deg);
+  overflow: hidden;
+}
+html.is-ltr .rfeat__sheet { transform: rotate(3deg); }
+.rfeat__band {
+  display: flex; align-items: center; gap: .4rem;
+  padding: .5rem .6rem;
+  background: var(--olive); color: var(--bg);
+  font-size: .66rem; font-weight: 800; line-height: 1;
+}
+.rfeat__band img {
+  inline-size: 1.3rem; block-size: 1.3rem; flex: none;
+  object-fit: contain;
+  background: var(--paper); border-radius: 4px; padding: 2px;
+}
+.rfeat__period {
+  margin: .95rem .7rem 0;
+  font-size: clamp(.82rem, 1.1vw, .98rem); font-weight: 800; line-height: 1.35;
+  color: var(--ink);
+}
+.rfeat__period::after {
+  content: ""; display: block;
+  inline-size: 1.4rem; block-size: 2px; margin-top: .45rem;
+  background: var(--red);
+}
+/* أسطر رمادية: زخرفة تمثّل متن الوثيقة، لا نصّ */
+.rfeat__lines { display: grid; gap: .4rem; margin: .85rem .7rem 0; }
+.rfeat__lines i { display: block; block-size: 4px; border-radius: 2px; background: var(--rule); }
+.rfeat__lines i:nth-child(2) { inline-size: 86%; }
+.rfeat__lines i:nth-child(3) { inline-size: 94%; }
+.rfeat__lines i:nth-child(4) { inline-size: 68%; }
+.rfeat__lines i:nth-child(5) { inline-size: 80%; }
+
+/* التفاصيل */
+.rfeat__body {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.4rem, 3vw, 2.5rem);
+  min-width: 0;
+}
+.rfeat__k {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .6rem;
+  margin: 0 0 .8rem;
+  font-size: .84rem; font-weight: 700; color: var(--olive);
+}
+.rfeat__badge {
+  padding: .25rem .7rem; border-radius: 6px;
+  background: var(--olive); color: var(--bg);
+  font-size: .76rem; font-weight: 800;
+}
+.rfeat__t {
+  margin: 0;
+  font-size: clamp(1.2rem, 1.9vw, 1.6rem); font-weight: 800; line-height: 1.5;
+  color: var(--ink); text-wrap: balance;
+}
+.rfeat__r {
+  display: flex; align-items: center; gap: .5rem;
+  margin: .8rem 0 0;
+  font-size: .94rem; color: var(--ink-72);
+}
+.rfeat__r svg {
+  inline-size: 1.05rem; block-size: 1.05rem; flex: none;
+  fill: none; stroke: var(--olive); stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.rfeat__actions {
+  display: flex; flex-wrap: wrap; gap: .75rem;
+  margin-top: clamp(1.3rem, 2.4vw, 1.8rem);
+  padding-top: clamp(1.1rem, 2vw, 1.4rem);
+  border-top: var(--line) solid var(--rule);
+}
+/* الزرّ الرئيس حبري — أثقل من الزرّ المحدَّد بجانبه */
+.rfeat__go { background: var(--ink); color: var(--bg); }
+.rfeat__go:hover { background: var(--olive); }
+
+/* الأرشيف */
+.rlog {
+  list-style: none; padding: 0;
+  margin: clamp(1.25rem, 2.4vw, 1.75rem) 0 0;
+  border-top: var(--line) solid var(--rule);
+}
+.rlog li { border-bottom: var(--line) solid var(--rule); }
+.rlog__a {
+  display: grid;
+  grid-template-columns: auto 8.5rem minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(.9rem, 2vw, 1.75rem);
+  padding: clamp(.95rem, 1.7vw, 1.2rem) .25rem;
+  text-decoration: none; color: var(--ink);
+}
+.rlog__ico {
+  display: grid; place-items: center;
+  inline-size: 2.5rem; aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  border: var(--line) solid var(--rule);
+  color: var(--olive);
+}
+.rlog__ico svg {
+  inline-size: 50%; block-size: 50%;
+  fill: none; stroke: currentColor; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.rlog__k { font-size: .84rem; font-weight: 800; color: var(--olive); }
+.rlog__t { font-size: clamp(.95rem, 1.1vw, 1.05rem); font-weight: 800; line-height: 1.5; }
+.rlog__r { font-size: .86rem; color: var(--ink-72); white-space: nowrap; }
+.rlog__go {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .86rem; font-weight: 800; color: var(--olive);
+  white-space: nowrap;
+}
+.rlog__go::after { content: "←"; font-weight: 400; }
+html.is-ltr .rlog__go::after { content: "→"; }
+.rlog__a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: var(--r-sm); }
+
+@media (max-width: 860px) {
+  .rfeat { grid-template-columns: minmax(0, 1fr); }
+  .rfeat__cover { border-inline-end: 0; border-bottom: var(--line) solid var(--rule); }
+  .rlog__a {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: "ico k" "ico t" "ico r" "ico go";
+    align-items: start; row-gap: .2rem;
+  }
+  .rlog__ico { grid-area: ico; }
+  .rlog__k { grid-area: k; }
+  .rlog__t { grid-area: t; }
+  .rlog__r { grid-area: r; white-space: normal; }
+  .rlog__go { grid-area: go; margin-top: .35rem; }
+}
+
+/* =====================================================================
+   الدعم والتواصل — لوح واحد بنصفين: التواصل ورقياً، والدعم حبرياً
+   التواصل صفوف بمربّعات زيتونية ممتلئة، والدعم على الحبري بشبكة المثمّنات
+   الخافتة نفسها في «لمحة أثر»: رابط الدعم، ثم كود QR في إطار بزوايا
+   كإطار المسح. الحقل الفارغ خانة محجوزة موسومة — لا يُخفى ولا يُبدَّل.
+   ===================================================================== */
+.sup {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  border: var(--line) solid var(--rule);
+  border-radius: var(--r);
+  background: var(--paper);
+  overflow: hidden;
+  box-shadow: 0 22px 48px -40px rgba(26,26,26,.5);
+}
+
+.sup__reach { padding: clamp(1rem, 2.2vw, 1.6rem) clamp(1.4rem, 3vw, 2.25rem); }
+.sup__list { list-style: none; margin: 0; padding: 0; }
+.sup__row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem; align-items: center;
+  padding-block: clamp(.9rem, 1.7vw, 1.15rem);
+}
+.sup__row + .sup__row { border-top: var(--line) solid var(--rule); }
+/* داخل الصفّ تُرسم الخانة بلا صندوق ثانٍ — الصفّ هو الإطار */
+.sup__row .slot { margin: 0; padding: 0; border: 0; background: none; }
+.sup__ico, .sup__mark {
+  display: grid; place-items: center; flex: none;
+  inline-size: 2.75rem; aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  background: var(--olive); color: var(--bg);
+}
+.sup__ico svg, .sup__mark svg {
+  inline-size: 48%; block-size: 48%;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+.sup__give {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: clamp(1.1rem, 2.2vw, 1.5rem);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cpath d='M28 0h40l28 28v40L68 96H28L0 68V28z' fill='none' stroke='%23FCFCFA' stroke-opacity='.045' stroke-width='1'/%3E%3C/svg%3E");
+  color: var(--on-ink);
+}
+.sup__donate { display: flex; align-items: center; gap: 1rem; }
+.sup__give .slot { margin: 0; padding: 0; border: 0; background: none; }
+.sup__give .slot__label { color: var(--bg); }
+.sup__give .slot__state { color: var(--on-ink); }
+.sup__give .slot__state::before { background: var(--red-soft); }
+.sup__give :focus-visible { outline-color: var(--red-soft); }
+
+.sup__qr {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 0;
+  padding-top: clamp(1.1rem, 2.2vw, 1.5rem);
+  border-top: var(--line) solid var(--rule-ink);
+}
+/* إطار المسح: أربع زوايا من خطوط ورقية */
+.sup__frame {
+  --c: rgba(252,252,250,.7); --l: 1.1rem; --w: 2px;
+  display: grid; place-items: center; flex: none;
+  inline-size: 6.5rem; aspect-ratio: 1;
+  background:
+    linear-gradient(var(--c), var(--c)) 0 0 / var(--l) var(--w),
+    linear-gradient(var(--c), var(--c)) 0 0 / var(--w) var(--l),
+    linear-gradient(var(--c), var(--c)) 100% 0 / var(--l) var(--w),
+    linear-gradient(var(--c), var(--c)) 100% 0 / var(--w) var(--l),
+    linear-gradient(var(--c), var(--c)) 0 100% / var(--l) var(--w),
+    linear-gradient(var(--c), var(--c)) 0 100% / var(--w) var(--l),
+    linear-gradient(var(--c), var(--c)) 100% 100% / var(--l) var(--w),
+    linear-gradient(var(--c), var(--c)) 100% 100% / var(--w) var(--l);
+  background-repeat: no-repeat;
+}
+.sup__frame svg {
+  inline-size: 52%; block-size: 52%;
+  fill: none; stroke: var(--bg); stroke-width: 1.4; opacity: .3;
+}
+.sup__frame img {
+  inline-size: 82%; block-size: 82%; object-fit: contain;
+  background: var(--bg); padding: .35rem; border-radius: 4px;
+}
+.sup__qr figcaption { min-width: 0; }
+
+@media (max-width: 860px) {
+  .sup { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* =====================================================================
    الأزرار — محدِّدات مستقلة، لا تُغلب بقاعدة قسم
