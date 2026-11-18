@@ -30,15 +30,14 @@ export function Band({
   );
 }
 
-/** رأس قسم موحّد في الرئيسية: العنوان وتحته شعرة حمراء تنتهي بمعيّن في جهة
-    البدء، والحقائق والخانات المحجوزة في الجهة الأخرى على السطر نفسه، وشعرة
-    تفصل الرأس عن المحتوى. لا نصّ تعريفي تحت العنوان — لا يُخترع نصّ. */
+/** رأس قسم موحّد في الرئيسية، بهيئة رأس صفحة التقرير: العنوان في الوسط،
+    وتحته سطر وسوم (الحقائق والخانات المحجوزة والإجراءات)، ثم شعرة تفصل
+    الرأس عن المحتوى. لا نصّ تعريفي تحت العنوان — لا يُخترع نصّ. */
 export function SectionHead({ title, side }: { title: ReactNode; side?: ReactNode }) {
   return (
     <header className="shead">
       <div className="shead__main">
         <h2 className="h-sec shead__title">{title}</h2>
-        <span className="shead__rule" aria-hidden="true" />
       </div>
       {side && <div className="shead__side">{side}</div>}
     </header>

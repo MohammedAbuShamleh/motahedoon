@@ -1,15 +1,16 @@
 import { Link } from "@inertiajs/react";
+import type { CSSProperties, ReactNode } from "react";
 import { Layout } from "@/app/Layout";
 import { Icon } from "@/components/Icon";
-import type { ReactNode } from "react";
-import { Band, FigureCell, Plate, Seal, Slot } from "@/components/primitives";
-import { ArOnly, SectionBrief, Table, TitledItems } from "@/features/report/parts";
+import { FigureCell, Plate, Seal, Slot } from "@/components/primitives";
+import { ArOnly, SectionBrief, Table } from "@/features/report/parts";
 import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
-import type { Report as R, TitledList } from "@/types";
+import type { Cover, Entry, Report as R, TitledList } from "@/types";
 
 interface PillarRef {
   id: string; num: string; title: string; short: string; orgs: string;
+  cover: Cover | null;
 }
 
 interface Props {
@@ -18,13 +19,25 @@ interface Props {
   others: { id: string; label: string; reportTitle: string }[];
 }
 
-/* وسم الفترة المختصر: كلّ قسم مؤرَّخ يحمل فترته بصرياً (قاعدة الحاشية)،
-   بوسم صغير في رأسه بدل صفّ ختم كامل يتكرّر فوق كلّ قسم. */
+/* =====================================================================
+   صفحة التقرير بلغة العروض المؤسسية: شرائح متعاقبة — غلاف ببطاقة وثيقة،
+   شريحة أرقام داكنة، مسار فصول، فصول منقسمة (صورة ومتن) تتبادل جهتها،
+   ثم بطاقات وقوائم مرقّمة. النصّ كلّه من المصدر كما هو؛ الجديد هنا
+   هندسة وحركة فقط.
+   ===================================================================== */
+
+/* ترقيم ترتيبي للواجهة (01، 02…): موضع البند في قائمته، لا رقم من المحتوى */
+const ord = (i: number) => String(i + 1).padStart(2, "0");
+
+/* متغيّر --i يقود تأخير الحركة لعنصر داخل مجموعة */
+const at = (i: number) => ({ "--i": i }) as CSSProperties;
+
+/* وسم الفترة المختصر: كلّ قسم مؤرَّخ يحمل فترته بصرياً (قاعدة الحاشية) */
 function PeriodTag({ label }: { label: string }) {
   return <span className="rp-tag">{label}</span>;
 }
 
-/* قسم من أقسام التقرير: رأس موحّد (العنوان ووسم الفترة) ثم المحتوى. */
+/* قسم من أقسام التقرير: رأس موحّد (العنوان ووسم الفترة) ثم المحتوى */
 function RpSection({ id, title, tag, cls, children }: {
   id: string; title: string; tag: string; cls?: string; children: ReactNode;
 }) {
@@ -41,6 +54,43 @@ function RpSection({ id, title, tag, cls, children }: {
   );
 }
 
+/* قائمة مرقّمة بأربع هيئات:
+   cards — بطاقات بشارة مربّعة تنقلب معيّناً عند المرور (القراءة، النداء)
+   notes — لوح فاتح بعمودين وشارات مفرّغة (ملاحظات الضبط)
+   steps — خطوات برقم كبير وسكّة تمتلئ (الفرص)
+   brief — بطاقات على الحبري (أبرز الإنجازات في شريحة الأرقام)
+   البند المعنون والنصّي كلاهما مقبول، فشكل المصدر لا يكسر الهيئة. */
+type ListVariant = "cards" | "notes" | "steps" | "brief";
+
+function ReportList({ items, variant }: { items: (Entry | string)[]; variant: ListVariant }) {
+  const rows: Entry[] = items.map((it) => (typeof it === "string" ? { text: it } : it));
+  return (
+    <ol className={`rp-list rp-list--${variant} stagger rp-stag`}>
+      {rows.map((it, i) => (
+        <li className="rp-item" key={i}>
+          <span className="rp-item__no" aria-hidden="true">{ord(i)}</span>
+          <div className="rp-item__body">
+            {it.term ? <h3 className="rp-item__term">{it.term}</h3> : null}
+            <p className="rp-item__text"><Nums text={it.text} /></p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+/* خطوط مائلة تُرسم في شريط بطاقة الوثيقة — نقش الغلاف */
+function CoverLines() {
+  return (
+    <svg className="rp-doc__lines" viewBox="0 0 320 120" preserveAspectRatio="xMidYMid slice"
+         aria-hidden="true" focusable="false">
+      {Array.from({ length: 10 }, (_, i) => (
+        <line key={i} x1={i * 40 - 70} y1="130" x2={i * 40 + 50} y2="-10" style={at(i)} />
+      ))}
+    </svg>
+  );
+}
+
 export default function Report({ report: rep, pillars, others }: Props) {
   const U = useU();
   const { locale, donors } = useSite();
@@ -48,10 +98,16 @@ export default function Report({ report: rep, pillars, others }: Props) {
 
   const chapters = pillars.filter((p) => rep.sections?.[p.id]);
 
-  const ListBand = ({ id, obj }: { id: string; obj: TitledList | null }) =>
+  /* المؤشّر الموسوم accent يتصدّر بجانب الحلقات؛ الهرمية من وسم المصدر */
+  const leadMetrics = rep.metrics.filter((m) => m.accent);
+  const restMetrics = rep.metrics.filter((m) => !m.accent);
+
+  const ListBand = ({ id, obj, variant, cls }: {
+    id: string; obj: TitledList | null; variant: ListVariant; cls?: string;
+  }) =>
     obj?.items?.length ? (
-      <RpSection id={id} title={obj.title} tag={rep.label}>
-        <TitledItems items={obj.items} />
+      <RpSection id={id} title={obj.title} tag={rep.label} cls={cls}>
+        <ReportList items={obj.items} variant={variant} />
       </RpSection>
     ) : null;
 
@@ -69,8 +125,8 @@ export default function Report({ report: rep, pillars, others }: Props) {
 
   return (
     <Layout active="report">
-      {/* الغلاف: العنوان والمقدّمة في جهة، وبطاقة الوثيقة في الأخرى —
-          الفترة، وملف PDF، ومحتويات التقرير */}
+      {/* الغلاف — شريحة العنوان: العنوان والمقدّمة في جهة، وبطاقة الوثيقة
+          في الأخرى يحضنها لوح أخضر ومربّع زيتوني مفرَّغ */}
       <section className="band rp-cover">
         <div className="rp-cover__in">
           <div className="rp-cover__main">
@@ -82,29 +138,32 @@ export default function Report({ report: rep, pillars, others }: Props) {
             </div>
           </div>
 
-          <aside className="rp-doc">
-            <div className="rp-doc__band">
-              <Seal value={rep.label} kicker={U("تقرير دوري")} />
-            </div>
-            <div className="rp-doc__body">
-              {rep.reportFile
-                ? <p className="rp-doc__file"><a className="btn btn--green" href={`/${rep.reportFile}`}>{U("ملف PDF")}</a></p>
-                : <Slot label={U("ملف التقرير PDF")} />}
-              <nav className="rp-toc" aria-label={U("محتويات التقرير")}>
-                <p className="rp-toc__h">{U("محتويات التقرير")}</p>
-                <ol>
-                  {toc.map((t) => (
-                    <li key={t.href}>
-                      <a href={t.href}>
-                        {t.n ? <span className="rp-toc__n">{t.n}</span> : <span className="rp-toc__d" aria-hidden="true" />}
-                        <span>{t.label}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ol>
-              </nav>
-            </div>
-          </aside>
+          <div className="rp-cover__side">
+            <aside className="rp-doc">
+              <div className="rp-doc__band">
+                <CoverLines />
+                <Seal value={rep.label} kicker={U("تقرير دوري")} />
+              </div>
+              <div className="rp-doc__body">
+                {rep.reportFile
+                  ? <p className="rp-doc__file"><a className="btn btn--green" href={`/${rep.reportFile}`}>{U("ملف PDF")}</a></p>
+                  : <Slot label={U("ملف التقرير PDF")} />}
+                <nav className="rp-toc" aria-label={U("محتويات التقرير")}>
+                  <p className="rp-toc__h">{U("محتويات التقرير")}</p>
+                  <ol>
+                    {toc.map((t) => (
+                      <li key={t.href}>
+                        <a href={t.href}>
+                          {t.n ? <span className="rp-toc__n">{t.n}</span> : <span className="rp-toc__d" aria-hidden="true" />}
+                          <span>{t.label}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
 
@@ -126,44 +185,92 @@ export default function Report({ report: rep, pillars, others }: Props) {
         </section>
       ) : null}
 
-      <Band
-        id="rp-metrics"
-        cls="band--dark"
-        main={
-          <>
+      {/* شريحة الأرقام — على الحبري: المؤشّر المتصدّر بجانب الحلقات، ثم
+          بطاقات مرقّمة يمتلئ شريطها، ثم أبرز الإنجازات بطاقاتٍ */}
+      <section className="band band--dark rp-kpi" id="rp-metrics">
+        <div className="rp-sec__in reveal">
+          <header className="rp-sec__head">
             <h2 className="h-sec">{rep.metricsTitle}</h2>
-            <div className="figs figs--tiles stagger">
-              {rep.metrics.map((m, i) => <FigureCell m={m} key={i} />)}
-            </div>
-            {rep.highlights?.length ? (
-              <ul className="bullets" style={{ marginTop: "clamp(2.5rem,5vw,3.5rem)" }}>
-                {rep.highlights.map((h, i) => <li key={i}><Nums text={h} /></li>)}
-              </ul>
-            ) : null}
-          </>
-        }
-        aside={<Seal value={rep.label} />}
-      />
+            <Seal value={rep.label} />
+          </header>
 
-      {/* فصول المجالات: إنجازات كلّ مجال في هذه الفترة، بترتيب المجالات الدائم.
-          سكّة جانبية تحمل رقم المجال ورمزه، والمتن بجانبها */}
-      {chapters.map((p) => {
+          {leadMetrics.length > 0 && (
+            <div className="rp-kpi__lead">
+              <div className="rp-kpi__figs">
+                {leadMetrics.map((m, i) => <FigureCell m={m} key={i} />)}
+              </div>
+            </div>
+          )}
+
+          {restMetrics.length > 0 && (
+            <div className="rp-kpi__grid stagger rp-stag">
+              {restMetrics.map((m, i) => (
+                <div className="rp-kpi__card" key={i}>
+                  <span className="rp-kpi__no" aria-hidden="true">{ord(i)}</span>
+                  <FigureCell m={m} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {rep.highlights?.length ? <ReportList items={rep.highlights} variant="brief" /> : null}
+        </div>
+      </section>
+
+      {/* مسار الفصول — المجالات الواردة في هذه الفترة على سكّة واحدة يسري
+          فيها خطّ أخضر عند الظهور؛ كلّ محطّة رابط إلى فصلها */}
+      {chapters.length > 1 && (
+        <section className="band rp-path">
+          <div className="rp-sec__in reveal">
+            <header className="rp-sec__head">
+              <h2 className="h-sec">{U("مجالات العمل")}</h2>
+              <PeriodTag label={rep.label} />
+            </header>
+            <ol className="rp-path__list stagger rp-stag">
+              {chapters.map((p) => (
+                <li key={p.id}>
+                  <a className="rp-path__a" href={`#rp-${p.id}`}>
+                    <span className="rp-path__mk" aria-hidden="true"><Icon id={p.id} /></span>
+                    <span className="rp-path__n">{p.num}</span>
+                    <span className="rp-path__t">{p.short}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {/* فصول المجالات: شريحة منقسمة — الصورة يحضنها لوح أخضر وشارة الرقم،
+          والمتن بجانبها؛ تتبادل الجهتان من فصل إلى آخر. مجال بلا غلاف
+          يأخذ لوحاً هندسياً برمزه، فلا يختلّ الإيقاع ولا يُخترع شيء. */}
+      {chapters.map((p, idx) => {
         const sec = rep.sections[p.id];
         return (
-          <section className="band rp-ch" id={`rp-${p.id}`} key={p.id}>
+          <section className={`band rp-ch${idx % 2 ? " rp-ch--flip" : ""}`} id={`rp-${p.id}`} key={p.id}>
             <div className="rp-ch__in reveal">
-              <div className="rp-ch__rail">
-                <span className="rp-ch__n">{p.num}</span>
-                <span className="rp-ch__ico" aria-hidden="true"><Icon id={p.id} /></span>
+              <div className="rp-ch__media">
+                {p.cover?.src ? (
+                  <figure className="rp-ch__fig">
+                    <img src={`/${p.cover.src}`} alt={p.cover.caption} loading="lazy" decoding="async" />
+                  </figure>
+                ) : (
+                  <div className="rp-ch__fig rp-ch__fig--geo" aria-hidden="true">
+                    <Icon id={p.id} />
+                  </div>
+                )}
+                <span className="rp-ch__badge">{p.num}</span>
               </div>
+
               <div className="rp-ch__body">
                 <p className="rp-ch__k">
+                  <span className="rp-ch__ico" aria-hidden="true"><Icon id={p.id} /></span>
                   <span>{U("مجال عمل")}</span>
                   <PeriodTag label={rep.label} />
                 </p>
                 <h2 className="h-sec">{p.title}</h2>
                 <p className="ph__orgs">{p.orgs}</p>
-                <SectionBrief sec={sec} />
+                <SectionBrief sec={sec} stagger />
                 {sec.untranslated && <ArOnly href={`/p/${p.id}?lang=ar`} />}
                 <p className="rp-ch__cta">
                   <Link className="btn btn--ghost" href={path(`/p/${p.id}`)}>
@@ -182,16 +289,14 @@ export default function Report({ report: rep, pillars, others }: Props) {
         </RpSection>
       )}
 
-      <ListBand id="rp-reading" obj={rep.reading} />
-      <ListBand id="rp-notes" obj={rep.dataNotes} />
-      <ListBand id="rp-opps" obj={rep.opportunities} />
+      <ListBand id="rp-reading" obj={rep.reading} variant="cards" cls="rp-tint" />
+      <ListBand id="rp-notes" obj={rep.dataNotes} variant="notes" />
+      <ListBand id="rp-opps" obj={rep.opportunities} variant="steps" />
 
       {rep.appeal?.title && (
-        <RpSection id="rp-appeal" title={rep.appeal.title} tag={rep.label}>
+        <RpSection id="rp-appeal" title={rep.appeal.title} tag={rep.label} cls="rp-tint">
           <p className="lead">{rep.appeal.lead}</p>
-          <ul className="bullets">
-            {rep.appeal.items.map((i, k) => <li key={k}><Nums text={i} /></li>)}
-          </ul>
+          <ReportList items={rep.appeal.items} variant="cards" />
           <div style={{ marginTop: "clamp(2rem,4vw,3rem)" }}>
             {donors.donateUrl
               ? <a className="btn btn--green" href={donors.donateUrl}
@@ -205,8 +310,9 @@ export default function Report({ report: rep, pillars, others }: Props) {
         <Plate src={rep.appeal.photo.src} caption={rep.appeal.photo.caption} olive />
       )}
 
+      {/* الخاتمة — بطاقة ورقية على أرضية فاتحة، تمسك زاويتها مربّعات الهوية */}
       {rep.closing && (
-        <RpSection id="rp-closing" title={rep.closing.title} tag={rep.label} cls="rp-closing">
+        <RpSection id="rp-closing" title={rep.closing.title} tag={rep.label} cls="rp-tint rp-closing">
           <div className="prose body-lg">
             {rep.closing.paragraphs.map((p, i) => <p key={i}><Nums text={p} /></p>)}
           </div>
@@ -239,6 +345,11 @@ export default function Report({ report: rep, pillars, others }: Props) {
           <aside className="sheet__aside" />
         </div>
       </section>
+
+      {/* شريط تقدّم القراءة — آخر الصفحة عمداً: أول ابن في main يأخذ حشوة
+          الشريط العائم، وهذا مثبّت لا يأخذ مكاناً. يرسمه CSS حيث يُدعم
+          ربط الحركة بالتمرير، ويغيب حيث لا يُدعم. */}
+      <div className="rp-progress" aria-hidden="true" />
     </Layout>
   );
 }

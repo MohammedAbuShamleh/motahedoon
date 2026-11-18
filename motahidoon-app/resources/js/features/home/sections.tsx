@@ -8,7 +8,7 @@ import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
 import { Icon } from "@/components/Icon";
 import {
-  Fact, Filled, Seal, Section, SectionHead, Slot, Statement,
+  Fact, FigureCell, Filled, Seal, Section, SectionHead, Slot,
 } from "@/components/primitives";
 import type { Founding, Identity, Partner, Pillar, Report } from "@/types";
 
@@ -61,6 +61,24 @@ export function AreasStrip({ pillars }: { pillars: Pillar[] }) {
    المحتوى كما كان حرفاً بحرف (العنوان، فقرة التأسيس، الرؤية والرسالة،
    سنة التأسيس، خانة الحوكمة، رابط التعريف الكامل) — التغيير في التخطيط وحده.
    بلا صورة لا عمود للصورة: التخطيط مشتقّ من البيانات لا مفترَض. */
+/* بند الرؤية أو الرسالة: مربّع أخضر برمزه، ثم الوسم والنصّ. الفارغ خانة
+   محجوزة موسومة — لا يُخفى ولا يُبدَّل. */
+function VmItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | null }) {
+  return (
+    <div className="vm">
+      <span className="vm__ico" aria-hidden="true">{icon}</span>
+      {value
+        ? (
+          <div className="vm__txt">
+            <p className="vm__k">{label}</p>
+            <p className="vm__v"><Nums text={value} /></p>
+          </div>
+        )
+        : <Slot label={label} />}
+    </div>
+  );
+}
+
 export function About({
   identity, founding, governance, photo,
 }: {
@@ -85,9 +103,17 @@ export function About({
             ))}
           </div>
 
-          <div className="statements about__statements">
-            <Statement label={U("الرؤية")} value={identity.vision} />
-            <Statement label={U("الرسالة")} value={identity.mission} />
+          <div className="about__vm">
+            <VmItem
+              label={U("الرؤية")}
+              value={identity.vision}
+              icon={<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></svg>}
+            />
+            <VmItem
+              label={U("الرسالة")}
+              value={identity.mission}
+              icon={<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="1" /></svg>}
+            />
           </div>
 
           <div className="about__meta">
@@ -255,34 +281,37 @@ export function Impact({ report, count }: { report: Report; count: number }) {
   const U = useU();
   const path = usePath();
   const metrics = report.metrics.slice(0, count);
-  /* شريط أرقام رسمي على الحبري: العنوان في الوسط وتحته ختم الفترة (كل
-     رقم مؤرَّخ يحمل فترته — حدّ أحمر)، ثم أعمدة متساوية بينها شعرات
-     رأسية: الترتيب، فالقيمة كما هي حرفياً، فوحدتها، فالتسمية. */
+  const lead = metrics.filter((m) => m.accent);
+  const rest = metrics.filter((m) => !m.accent);
+  /* شريحة الأرقام بلغة صفحة التقرير (rp-kpi): ختم الفترة في الرأس (كل رقم
+     مؤرَّخ يحمل فترته)، ثم المؤشّر الموسوم accent يتصدّر، ثم بطاقات مرقّمة.
+     القيم كما هي حرفياً — FigureCell لا يحسب ولا يختصر. */
   return (
-    <section className="band band--dark impact" id="impact">
-      <div className="impact__in reveal">
-        <header className="impact__head">
-          <h2 className="h-sec impact__title">{U("لمحة أثر")}</h2>
+    <section className="band band--dark rp-kpi impact" id="impact">
+      <div className="rp-sec__in reveal">
+        <header className="rp-sec__head">
+          <h2 className="h-sec">{U("لمحة أثر")}</h2>
           <Seal value={report.label} />
         </header>
 
-        <ol className="impact__cols" style={{ "--n": metrics.length } as React.CSSProperties}>
-          {metrics.map((m, i) => {
-            const shown = (m.prefix ? `${m.prefix} ` : "") + m.value;
-            return (
-              <li
-                key={`${m.label}-${i}`}
-                className="impact__col"
-                style={{ "--i": i } as React.CSSProperties}
-              >
-                <span className="impact__no" aria-hidden="true">{ord(i + 1)}</span>
-                <p className="impact__v"><bdi>{shown}</bdi></p>
-                {m.unit ? <p className="impact__u">{m.unit}</p> : null}
-                <p className="impact__l">{m.label}</p>
-              </li>
-            );
-          })}
-        </ol>
+        {lead.length > 0 && (
+          <div className="rp-kpi__lead">
+            <div className="rp-kpi__figs">
+              {lead.map((m, i) => <FigureCell m={m} key={`${m.label}-${i}`} />)}
+            </div>
+          </div>
+        )}
+
+        {rest.length > 0 && (
+          <div className="rp-kpi__grid stagger rp-stag">
+            {rest.map((m, i) => (
+              <div className="rp-kpi__card" key={`${m.label}-${i}`}>
+                <span className="rp-kpi__no" aria-hidden="true">{ord(i + 1)}</span>
+                <FigureCell m={m} />
+              </div>
+            ))}
+          </div>
+        )}
 
         <p className="impact__cta">
           <Link className="btn btn--light" href={path("/reports")}>
