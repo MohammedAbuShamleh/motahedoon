@@ -7,9 +7,6 @@
   <meta name="robots" content="noindex, nofollow">
   <title>لوحة التحكم — متحدون</title>
   <link rel="icon" href="{{ asset('assets/img/logos/mutahidoon-mark.png') }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
   @viteReactRefresh
   @vite(['resources/css/admin.css', 'resources/js/admin.tsx'])
   @inertiaHead

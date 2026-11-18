@@ -45,10 +45,42 @@
   --r-sm:   8px;
   --line:   1px;                            /* سماكة حد واحدة في الموقع كله */
 
-  /* توزيع الأدوار: Zain للعرض (صلة الهوية بـ29LT Bukra)،
-     و IBM Plex Sans Arabic للقراءة — ولاتينيته ممتازة فأغنت عن خط ثالث. */
-  --f:         "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
-  --f-display: "Zain", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  /* خطّ واحد للقراءة والعرض: ثمانية Sans — واضح في الأحجام الصغيرة ومريح
+     في النصوص الطويلة، ولاتينيته كافية فلا خطّ ثانٍ. العناوين تتميّز بالوزن
+     والحجم لا بعائلة أخرى. */
+  --f:         "Thmanyah Sans", "Segoe UI", system-ui, sans-serif;
+  --f-display: "Thmanyah Sans", "Segoe UI", system-ui, sans-serif;
+}
+
+/* ---------- الخطّ: ثمانية Sans، مستضاف محلياً (resources/fonts — يبصمه Vite) ----------
+   خمسة ملفات، والأوزان الوسيطة مربوطة صراحةً: 200–300 خفيف · 400 عادي ·
+   500 متوسط · 600–800 عريض · 900 أسود. بلا الربط كان 800 (أكثر من ثلاثين
+   موضعاً) يقفز إلى الأسود فتثقل العناوين والتسميات؛ الأسود للأرقام الكبرى. swap: النصّ يظهر
+   فوراً بخطّ النظام ثم يُستبدل — لا صفحة فارغة أثناء التحميل. */
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 200 300;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Light.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 600 800;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 900;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Black.woff2") format("woff2");
 }
 
 /* ---------- الأساس ---------- */
@@ -121,7 +153,7 @@ dl, dd, dt { margin: 0; }
    اللغات: مبدّل، تنويه، وضبط الاتجاه اللاتيني
    ===================================================================== */
 
-/* لاتينية IBM Plex Sans Arabic كافية، فلا خط ثالث. */
+/* لاتينية ثمانية Sans كافية، فلا خطّ ثانٍ. */
 :root { --f-latin: var(--f); }
 html.is-ltr .hero__h,
 html.is-ltr .h-sec,

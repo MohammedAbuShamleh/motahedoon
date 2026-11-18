@@ -3,6 +3,35 @@
    الألوان هي لوحة الموقع المقفلة نفسها — لا لون جديد. */
 @import "tailwindcss";
 
+/* ثمانية Sans — الملفات نفسها التي يستعملها الموقع العام */
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 200 300;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Light.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 600 800;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 900;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Black.woff2") format("woff2");
+}
+
+
+
 @source "../js/admin";
 
 @theme {
@@ -12,7 +41,7 @@
   --color-ink: #1A1A1A;
   --color-paper: #FCFCFA;
   --color-rule: #E3E4E5;
-  --font-sans: "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Thmanyah Sans", "Segoe UI", system-ui, sans-serif;
 }
 
 @layer base {
