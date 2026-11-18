@@ -15,7 +15,7 @@
   /* ---------- الألوان المعتمدة ---------- */
   --green:      #0C7B3F;   /* أرقام داخل النص · روابط الإجراء */
   --olive:      #5C5B34;   /* البنية: الترقيم، ترويسات الجداول، المصطلحات */
-  --red:        #CF2129;   /* ثلاثة استعمالات لا رابع: نقطة معيّنية · خط الختم · كلمة «ثبات» */
+  --red:        #CF2129;   /* لمسة نادرة، خطّ لا مساحة: نقطة معيّنية · خط الختم · كلمة «ثبات» · شريط تقدّم الشريحة */
   --ink:        #1A1A1A;   /* النص · الأرضيات الداكنة */
   --bg:         #FCFCFA;   /* الورق — أفتح، وأثر دفء باقٍ */
   --rule:       #E3E4E5;   /* الفواصل الشعرية — سماكة واحدة في الموقع كله */
@@ -617,25 +617,44 @@ html.is-ltr .lang__menu { --lang-origin: right; }
 }
 
 /* =====================================================================
-   الافتتاحية — صورة بعرض الصفحة، والنص في كرت ورقي يقطع حافتها.
+   الافتتاحية — صورة بعرض الصفحة. الكرت الزجاجي يحمل الشعار النصّي وحده؛
+   عنوان الشريحة ومؤشّراتها شريط في أسفل الوسط فوق الصورة بلا أرضية.
    لا نص فوق الوجوه، ولا تكرار لاسم التجمع الموجود في الترويسة.
    ===================================================================== */
 
 .hero {
   position: relative;
   /* بلا سقف: أي سقف أقلّ من ارتفاع النافذة يُطلّ القسم التالي من تحتها */
-  min-height: max(560px, calc(100svh - var(--xb, 0px)));
-  display: flex; align-items: flex-end;
+  min-height: max(600px, calc(100svh - var(--xb, 0px)));
+  /* العنوان في منتصف الارتفاع قرب حافّة بدء السطر */
+  display: flex; align-items: center;
   overflow: hidden;
+  --strip: clamp(9rem, 15vh, 10.5rem);   /* حيّز شريط الشريحة أسفل الصورة */
 }
-.hero__shot { position: absolute; inset: 0; background: var(--ink); }
+/* isolation: سياق تكديس مستقلّ للطبقات. المنزلق يرفع z-index كل طبقة
+   جديدة بلا سقف (++z)، وبدون هذا العزل تتجاوز الطبقةُ الثالثة الكرتَ
+   (z-index: 2) فتغطّيه ويختفي بعد ثاني انتقال. */
+.hero__shot { position: absolute; inset: 0; background: var(--ink); isolation: isolate; }
+
+/* ظلّ حبري محايد في أسفل الصورة يحمل شريط الشريحة — لا تدرّج ملوّن
+   (قرار الهوية يمنع التلوين فوق الصور). */
+.hero__shot::after {
+  content: ""; position: absolute; inset: 0; z-index: 9999;
+  /* ظلّ ناعم خلف كتلة العنوان وحدها، وشريط خفيف في الأسفل لشريط الشريحة */
+  background:
+    radial-gradient(46% 60% at var(--corner, 100%) 52%, rgba(26,26,26,.62) 0%, rgba(26,26,26,.38) 48%, rgba(26,26,26,0) 80%),
+    linear-gradient(0deg, rgba(26,26,26,.8) 0%, rgba(26,26,26,.5) 16%, rgba(26,26,26,0) 34%);
+  pointer-events: none;
+}
+html.is-ltr .hero__shot::after { --corner: 0%; }
 
 /* ---------- الكشف ----------
-   الستارة تنزاح عن الصورة الجديدة من جهة بدء السطر. الصورة نفسها ساكنة:
-   لا تكبير ولا انزلاق — فلا حركة تُفرض على مادّة جادّة. الطبقات السابقة
-   تبقى مكشوفة تحتها، والترتيب بـz-index يضبطه app.js. */
+   الستارة تنزاح عن الصورة الجديدة من جهة بدء السطر، والصورة تهدأ من
+   تكبير 1.1 إلى حجمها ببطء طوال عرضها — حركة واحدة هادئة لا زخرفة.
+   الطبقات السابقة تبقى مكشوفة تحتها، والترتيب بـz-index يضبطه المنزلق. */
 .hero__layer {
   position: absolute; inset: 0; z-index: 1;
+  overflow: hidden;
   clip-path: inset(0 0 0 100%);
   transition: clip-path 1.1s cubic-bezier(.76, 0, .24, 1);
 }
@@ -645,42 +664,122 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
 .hero__layer img {
   width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%;
   display: block;
+  transform: scale(1.1);
+}
+.hero__layer.is-on img { animation: hero-settle 9s cubic-bezier(.22, .61, .36, 1) both; }
+@keyframes hero-settle {
+  from { transform: scale(1.1); }
+  to   { transform: scale(1); }
 }
 
+/* العنوان الرئيسي للصفحة (h1) — تسلسل بصري من ثلاث درجات على الصورة
+   مباشرة، في منتصف ارتفاعها قرب حافّة بدء السطر:
+     وسم صغير على علامة قلم ← سطر متوسّط ← كلمة كبرى ← سطر تعريف هادئ.
+   لا صندوق يحجب الصورة؛ ظلّ حبري محايد ناعم خلف الكتلة وحدها. */
 .hero__card {
   position: relative; z-index: 2;
-  width: min(100% - var(--edge) * 2, 40rem);
-  margin-inline-start: max(var(--edge), calc((100% - var(--wrap)) / 2));
-  margin-block-end: clamp(0rem, 4vw, 3.5rem);
-  padding: clamp(1.5rem, 3.4vw, 2.75rem);
-  background: var(--bg);
-  border-radius: var(--r);
+  width: min(100% - var(--edge) * 2, 54rem);
+  /* حافّة عمود المحتوى نفسها (var(--wrap)): الخطّ الذي تبدأ منه أقسام
+     الصفحة كلّها تحته، والترويسة بعد التمرير — فيصطفّ العنوان مع ما بعده */
+  /* أقرب إلى حافّة الصورة من عمود المحتوى: نصف المسافة بين الحافّة والعمود */
+  margin-inline-start: max(var(--edge), (100% - var(--wrap)) / 4);
+  /* فوق منتصف المساحة الظاهرة قليلاً: العين تبدأ من الثلث الأعلى */
+  margin-block: calc(var(--xb, 0px) + 3rem) calc(var(--strip) + 3rem);
+  color: var(--bg);
 }
-.hero__eyebrow {
-  margin: 0 0 clamp(.9rem, 2vw, 1.3rem);
-  font-size: .8rem; font-weight: 700; letter-spacing: .16em;
-  color: var(--olive);
-}
+/* إيقاع رأسي واحد: كل درجة بسطرها الكامل (لا هوامش سالبة)، فلا تصعد
+   نقاط «ث» ولا رؤوس الألف إلى السطر الذي فوقها. */
 .hero__h {
   margin: 0;
-  font-weight: 300;
-  font-size: clamp(1.9rem, 4vw, 3.4rem);
-  line-height: 1.3; letter-spacing: -.03em;
-  text-wrap: balance;
+  font-family: var(--f-display);
+  font-weight: 700;
+  letter-spacing: 0;
 }
-.hero__h em { font-style: normal; font-weight: 900; color: var(--red); }
+.hero__h > span, .hero__h > em { display: block; }
 
-/* ---------- اللوحة المتبدّلة ----------
-   الألواح متراكبة في خلية شبكة واحدة، فارتفاع الحيّز هو ارتفاع أطولها
-   ولا يقفز التخطيط عند التبديل. */
-.hero__slot {
-  display: grid;
-  margin-top: clamp(1.25rem, 2.6vw, 1.9rem);
-  padding-top: clamp(1rem, 2vw, 1.4rem);
-  border-top: var(--line) solid var(--rule);
+/* الوسم: علامة قلم زيتونية شفّافة على مقاس الحروف */
+.hero__kicker {
+  margin-inline-start: 0;
+  margin-bottom: .5rem;
+  font-family: var(--f);
+  font-size: clamp(1.15rem, 1.7vw, 1.5rem); font-weight: 800;
+  line-height: 1.5;
 }
+/* حافّة العلامة على خطّ البدء نفسه الذي تقف عليه الدرجات الأخرى */
+.hero__mark {
+  padding: .12em .55em;
+  background: linear-gradient(90deg,
+    rgba(92,91,52,.94) 0, rgba(92,91,52,.8) .4em,
+    rgba(92,91,52,.76) 50%,
+    rgba(92,91,52,.8) calc(100% - .4em), rgba(92,91,52,.94) 100%);
+  color: var(--bg);
+  -webkit-box-decoration-break: clone;
+          box-decoration-break: clone;
+}
+
+.hero__lead {
+  font-size: clamp(2.35rem, 4.4vw, 4.1rem);
+  font-weight: 800;
+  line-height: 1.05;
+  text-shadow: 0 2px 18px rgba(26,26,26,.5);
+}
+
+/* الكلمة الكبرى: Zain بأثقل أوزانه، بالأحمر الأصلي، ممدودة بالكشيدة */
+.hero__word {
+  font-style: normal;
+  font-weight: 900;
+  font-size: clamp(5rem, 11.6vw, 10.2rem);
+  /* أضيق سطر لا تصعد فيه نقاط «ث» إلى السطر السابق (مقيس بالعين على Zain) */
+  line-height: .92;
+  /* أقلّ إزاحة تُبعد نقطتَي «ث» عن ذيل «ح» في السطر السابق (مقيسة بلقطة مكبّرة) */
+  margin-top: .12em;
+  color: var(--red);
+  text-shadow: 0 4px 30px rgba(26,26,26,.45);
+}
+/* الرسم الممدود من data-k، و« / ""» تُخفيه عن قارئ الشاشة */
+.hero__word[data-k]::before { content: attr(data-k); content: attr(data-k) / ""; }
+/* النصّ الأصلي مستور بصرياً، باقٍ لقارئ الشاشة ولـ textContent */
+.hero__wordtxt {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* سطر التعريف: صغير هادئ بمسافات واسعة بين الكلمات — لا بين الحروف،
+   فتباعد الحروف يقطع وصل الحرف العربي */
+.hero__sub {
+  display: flex; align-items: center; gap: .7em;
+  margin: .5rem 0 0;
+  font-size: clamp(1.02rem, 1.25vw, 1.2rem); font-weight: 600;
+  word-spacing: .45em;
+  color: var(--bg);
+  text-shadow: 0 1px 3px rgba(26,26,26,.6), 0 1px 14px rgba(26,26,26,.55);
+}
+/* شعرة قصيرة تسبق السطر — توقيع لا زخرفة */
+.hero__sub::before {
+  content: ""; width: 2.2rem; height: 1px; flex: none;
+  background: rgba(252,252,250,.6);
+}
+
+
+/* ---------- شريط الشريحة: أسفل الوسط، بلا أرضية ----------
+   الألواح متراكبة في خلية شبكة واحدة، فارتفاع الحيّز هو ارتفاع أطولها
+   ولا يقفز التخطيط عند التبديل. النصّ فاتح فوق الظلّ الحبري. */
+.hero__strip {
+  position: absolute; z-index: 3;
+  inset-inline: 0; bottom: clamp(1.1rem, 3vh, 2rem);
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  color: var(--bg);
+  text-shadow: 0 1px 12px rgba(26,26,26,.55);
+  pointer-events: none;
+}
+.hero__strip > * { pointer-events: auto; }
+.hero__slot { display: grid; justify-items: center; }
 .hero__pane {
   grid-area: 1 / 1;
+  /* الألواح تلتصق بأسفل الحيّز: اللوح الأقصر لا يترك فراغاً فوق المؤشّرات */
+  align-self: end;
+  display: flex; flex-direction: column; align-items: center;
   visibility: hidden;
   transition: visibility 0s .25s;
 }
@@ -699,57 +798,88 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
 .hero__pane.is-on > :nth-child(3) { transition-delay: .56s; }
 
 .hero__facts {
-  display: flex; flex-wrap: wrap; align-items: baseline;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline;
   gap: clamp(1.25rem, 3vw, 2.5rem);
 }
 .hero__facts li { display: flex; align-items: baseline; gap: .45rem; }
 .hero__facts b {
   unicode-bidi: isolate;
-  font-weight: 200; font-size: clamp(1.7rem, 2.6vw, 2.3rem);
-  line-height: 1; letter-spacing: -.04em; color: var(--olive);
+  font-weight: 200; font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  line-height: 1; letter-spacing: -.04em; color: var(--bg);
 }
-.hero__facts span { font-size: .84rem; font-weight: 700; color: var(--ink-72); }
+.hero__facts span { font-size: .84rem; font-weight: 700; color: rgba(252,252,250,.88); }
 
-.hero__num {
-  margin: 0; unicode-bidi: isolate;
-  font-weight: 200; font-size: clamp(1.7rem, 2.6vw, 2.3rem);
-  line-height: 1; letter-spacing: -.04em; color: var(--olive);
-}
 .hero__st {
-  margin: .5rem 0 0;
+  margin: 0;
   font-size: clamp(1.02rem, 1.6vw, 1.2rem); font-weight: 800;
   letter-spacing: -.02em; line-height: 1.35;
 }
-.hero__sc { margin: .3rem 0 0; font-size: .86rem; color: var(--ink-65); }
+.hero__sc { margin: .25rem 0 0; font-size: .84rem; color: rgba(252,252,250,.88); }
 
-/* ---------- مؤشّرات الشرائح ---------- */
+/* ---------- مؤشّرات الشرائح: أشرطة تقدّم ----------
+   الشريط النشط يمتلئ بالأحمر طوال مدّة الشريحة (--dwell)، ويتوقّف
+   حين يتوقّف العدّ (القراءة على الكرت أو التركيز) — المنزلق يضع
+   is-held على القسم، وis-stopped بعد أوّل تدخّل أو مع «تقليل الحركة». */
 .hero__dots {
-  display: flex; flex-wrap: wrap; gap: .3rem;
-  margin-top: clamp(1.1rem, 2.2vw, 1.6rem);
+  display: flex; justify-content: center; gap: .4rem;
+  margin-top: .45rem;
 }
 .hero__dot {
-  width: 30px; height: 24px; padding: 0; border: 0; background: none;
+  position: relative;
+  width: 34px; height: 24px; padding: 0; border: 0; background: none;
   cursor: pointer; display: grid; align-items: center;
-  transition: width .4s cubic-bezier(.4, 0, .2, 1);
 }
 .hero__dot::before {
-  content: ""; display: block; height: 2px; background: var(--rule);
+  content: ""; display: block; height: 2px; border-radius: 2px;
+  background: rgba(252,252,250,.32);
   transition: background-color .25s ease;
 }
-.hero__dot:hover::before { background: var(--ink-65); }
-.hero__dot[aria-current="true"] { width: 50px; }
-.hero__dot[aria-current="true"]::before { background: var(--olive); }
+.hero__dot:hover::before { background: rgba(252,252,250,.6); }
+.hero__bar {
+  position: absolute; inset-inline: 0; top: 50%;
+  height: 2px; margin-top: -1px; border-radius: 2px;
+  background: var(--red);
+  transform: scaleX(0); transform-origin: right;
+  animation: hero-progress var(--dwell, 7000ms) linear forwards;
+}
+html.is-ltr .hero__bar { transform-origin: left; }
+@keyframes hero-progress { to { transform: scaleX(1); } }
+.hero.is-held .hero__bar { animation-play-state: paused; }
+.hero.is-stopped .hero__bar { animation: none; transform: none; }
 
+/* على الجوّال يبقى العنوان داخل الصورة كما على الشاشة الكبيرة: الكتلة
+   تنزل إلى الثلث الأسفل فوق شريط الشريحة، وظلّ حبري رأسي يحملها — الوجوه
+   في أعلى الصورة تبقى مكشوفة */
 @media (max-width: 760px) {
-  .hero { min-height: 0; display: block; }
-  .hero__shot { position: relative; height: clamp(250px, 58vw, 400px); }
+  /* الكتلة في أعلى الصورة تحت الترويسة — حيث المباني والسماء عادةً — فلا
+     نصّ فوق الوجوه، وشريط الشريحة يبقى في الأسفل */
+  .hero {
+    min-height: max(560px, calc(100svh - var(--xb, 0px)));
+    align-items: flex-start;
+  }
   .hero__card {
     width: calc(100% - var(--edge) * 2);
     margin-inline: var(--edge);
-    margin-block: -3.5rem 0;
+    margin-block: calc(var(--xb, 0px) + 6.25rem) calc(var(--strip) + 1rem);
   }
-  .hero__dot { width: 26px; }
-  .hero__dot[aria-current="true"] { width: 42px; }
+  /* ظلّان حبريان: من الأعلى خلف العنوان، ومن الأسفل خلف شريط الشريحة */
+  .hero__shot::after {
+    background:
+      linear-gradient(180deg,
+        rgba(26,26,26,.78) 0%, rgba(26,26,26,.6) 32%,
+        rgba(26,26,26,.2) 52%, rgba(26,26,26,0) 62%),
+      linear-gradient(0deg, rgba(26,26,26,.8) 0%, rgba(26,26,26,0) 26%);
+  }
+  .hero__kicker { margin-bottom: .45rem; }
+  .hero__sub { margin-top: .6rem; }
+  .hero__dot { width: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__layer.is-on img { animation: none; transform: none; }
+}
+
+
 }
 
 /* الصورة الكبيرة التي تتنفس — عرض كامل، وشارة تعليق على ركنها */

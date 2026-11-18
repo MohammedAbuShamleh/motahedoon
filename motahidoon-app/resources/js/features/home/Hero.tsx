@@ -3,19 +3,49 @@ import { useHeroSlider } from "@/hooks/useHeroSlider";
 import { useSite, useU } from "@/lib/site";
 import type { Pillar } from "@/types";
 
-/* الكلمة المميّزة بالأحمر موجودة في الشعار العربي وحده. في اللغات
-   الأخرى لا تُحقن — نقل حرفي لسلوك app.js الثابت. */
+/**
+ * الشعار النصّي بتسلسل بصري من ثلاث درجات — عرضٌ وحده، النصّ نفسه:
+ *   «في قلب الحصار ..»   وسم صغير على علامة قلم
+ *   «تحوّل الدعمُ إلى»   سطر متوسّط
+ *   «ثبات»              الكلمة الكبرى بالأحمر
+ * المسافات بين القطع محفوظة فيبقى textContent حرفياً كما هو (بصمة
+ * tools/verify-strings.js). الكلمة الكبرى في الشعار العربي وحده؛ في
+ * اللغات الأخرى لا تُحقن — والنصّ بلا «..» يُعرض سطراً واحداً.
+ */
+/* «ثبات» ممدودةً بالتطويل بين الباء والألف — الموضع الوحيد الذي يقبل
+   الوصل فيها (الألف لا تتّصل بما بعدها) */
+const STRETCHED = "ثبـــات";
+
 function Tagline({ text }: { text: string }) {
-  const parts = text.split("ثبات");
-  if (parts.length === 1) return <>{text}</>;
+  const cut = text.indexOf(".. ");
+  const kicker = cut < 0 ? null : text.slice(0, cut + 2);
+  const rest = cut < 0 ? text : text.slice(cut + 3);
+  const at = rest.indexOf("ثبات");
+  const lead = at < 0 ? rest : rest.slice(0, at);
+  const tail = at < 0 ? "" : rest.slice(at + "ثبات".length);
+
   return (
     <>
-      {parts[0]}
-      <em>ثبات</em>
-      {parts.slice(1).join("ثبات")}
+      {kicker !== null && (
+        <>
+          <span className="hero__kicker"><span className="hero__mark">{kicker}</span></span>{" "}
+        </>
+      )}
+      <span className="hero__lead">{lead}</span>
+      {at >= 0 && (
+        /* المدّ (الكشيدة) رسمٌ لا نصّ: يُرسم من data-k في ::before ويُستر
+           عن قارئ الشاشة، ويبقى «ثبات» نفسه في textContent للبصمة وللقراءة */
+        <em className="hero__word" data-k={STRETCHED}>
+          <span className="hero__wordtxt">ثبات</span>
+        </em>
+      )}
+      {tail && <span className="hero__lead">{tail}</span>}
     </>
   );
 }
+
+/** مدّة الشريحة — يقرؤها المنزلق للعدّ وCSS لملء شريط التقدّم (--dwell). */
+const DWELL = 7000;
 
 interface Slide {
   src: string;
@@ -57,7 +87,6 @@ export function Hero({
         label: p.short,
         pane: (
           <>
-            <p className="hero__num">{p.num}</p>
             <p className="hero__st">{p.short}</p>
             {p.cover!.caption && <p className="hero__sc">{p.cover!.caption}</p>}
           </>
@@ -65,10 +94,15 @@ export function Hero({
       })),
   ];
 
-  const { at, go, take } = useHeroSlider(ref, slides.length);
+  const { at, go, take } = useHeroSlider(ref, slides.length, DWELL);
 
   return (
-    <section className="hero" ref={ref} {...(slides.length > 1 ? { "data-slider": "" } : {})}>
+    <section
+      className="hero"
+      ref={ref}
+      style={{ "--dwell": `${DWELL}ms` } as React.CSSProperties}
+      {...(slides.length > 1 ? { "data-slider": "" } : {})}
+    >
       <div className="hero__shot">
         {slides.map((s, i) => (
           <div
@@ -88,9 +122,12 @@ export function Hero({
       </div>
 
       <div className="hero__card">
-        <p className="hero__eyebrow">{org.name}</p>
         <h1 className="hero__h"><Tagline text={org.tagline} /></h1>
+        <p className="hero__sub">{org.name}</p>
+      </div>
 
+      {/* شريط الشريحة: عنوانها ومؤشّرات التقدّم، أسفل الوسط بلا أرضية */}
+      <div className="hero__strip">
         <div className="hero__slot">
           {slides.map((s, i) => (
             <div
@@ -120,7 +157,10 @@ export function Hero({
                   take();
                   go(at + ((e.key === "ArrowRight") === ltr ? 1 : -1));
                 }}
-              />
+              >
+                {/* المفتاح at: الشريط يبدأ من الصفر مع كل شريحة */}
+                {i === at && <span key={at} className="hero__bar" />}
+              </button>
             ))}
           </div>
         )}

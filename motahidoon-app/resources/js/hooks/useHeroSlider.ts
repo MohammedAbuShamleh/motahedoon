@@ -65,7 +65,8 @@ export function useHeroSlider(
   const take = useCallback(() => {
     took.current = true;
     clearTimeout(timer.current);
-  }, []);
+    ref.current?.classList.add("is-stopped");   // شريط التقدّم يثبت ممتلئاً
+  }, [ref]);
 
   useEffect(() => {
     const host = ref.current;
@@ -82,32 +83,60 @@ export function useHeroSlider(
       first.removeAttribute("data-src");
     }
 
-    const plan = () => {
+    if (calm) host.classList.add("is-stopped");
+
+    /* العدّ يتوقّف ويستأنف من حيث وقف، لا من البداية — كي يبقى شريط
+       التقدّم (CSS، يتوقّف بالصنف is-held) متزامناً مع المؤقّت. */
+    let started = 0;
+    let remaining = dwell;
+
+    const plan = (delay = dwell) => {
       clearTimeout(timer.current);
       if (calm || took.current) return;
+      started = Date.now();
+      remaining = delay;
       timer.current = window.setTimeout(() => {
-        if (!held.current && !document.hidden) go(atRef.current + 1);
+        go(atRef.current + 1);
         plan();
-      }, dwell);
+      }, delay);
     };
 
-    /* القراءة على البطاقة توقف العدّ، لا المرور فوق الصورة كلها */
-    const card = host.querySelector(".hero__card");
-    const hold = () => { held.current = true; };
-    const free = () => { held.current = false; };
-    card?.addEventListener("pointerenter", hold);
-    card?.addEventListener("pointerleave", free);
+    const hold = () => {
+      if (held.current) return;
+      held.current = true;
+      host.classList.add("is-held");
+      clearTimeout(timer.current);
+      remaining = Math.max(0, remaining - (Date.now() - started));
+    };
+    const free = () => {
+      if (!held.current) return;
+      held.current = false;
+      host.classList.remove("is-held");
+      plan(remaining);
+    };
+    const onVisibility = () => (document.hidden ? hold() : free());
+
+    /* القراءة على الكرت أو شريط الشريحة توقف العدّ، لا المرور فوق الصورة كلها */
+    const zones = host.querySelectorAll(".hero__card, .hero__strip");
+    zones.forEach((z) => {
+      z.addEventListener("pointerenter", hold);
+      z.addEventListener("pointerleave", free);
+    });
     host.addEventListener("focusin", hold);
     host.addEventListener("focusout", free);
+    document.addEventListener("visibilitychange", onVisibility);
 
     plan();
 
     return () => {
       clearTimeout(timer.current);
-      card?.removeEventListener("pointerenter", hold);
-      card?.removeEventListener("pointerleave", free);
+      zones.forEach((z) => {
+        z.removeEventListener("pointerenter", hold);
+        z.removeEventListener("pointerleave", free);
+      });
       host.removeEventListener("focusin", hold);
       host.removeEventListener("focusout", free);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [ref, count, dwell, go]);
 
