@@ -1,3 +1,4 @@
+
 /* =====================================================================
    تجمع متحدون من أجل غزة — نظام التنسيق
    ---------------------------------------------------------------------
@@ -1216,7 +1217,7 @@ html.is-ltr .about__ring { transform: rotate(24deg); }
 .film__strip::-webkit-scrollbar-track { background: var(--rule); border-radius: 7px; }
 
 /* =====================================================================
-   شريط المجالات — شريط إخباري أسود: عنوان في الوسط، وسيل ينساب بثلاثة في المنظور
+   شريط المجالات — شريط رسمي ثابت على الحبري: عنوان في الوسط وأعمدة بينها شعرات
    ===================================================================== */
 
 .areas {
@@ -1224,9 +1225,6 @@ html.is-ltr .about__ring { transform: rotate(24deg); }
   background: var(--ink);
   color: var(--on-ink);
   border-block: var(--line) solid var(--rule-ink);
-  /* ضلع البطاقة المربّعة؛ عدد الظاهر منها يتبع عرض الصفحة */
-  --tile: clamp(7.5rem, 22vw, 14.6rem);
-  --gap: clamp(.6rem, 1.3vw, 1.1rem);
 }
 .areas__in {
   display: grid;
@@ -1256,100 +1254,104 @@ html.is-ltr .about__ring { transform: rotate(24deg); }
 html[dir="rtl"] .areas__label::before { transform: scaleX(-1); }
 html[dir="rtl"] .areas__label::after { transform: none; }
 
-/* المنظور: نافذة في الوسط بعرض ثلاث بطاقات. clip لا hidden كي لا
-   يمرّره التركيز خلسةً، وتلاشٍ رقيق على الحافتين */
-.areas__view {
-  inline-size: calc(100% - clamp(1.5rem, 4vw, 3rem));
+/* خطّ تتدلّى منه البطاقات: كل عمود يحمل قطعة من الخطّ (تمتدّ نصف الفراغ
+   على جانبيها فتلتحم القطع خطّاً واحداً) وعقدة معيّنية زيتونية في الوسط،
+   ثم ساقاً قصيرة، ثم بطاقة حبرية أفتح قليلاً بحافّة علوية زيتونية.
+   ألوان اللوحة وحدها على #1A1A1A: الزيتوني والورقي وشعرات --rule-ink. */
+.areas__grid {
+  --gap: clamp(.6rem, 1.1vw, .95rem);
+  list-style: none; margin: 0; padding: 0;
+  width: min(100% - var(--edge) * 2, var(--wrap));
   margin-inline: auto;
-  overflow: hidden; overflow: clip;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
-          mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  column-gap: var(--gap);
+}
+.areas__grid li {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 0;
+  --delay: calc(.1s + var(--i) * .08s);
 }
 
-.areas__row {
-  display: flex; inline-size: max-content;
-  margin: 0; padding: 0; list-style: none;
+/* قطعة الخطّ والعقدة */
+.areas__axis {
+  position: relative; align-self: stretch;
+  display: grid; place-items: center;
+  block-size: 1rem;
+  margin-inline: calc(var(--gap) / -2);
 }
-.areas__row li {
-  inline-size: calc(var(--tile) + var(--gap));
-  padding-inline: calc(var(--gap) / 2);
-  display: flex; min-width: 0; flex: none;
+.areas__axis::before {
+  content: ""; position: absolute; inset-inline: 0; inset-block-start: 50%;
+  block-size: var(--line); background: rgba(252,252,250,.22);
 }
-.areas:not(.areas--flow) .areas__row { inline-size: 100%; justify-content: center; }
+/* لا يمتدّ الخطّ خارج أول عقدة وآخرها */
+.areas__grid li:first-child .areas__axis::before { inset-inline-start: 50%; }
+.areas__grid li:last-child .areas__axis::before { inset-inline-end: 50%; }
+.areas__axis i {
+  position: relative; z-index: 1;
+  inline-size: .62rem; block-size: .62rem;
+  background: var(--olive);
+  box-shadow: 0 0 0 3px var(--ink), 0 0 0 4px rgba(252,252,250,.3);
+  transform: rotate(45deg);
+}
+/* الساق: من العقدة إلى البطاقة */
+.areas__grid li::after {
+  content: ""; order: 1;
+  inline-size: var(--line); block-size: clamp(.8rem, 1.4vw, 1.1rem);
+  background: rgba(252,252,250,.22);
+}
 
-/* الانسياب: ثلث الشريط (نسخة كاملة من المجالات) في n×5 ثوانٍ — نحو
-   خمس ثوانٍ لمرور كل بطاقة: يُقرأ ولا يُلاحَق */
-.areas--flow .areas__row {
-  animation: areas-flow calc(var(--n) * 5s) linear infinite;
-  will-change: transform;
-}
-@keyframes areas-flow { to { transform: translateX(calc(-100% / 3)); } }
-@keyframes areas-flow-rtl { to { transform: translateX(calc(100% / 3)); } }
-html[dir="rtl"] .areas--flow .areas__row { animation-name: areas-flow-rtl; }
-
-/* التركيز بلوحة المفاتيح: يقف السيل ويُوضع العنصر في المنظور بانتقال */
-.areas.is-manual .areas__row {
-  animation: none;
-  transition: transform .6s cubic-bezier(.22,.61,.36,1);
-}
-
-/* البطاقة: بانحناء الموقع الواحد (--r)، حدّها شعرة محايدة، شارة مقوّسة
-   للرمز في البداية، والرقم في النهاية، والاسم في القاع.
-   الألوان من اللوحة المقفلة وحدها: الحبري والورق. */
+/* البطاقة */
 .areas__a {
-  flex: 1;
-  aspect-ratio: 1;
-  display: flex; flex-direction: column; justify-content: space-between;
-  /* هامش داخلي نحو ٧٪ من ضلع البطاقة: النص قريب من الحافة ولا يلتصق بها */
-  padding: calc(var(--tile) * .07);
+  order: 2;
+  align-self: stretch; flex: 1;
+  display: flex; flex-direction: column; gap: clamp(.7rem, 1.2vw, .95rem);
+  padding: clamp(.85rem, 1.4vw, 1.15rem) clamp(.75rem, 1.2vw, 1rem) clamp(1rem, 1.6vw, 1.3rem);
+  background: rgba(252,252,250,.045);
   border: var(--line) solid var(--rule-ink);
-  border-radius: var(--r);
-  background: rgba(252,252,250,.03);
+  border-top: 2px solid var(--olive);
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
   text-align: start; text-decoration: none; color: var(--bg);
-  transition: border-color .35s ease, background-color .35s ease;
+  transition: opacity .6s ease var(--delay), transform .7s cubic-bezier(.22, 1, .36, 1) var(--delay);
 }
-.areas__top {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem;
-}
-
-/* الشارة المقوّسة: قبّة أعلاها وقاعدة مستوية، بورقٍ شفيف على الحبري */
+.areas__top { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; }
+/* الرمز في مربّع زيتوني ممتلئ — راكز */
 .areas__badge {
   display: grid; place-items: center;
-  inline-size: clamp(2.4rem, 4.2vw, 3.4rem);
-  aspect-ratio: 1 / 1.08;
-  border-radius: 999px 999px var(--r-sm) var(--r-sm);
-  background: rgba(252,252,250,.08);
+  inline-size: clamp(2.4rem, 3vw, 2.85rem); aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  background: var(--olive);
   color: var(--bg);
 }
-/* الرمز يشغل وسط مربّع الرسم وحده، فيُعطى عرض الشارة كاملاً ليظهر بحجمه */
-.areas__badge .ico { font-size: clamp(2.4rem, 4.2vw, 3.4rem); flex: none; }
-/* المعيّن الحاوي لا يُرسم في هذا الشريط: الرمز وحده داخل الشارة */
+.areas__badge .ico { width: 78%; height: 78%; }
 .areas .ico__f { display: none; }
-
 .areas__n {
-  padding: .3em .7em;
-  border-radius: 999px;
-  background: rgba(252,252,250,.07);
-  font-size: .68rem; font-weight: 800; letter-spacing: .1em; line-height: 1;
-  color: var(--on-ink);
-  font-variant-numeric: tabular-nums;
+  font-size: .72rem; font-weight: 800; letter-spacing: .14em;
+  color: var(--on-ink-dim); font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate; line-height: 1;
 }
 .areas__name {
-  font-size: clamp(.78rem, 1.25vw, 1.08rem); font-weight: 800; line-height: 1.5;
-  text-wrap: balance;
+  font-size: clamp(.86rem, 1vw, .98rem); font-weight: 800; line-height: 1.5;
+  color: var(--bg); text-wrap: balance;
+}
+.areas :focus-visible { outline-color: var(--red-soft); outline-offset: 2px; }
+
+html.js-reveal .reveal:not(.is-in) .areas__a { opacity: 0; transform: translateY(10px); }
+
+/* الشاشات المتوسّطة: أربعة في السطر، والخطّ يتكرّر لكل سطر */
+@media (max-width: 1000px) {
+  .areas__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 1.25rem; }
+  .areas__grid li:nth-child(4n + 1) .areas__axis::before { inset-inline-start: 50%; }
+  .areas__grid li:nth-child(4n) .areas__axis::before { inset-inline-end: 50%; }
+}
+@media (max-width: 560px) {
+  .areas__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .areas__grid li:nth-child(odd) .areas__axis::before { inset-inline-start: 50%; inset-inline-end: 0; }
+  .areas__grid li:nth-child(even) .areas__axis::before { inset-inline-end: 50%; inset-inline-start: 0; }
+  /* بند وحيد في سطره: عقدة بلا خطّ */
+  .areas__grid li:last-child:nth-child(odd) .areas__axis::before { display: none; }
 }
 
-/* المرور: الحدّ يتّضح والأرضية تفتح قليلاً، بلا حركة ولا قفز */
-.areas__a:hover {
-  border-color: rgba(252,252,250,.32);
-  background: rgba(252,252,250,.055);
-}
-.areas :focus-visible { outline-color: var(--red-soft); outline-offset: 3px; }
-
-/* على الهاتف يضيق العرض فيحتاج النص ارتفاعاً أكثر */
-@media (max-width: 720px) {
-  .areas__n { font-size: .58rem; padding: .3em .55em; }
-}
 
 /* =====================================================================
    المؤسسات الشريكة — مسار أفقي رسمي: دوائر الشعارات على خطّ واحد، وتحت
