@@ -163,25 +163,32 @@ export function Partners({ partners }: { partners: Partner[] }) {
       main={
         <>
           <h2 className="h-sec">{U("المؤسسات الشريكة")}</h2>
-          <div className="partners__grid stagger">
-            {partners.map((p) => (
-              <article className="partner" key={p.id}>
-                <span className="partner__logo">
+          {/* مسار أفقي: دوائر الشعارات على خطّ واحد، وتحت كلّ دائرة رقمها
+              وبطاقة اسمها. عدد الأعمدة من عدد الشركاء (--n) — لا عدد مفترَض. */}
+          <ol className="ptl" style={{ "--n": partners.length } as React.CSSProperties}>
+            <li className="ptl__line" aria-hidden="true" />
+            {partners.map((p, i) => (
+              <li key={p.id} className="ptl__item" style={{ "--i": i } as React.CSSProperties}>
+                <span className="ptl__logo">
                   {p.logo
                     ? <img src={`/${p.logo}`} alt={p.name} loading="lazy" />
                     : <span className="partner__nologo">{U("شعار قيد الاستلام")}</span>}
                 </span>
-                <h3 className="partner__n">
-                  {p.site
-                    ? <a href={p.site} target="_blank" rel="noopener">{p.name}</a>
-                    : p.name}
-                </h3>
-                {(p.role || p.about) && (
-                  <p className="partner__meta">{p.role || p.about}</p>
-                )}
-              </article>
+                <span className="ptl__stem" aria-hidden="true" />
+                <span className="ptl__no" aria-hidden="true">{ord(i + 1)}</span>
+                <article className="ptl__card">
+                  <h3 className="partner__n">
+                    {p.site
+                      ? <a href={p.site} target="_blank" rel="noopener">{p.name}</a>
+                      : p.name}
+                  </h3>
+                  {(p.role || p.about) && (
+                    <p className="partner__meta">{p.role || p.about}</p>
+                  )}
+                </article>
+              </li>
             ))}
-          </div>
+          </ol>
         </>
       }
       aside={
