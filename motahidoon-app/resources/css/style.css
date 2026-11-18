@@ -2560,20 +2560,6 @@ html.js-reveal .reveal:not(.is-in) .stagger > * { opacity: 0; transform: transla
   transition-delay: calc(.12s + var(--i, 0) * .07s);
 }
 
-/* شريط الصور: تلاشٍ على الحافة يقول إن ثمة بقية */
-.film { position: relative; }
-.film__strip { position: relative; }
-.film::after {
-  content: ""; position: absolute; z-index: 2; pointer-events: none;
-  inset-block-end: 0; block-size: calc(100% - 1px);
-  inset-inline-end: 0; inline-size: clamp(2rem, 6vw, 5rem);
-  background: linear-gradient(to left, var(--bg), rgba(252,252,250,0));
-  opacity: 1; transition: opacity .3s ease;
-}
-html[dir="ltr"] .film::after {
-  background: linear-gradient(to right, var(--bg), rgba(252,252,250,0));
-}
-.film:has(.film__strip.is-end)::after { opacity: 0; }
 
 /* أيقونة المجال: دوران طفيف للمعيّن عند المرور — من هندسة الشعار */
 .ico__f { transform-origin: 50% 50%; transition: transform .45s cubic-bezier(.22,.61,.36,1); }
@@ -2591,12 +2577,11 @@ html[dir="ltr"] .film::after {
     transition-delay: 0s !important;
   }
   .ico__f { transform: none !important; }
-  /* بلا انسياب: النسخة المكرّرة وزرّ الإيقاف يُخفيان، والمنظور يُمرَّر باليد */
-  .areas__view { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
-  .areas__row li[aria-hidden="true"] { display: none; }
-  /* الخطّ الزمني مرسوم كاملاً، بلا ضوء سارٍ */
-  .ftl__row::before, .ftl__axis::before, .ftl__dot,
+  .areas__a { transition: none; transform: none !important; opacity: 1 !important; }
+  /* الخطّ الزمني مرسوم كاملاً، بلا ضوء سارٍ؛ العقدة تبقى معيّناً */
+  .ftl__row::before, .ftl__axis::before,
   .ftl__text::after, .ftl__media::after { transform: none !important; }
+  .ftl__dot { transform: rotate(45deg) !important; }
   .ftl__axis::after { display: none; }
 }
 
@@ -2849,23 +2834,33 @@ p, li, dd, figcaption { text-wrap: pretty; }
   /* شريط المجالات: كل المجالات على الورق، بلا حركة ولا نسخ ولا أرضية سوداء */
   .areas { background: #fff !important; color: #000 !important; }
   .areas__in { grid-template-columns: 1fr; }
-  .areas__label, .areas__row li[aria-hidden="true"] { display: none !important; }
-  .areas__view { -webkit-mask-image: none; mask-image: none; }
-  .areas__row { animation: none !important; transform: none !important; flex-wrap: wrap; inline-size: 100% !important; }
-  .areas__row li { inline-size: auto !important; flex: 1 1 30%; border: 0 !important; }
-  .areas__a, .areas__a .ico, .areas__n { color: #000 !important; }
+  .areas__label { display: none !important; }
+  .areas__a { transform: none !important; opacity: 1 !important; border-color: #ccc !important; background: none !important; }
+  .areas__a, .areas__a .ico, .areas__n, .areas__name { color: #000 !important; }
+  .areas__badge { background: none !important; border: 1px solid #999; }
 
-  /* الخطّ الزمني: مرسوم كاملاً على الورق، بلا ضوء */
-  .ftl__row::before, .ftl__axis::before, .ftl__dot,
+  /* الخطّ الزمني: مرسوم كاملاً على الورق، بلا ضوء؛ العقدة تبقى معيّناً */
+  .ftl__row::before, .ftl__axis::before,
   .ftl__text::after, .ftl__media::after { transform: none !important; }
+  .ftl__dot { transform: rotate(45deg) !important; }
   .ftl__axis::after { display: none; }
   .ftl { break-inside: avoid; }
+
+  /* الخطّ الزمني: مرسوم كاملاً على الورق، بلا ضوء */
 
   /* المطويّات تحمل متن التقرير — تُفتح كلها على الورق */
   details > summary { display: none; }
   details > *:not(summary) { display: block !important; }
 
   /* لا تُقطع البطاقة عبر صفحتين */
-  .band, .group, .partner, .report, .entry { break-inside: avoid; }
-  .plate__img, .film__strip { break-inside: avoid; }
+  .band, .group, .partner, .rfeat, .sup, .entry { break-inside: avoid; }
+
+  /* الدعم والتقارير: النصف الحبري ورقيّ على الورق، والغلاف بلا ميل */
+  .sup__give { background: #fff !important; color: #000 !important; border-inline-start: 1px solid #ccc; }
+  .sup__give .slot__label, .sup__give .slot__state { color: #000 !important; }
+  .sup__frame { --c: #999; }
+  .sup__frame svg { stroke: #000; }
+  .rfeat, .sup { box-shadow: none !important; }
+  .rfeat__sheet, .rfeat__stack::before { transform: none !important; }
+  .plate__img, .fgal__item { break-inside: avoid; }
 }
