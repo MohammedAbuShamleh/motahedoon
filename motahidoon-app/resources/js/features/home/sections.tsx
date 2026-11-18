@@ -2,6 +2,7 @@
    الترتيب والأصناف ومواضع الخانات المحجوزة كما هي، فـstyle.css يسري
    بلا تعديل حرف. */
 
+import { useLayoutEffect, useRef } from "react";
 import { Link } from "@inertiajs/react";
 import { useCardCycle } from "@/hooks/useCardCycle";
 import { Nums } from "@/lib/nums";
@@ -94,8 +95,6 @@ export function About({
       <div className="about__in reveal">
         <div className="about__text">
           <h2 className="h-sec about__title">{U("من نحن")}</h2>
-          {/* شعرة حمراء تنتهي بالنقطة المعيّنية — من استعمالات الأحمر المعدودة */}
-          <span className="about__rule" aria-hidden="true" />
 
           <div className="prose body-lg about__lead">
             {founding.story.slice(0, 1).map((p) => (
@@ -133,12 +132,14 @@ export function About({
           </p>
         </div>
 
+        {/* الصورة بهيئة فصول صفحة التقرير (rp-ch__media): إطار أخضر مفرَّغ
+            يبرز نحو حافّة الصفحة ومربّع زيتوني مفرَّغ نحو المتن */}
         {photo && (
-          <figure className="about__media" aria-hidden="true">
-            <span className="about__dots" />
-            <span className="about__ring" />
-            <img src={`/${photo}`} alt="" loading="lazy" decoding="async" width={560} height={560} />
-          </figure>
+          <div className="rp-ch__media about__media" aria-hidden="true">
+            <figure className="rp-ch__fig">
+              <img src={`/${photo}`} alt="" loading="lazy" decoding="async" width={640} height={480} />
+            </figure>
+          </div>
         )}
       </div>
     </section>
@@ -191,12 +192,16 @@ export function Partners({ partners }: { partners: Partner[] }) {
 }
 
 /* ---------- مجالات العمل ---------- */
-/* بطاقات منقسمة: الصورة في جهة بدء السطر والنصّ في جهة نهايته. أربع ظاهرة،
-   وكل بضع ثوانٍ تُستبدل أقدمها ظهوراً بالمجال التالي (useCardCycle) فتمرّ
-   المجالات كلّها. يتوقّف الدوران تحت المؤشّر والتركيز، ومع «تقليل الحركة»
-   تُعرض المجالات كلّها ثابتة. المجال بلا غلاف لوحٌ زيتوني برمزه — لا صورة
-   بديلة (الفجوة تُسدّ من اللوحة). وللطباعة شبكة بالمجالات كلّها. */
+/* بطاقات منقسمة: الصورة في جهة بدء السطر والنصّ في جهة نهايته. أربع ظاهرة
+   متتالية بترتيب القراءة، وكل خمس ثوانٍ تتقدّم النافذة بطاقتين
+   (useCardCycle): يخرج الصفّ الأول، ويصعد الثاني إلى مكانه بانزلاق هادئ،
+   ويدخل مجالان جديدان تحته — فالمعروض والنقاط مرتّبان دائماً. يتوقّف الدوران
+   تحت المؤشّر والتركيز، ومع «تقليل الحركة» تُعرض المجالات كلّها ثابتة. المجال
+   بلا غلاف لوحٌ برمزه — لا صورة بديلة (الفجوة تُسدّ من اللوحة). وللطباعة
+   شبكة بالمجالات كلّها. */
 const FIELD_SLOTS = 4;
+const FIELD_STEP = 2;
+const FIELD_TICK = 5000;
 
 function FieldCard({ p, href, more }: { p: Pillar; href: string; more: string }) {
   return (
@@ -220,9 +225,52 @@ function FieldCard({ p, href, more }: { p: Pillar; href: string; more: string })
 export function Fields({ pillars }: { pillars: Pillar[] }) {
   const U = useU();
   const path = usePath();
-  const { shown, rotates, calm, hold } = useCardCycle(pillars.length, FIELD_SLOTS);
+  const listRef = useRef<HTMLUListElement>(null);
+  /* مواضع البطاقات قُبيل التقدّم — لتحريك الباقية من مكانها القديم (FLIP) */
+  const prevPos = useRef<Map<string, { x: number; y: number }> | null>(null);
+  const { shown, start, pos, cycle, rotates, calm, hold } = useCardCycle(pillars.length, FIELD_SLOTS, {
+    step: FIELD_STEP,
+    tick: FIELD_TICK,
+    onBeforeStep: () => {
+      const ul = listRef.current;
+      if (!ul) return;
+      prevPos.current = new Map(
+        Array.from(ul.children as HTMLCollectionOf<HTMLElement>, (el) => [
+          el.dataset.id ?? "", { x: el.offsetLeft, y: el.offsetTop },
+        ]),
+      );
+    },
+  });
   const live = calm ? pillars.map((_, i) => i) : shown;
   const more = U("تفاصيل المجال");
+
+  /* البطاقتان الباقيتان تنزلقان من موضعهما القديم إلى الجديد، والخارجتان
+     تُزالان. الجديدتان تنتظران حتى يخلو مكانهما من المنزلقتين ثم تظهران —
+     وإلا عبرت المنزلقتان فوقهما لحظةَ دخولهما */
+  useLayoutEffect(() => {
+    const prev = prevPos.current;
+    prevPos.current = null;
+    const ul = listRef.current;
+    if (!prev || !ul) return;
+    for (const el of Array.from(ul.children as HTMLCollectionOf<HTMLElement>)) {
+      const p = prev.get(el.dataset.id ?? "");
+      if (!p) {
+        el.animate(
+          [{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1 }],
+          { duration: 800, easing: "ease-out" },
+        );
+        continue;
+      }
+      const dx = p.x - el.offsetLeft;
+      const dy = p.y - el.offsetTop;
+      if (dx || dy) {
+        el.animate(
+          [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
+          { duration: 700, easing: "cubic-bezier(.22,.61,.36,1)" },
+        );
+      }
+    }
+  }, [start]);
 
   return (
     <section className="band sec fields-band" id="fields">
@@ -239,21 +287,24 @@ export function Fields({ pillars }: { pillars: Pillar[] }) {
           onFocus={() => hold(true)}
           onBlur={() => hold(false)}
         >
-          <ul className="fcards fcards--live">
-            {live.map((idx, slot) => {
+          <ul className="fcards fcards--live" ref={listRef}>
+            {live.map((idx) => {
               const p = pillars[idx];
               return (
-                /* المفتاح يحمل المجال: تبدّله يعيد تركيب البطاقة فيجري تلاشيها */
-                <li key={`${slot}-${p.id}`} className="fcards__slot">
+                /* المفتاح هو المجال وحده: البطاقة الباقية تحتفظ بعنصرها فتنزلق،
+                   والجديدة وحدها تُركَّب فتجري حركة دخولها */
+                <li key={p.id} data-id={p.id} className="fcards__slot">
                   <FieldCard p={p} href={path(`/p/${p.id}`)} more={more} />
                 </li>
               );
             })}
           </ul>
 
+          {/* مؤشّر ترقيم: نقطة لكل خطوة من الدورة، والمضاءة تتقدّم واحدةً
+              واحدةً باتجاه القراءة — لا تنقسم على طرفي الصفّ حين تلتفّ النافذة */}
           {rotates && (
             <p className="fcards__dots" aria-hidden="true">
-              {pillars.map((p, i) => <i key={p.id} className={shown.includes(i) ? "is-on" : undefined} />)}
+              {Array.from({ length: cycle }, (_, k) => <i key={k} className={k === pos ? "is-on" : undefined} />)}
             </p>
           )}
 

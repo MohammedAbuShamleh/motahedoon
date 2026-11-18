@@ -18,7 +18,7 @@
   --red:        #CF2129;   /* لمسة نادرة، خطّ لا مساحة: نقطة معيّنية · خط الختم · كلمة «ثبات» · شريط تقدّم الشريحة */
   --ink:        #1A1A1A;   /* النص · الأرضيات الداكنة */
   --bg:         #FCFCFA;   /* الورق — أفتح، وأثر دفء باقٍ */
-  --rule:       rgba(26,26,26,.12);   /* الفواصل الشعرية: شفافية الحبري — لا لون خارج الخمسة */
+  --rule:       #E3E4E5;   /* الفواصل الشعرية — سماكة واحدة في الموقع كله (اللون السادس في اللوحة المعتمدة) */
   --green-soft: #FCFCFA;   /* كان أخضر فاتحاً: صار ورقياً — على الداكن النصّ ورقيّ (هوية قريبة من الأبيض والأسود) */
   --red-soft:   #CF2129;   /* كان أحمر فاتحاً: صار الأحمر الرسمي — للخطوط والنقاط وحلقات التركيز على الداكن (3.24:1) لا للنصّ */
   --paper:      #FCFCFA;   /* الكروت: الورق نفسه — تتميّز بحدّها وظلّها لا بلون آخر */
@@ -777,8 +777,9 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
      الصفحة كلّها تحته، والترويسة بعد التمرير — فيصطفّ العنوان مع ما بعده */
   /* أقرب إلى حافّة الصورة من عمود المحتوى: نصف المسافة بين الحافّة والعمود */
   margin-inline-start: max(var(--edge), (100% - var(--wrap)) / 4);
-  /* فوق منتصف المساحة الظاهرة قليلاً: العين تبدأ من الثلث الأعلى */
-  margin-block: calc(var(--xb, 0px) + 3rem) calc(var(--strip) + 3rem);
+  /* تحت منتصف المساحة الظاهرة قليلاً (بطلب صاحب المشروع): الفرق بين
+     الهامشين يُنزل الكتلة نحو 2.5rem ويُبقيها فوق شريط الشريحة */
+  margin-block: calc(var(--xb, 0px) + 6.5rem) calc(var(--strip) + 1.5rem);
   color: var(--bg);
 }
 /* هالة حبرية ناعمة تتبع كتلة العنوان نفسها — بأي لغة وأي عرض. الظلّ
@@ -829,10 +830,9 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
   text-shadow: 0 2px 18px rgba(26,26,26,.5);
 }
 
-/* الكلمة الكبرى: بأثقل أوزان الخطّ، ممدودة بالكشيدة — ورقيّة وتحتها خطّ
-   أحمر قصير. الألوان الخمسة الرسمية وحدها (قرار 2026-11-18): الأحمر
-   #CF2129 لا يبلغ 3:1 فوق الصور إلا على حبر شبه خالص، فصار الأحمر خطّاً
-   تحت الكلمة لا لونها — «خطوط ملوّنة بسيطة» في هوية قريبة من الأبيض والأسود. */
+/* الكلمة الكبرى: بأثقل أوزان الخطّ، ممدودة بالكشيدة، بالأحمر الرسمي
+   #CF2129 (بطلب صاحب المشروع، 2026-11-18). الأحمر على الحبري 3.24:1 —
+   فوق 3:1 للنصّ الكبير؛ والظلّ الحبري المزدوج يحمله حيث تفتح الصورة. */
 .hero__word {
   font-style: normal;
   font-weight: 900;
@@ -842,16 +842,31 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
   /* نقطتا «ث» في خطّ ثمانية أعلى منهما في Zain: إزاحة تُبعدهما عن ذيل
      «ى» و«ح» في السطر السابق (مقيسة بلقطة مكبّرة) */
   margin-top: .26em;
-  color: var(--bg);
-  text-shadow: 0 4px 30px rgba(26,26,26,.45);
+  color: var(--red);
+  text-shadow: 0 2px 6px rgba(26,26,26,.4), 0 6px 34px rgba(26,26,26,.6);
+  position: relative;
 }
-/* الخطّ الأحمر تحت «ثبات»: يبتعد عن نقطة «ب» السفلى */
+/* هالة حبرية موضعية خلف الكلمة وحدها: الأحمر لا يبلغ 3:1 إلا على أرضية
+   شبه حبرية، وكان يهبط إلى 1.3–2.8 فوق مساحات الصور الفاتحة. الهالة تحت
+   النصّ وفوق هالة الكرت (ترتيب الشجرة في سياق تكديس الكرت). */
 .hero__word::after {
-  content: ""; display: block;
-  inline-size: clamp(4rem, 9vw, 7.5rem); block-size: clamp(4px, .45vw, 6px);
-  margin-top: .14em;
-  background: var(--red);
+  content: ""; position: absolute; z-index: -1;
+  inset: -2% -5% -6%;
+  background: var(--ink);
+  filter: blur(20px);
+  pointer-events: none;
 }
+/* اللاتينية: الكلمة نفسها بلا كشيدة، ومقاسها يتقلّص بطولها (--len) فلا
+   تفيض عن عرض الكرت — «steadfastness» ثلاثة عشر حرفاً و«sebata» ستّة */
+.hero__word--plain {
+  font-size: min(clamp(3.4rem, 9vw, 8.5rem),
+                 calc(min(54rem, 100vw - 2 * var(--edge)) / (var(--len) * .6)));
+  line-height: 1;
+  margin-top: .1em;
+  letter-spacing: -.035em;
+}
+/* ما بعد الكلمة الكبرى (التركية: «dönüşür») سطرٌ متوسّط تحتها */
+.hero__word + .hero__lead { margin-top: .12em; }
 /* الرسم الممدود من data-k، و« / ""» تُخفيه عن قارئ الشاشة */
 .hero__word[data-k]::before { content: attr(data-k); content: attr(data-k) / ""; }
 /* النصّ الأصلي مستور بصرياً، باقٍ لقارئ الشاشة ولـ textContent */
@@ -991,6 +1006,8 @@ html.is-ltr .hero__bar { transform-origin: left; }
   }
   .hero__kicker { margin-bottom: .45rem; }
   .hero__sub { margin-top: 1.4rem; }   /* نقطة «ب» تنزل تحت سطرها */
+  /* الكلمة أصغر فالهالة الموضعية أعرض وأحدّ: تحفظ الأحمر فوق 3:1 */
+  .hero__word::after { inset: -8% -8% -12%; filter: blur(14px); }
   .hero__dot { width: 28px; }
 }
 
@@ -1018,19 +1035,6 @@ html.is-ltr .hero__bar { transform-origin: left; }
 .about--solo .about__in { grid-template-columns: minmax(0, 1fr); }
 
 .about__title { margin: 0; font-size: clamp(1.7rem, 3vw, 2.5rem); }
-
-/* شعرة حمراء قصيرة تنتهي بالنقطة المعيّنية */
-.about__rule {
-  position: relative; display: block;
-  width: 4.5rem; height: 2px;
-  margin-top: clamp(.9rem, 1.6vw, 1.2rem);
-  background: var(--red);
-}
-.about__rule::after {
-  content: ""; position: absolute; top: 50%; inset-inline-end: -11px;
-  width: 7px; height: 7px; margin-top: -3.5px;
-  background: var(--red); transform: rotate(45deg);
-}
 
 .about__lead { margin-top: clamp(1.1rem, 2vw, 1.5rem); }
 .about__lead.body-lg { font-size: clamp(.98rem, .35vw + .9rem, 1.08rem); line-height: 1.85; }
@@ -1088,44 +1092,22 @@ html.is-ltr .hero__bar { transform-origin: left; }
 
 .about__cta { margin: clamp(1.1rem, 2.2vw, 1.5rem) 0 0; }
 
-/* ---------- الصورة في مربّع لطيف ----------
-   الصورة مربّع بانحناء ناعم، خلفها إطار زيتوني مُزاح نحو الركن السفلي من
-   جهة بدء السطر (صدى الختم الرسمي)، وحول الكلّ إطار شعري خارجي. */
+/* ---------- الصورة بهيئة فصول صفحة التقرير ----------
+   rp-ch__media وrp-ch__fig كما هما (إطار 4:3 ينكشف عند الظهور، وإطار أخضر
+   مفرَّغ ومربّع زيتوني مفرَّغ). هنا العرض، وقلب الجهتين: الصورة في جهة
+   نهاية السطر، فيبرز الإطار الأخضر نحو حافّة الصفحة لا نحو المتن —
+   كالفصل المقلوب (rp-ch--flip) في صفحة التقرير. */
 .about__media {
-  position: relative; margin: 0;
-  justify-self: center;
-  width: min(100%, 23rem); aspect-ratio: 1;
-  --rr: calc(var(--r) * 1.6);
+  justify-self: center; align-self: start;
+  width: min(100%, 26rem);
+  margin: 1.25rem 0;
 }
-.about__media img {
-  position: absolute; z-index: 2;
-  inset-block-start: 4%; inset-inline-end: 4%;
-  width: 84%; height: 84%;
-  border-radius: var(--rr); object-fit: cover;
-  /* إطار ورقي حول الصورة، وظلّ ناعم يرفعها عن المربّع الأخضر */
-  box-shadow: 0 0 0 7px var(--paper), 0 24px 48px -26px rgba(26,26,26,.55);
-}
-/* إطار أخضر رفيع خلف الركن السفلي للصورة من جهة البدء — الشكل الهندسي
-   الذي تجلس عليه الصور في العروض المؤسسية، خطّاً لا مساحة */
-.about__ring {
-  position: absolute; z-index: 1;
-  inset-block-end: 0; inset-inline-start: 0;
-  inline-size: 58%; aspect-ratio: 1;
-  border-radius: var(--rr);
-  border: 2px solid var(--green);
-}
-/* شبكة نقاط في الركن العلوي — هندسة لا زخرفة حيّة */
-.about__dots {
-  position: absolute; top: -3%; inset-inline-end: -5%; z-index: 0;
-  width: 24%; aspect-ratio: 1;
-  background-image: radial-gradient(var(--ink) 1.3px, transparent 1.7px);
-  background-size: 14px 14px;
-  opacity: .45;
-}
+.about .rp-ch__media::before { inset-inline: auto -1.25rem; }
+.about .rp-ch__media::after { inset-inline: -1rem auto; }
 
 @media (max-width: 900px) {
   .about__in { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  .about__media { order: -1; width: min(64%, 16rem); }
+  .about__media { order: -1; width: min(86%, 24rem); position: relative; top: auto; }
 }
 
 /* الصورة الكبيرة التي تتنفس — عرض كامل، وشارة تعليق على ركنها */
@@ -1421,7 +1403,8 @@ html[dir="rtl"] .areas__label::after { transform: none; }
   transition: opacity .6s ease var(--delay), transform .7s cubic-bezier(.22, 1, .36, 1) var(--delay);
 }
 .areas__top { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; }
-/* الرمز في مربّع زيتوني ممتلئ — راكز */
+/* الرمز في مربّع مفرَّغ بحدّ ورقي على الحبري — أبيض وأسود؛ اللون في
+   الخطوط وحدها (الحافّة العلوية الزيتونية والعُقد) */
 .areas__badge {
   display: grid; place-items: center;
   inline-size: clamp(2.4rem, 3vw, 2.85rem); aspect-ratio: 1;
@@ -1569,7 +1552,7 @@ html.js-reveal .reveal:not(.is-in) .areas__a { opacity: 0; transform: translateY
 /* جهة البدء: الصورة تملأ نصف البطاقة، وتهدأ من تكبير خفيف حين تظهر */
 .fcard__media {
   position: relative; display: block; min-block-size: 100%;
-  background: rgba(26,26,26,.04);
+  background: var(--olive);
 }
 .fcard__media img {
   position: absolute; inset: 0;
@@ -1606,8 +1589,7 @@ html.js-reveal .reveal:not(.is-in) .areas__a { opacity: 0; transform: translateY
   display: grid; place-items: center;
   inline-size: 2.6rem; aspect-ratio: 1;
   border-radius: var(--r-sm);
-  background: var(--bg); color: var(--green);
-  box-shadow: inset 0 0 0 1.5px var(--green);
+  background: rgba(92,91,52,.1); color: var(--olive);
 }
 .fcard__ico .ico { font-size: 2rem; }
 .fcard .ico__f { display: none; }
@@ -1878,7 +1860,7 @@ html.js-reveal .reveal:not(.is-in) .impact__col { opacity: 0; transform: transla
 .rfeat__cover {
   display: grid; place-items: center;
   padding: clamp(1.9rem, 3.4vw, 2.6rem) 1rem;
-  background: rgba(26,26,26,.03);
+  background: rgba(92,91,52,.08);
   border-inline-end: var(--line) solid var(--rule);
 }
 .rfeat__stack { position: relative; display: block; }
@@ -1886,7 +1868,7 @@ html.js-reveal .reveal:not(.is-in) .impact__col { opacity: 0; transform: transla
 .rfeat__stack::before {
   content: ""; position: absolute; inset: 0;
   border-radius: 8px;
-  border: 1.5px solid var(--green);
+  background: rgba(92,91,52,.24);
   transform: rotate(4deg) translate(-6%, 3%);
 }
 html.is-ltr .rfeat__stack::before { transform: rotate(-4deg) translate(6%, 3%); }
@@ -1907,7 +1889,7 @@ html.is-ltr .rfeat__sheet { transform: rotate(3deg); }
 .rfeat__band {
   display: flex; align-items: center; gap: .4rem;
   padding: .5rem .6rem;
-  background: var(--ink); color: var(--bg);
+  background: var(--olive); color: var(--bg);
   font-size: .66rem; font-weight: 800; line-height: 1;
 }
 .rfeat__band img {
@@ -1946,8 +1928,7 @@ html.is-ltr .rfeat__sheet { transform: rotate(3deg); }
 }
 .rfeat__badge {
   padding: .25rem .7rem; border-radius: 6px;
-  background: var(--bg); color: var(--green);
-  box-shadow: inset 0 0 0 1.5px var(--green);
+  background: var(--olive); color: var(--bg);
   font-size: .76rem; font-weight: 800;
 }
 .rfeat__t {
@@ -2059,8 +2040,7 @@ html.is-ltr .rlog__go::after { content: "→"; }
   display: grid; place-items: center; flex: none;
   inline-size: 2.75rem; aspect-ratio: 1;
   border-radius: var(--r-sm);
-  background: var(--bg); color: var(--green);
-  box-shadow: inset 0 0 0 1.5px var(--green);
+  background: var(--olive); color: var(--bg);
 }
 .sup__ico svg, .sup__mark svg {
   inline-size: 48%; block-size: 48%;
@@ -2131,12 +2111,12 @@ html.is-ltr .rlog__go::after { content: "→"; }
   border: var(--line) solid transparent;
   transition: background-color .2s ease, color .2s ease, border-color .2s ease;
 }
-.btn--green { background: var(--bg); color: var(--green); border-color: var(--green); }
-.btn--green:hover { background: rgba(12,123,63,.06); }
+.btn--green { background: var(--green); color: var(--bg); }
+.btn--green:hover { background: var(--ink); }
 .btn--ghost { border-color: var(--rule); color: var(--ink); background: var(--paper); }
 .btn--ghost:hover { border-color: var(--olive); color: var(--olive); }
 .btn--light { background: var(--bg); color: var(--ink); }
-.btn--light:hover { background: var(--green-soft); }
+.btn--light:hover { background: var(--green); color: var(--bg); }
 
 /* =====================================================================
    التذييل
@@ -2161,14 +2141,15 @@ html.is-ltr .rlog__go::after { content: "→"; }
   border-radius: var(--r); padding: .9rem 1.2rem; margin-bottom: 1.1rem;
 }
 .footer__logo img { height: 72px; width: auto; }
-/* عناوين الأعمدة: تسمية صغيرة بشعرة زيتونية قصيرة تحتها */
+/* عناوين الأعمدة: تسمية صغيرة بشعرة خضراء قصيرة تحتها — الزيتوني على
+   الحبري 2.5:1 لا يكاد يُرى، والأخضر 3.25:1 يُرى خطّاً */
 .footer__h {
   font-size: .78rem; letter-spacing: .14em; font-weight: 700;
   color: var(--bg); margin: 0 0 1.1rem;
 }
 .footer__top > div > h2.footer__h::after {
   content: ""; display: block; width: 1.75rem; height: 2px;
-  margin-top: .6rem; background: var(--olive);
+  margin-top: .6rem; background: var(--green);
 }
 .footer__top > div:first-child .footer__h { color: var(--on-ink); font-weight: 600; letter-spacing: .04em; }
 .footer__list { list-style: none; margin: 0; padding: 0; }
@@ -2191,9 +2172,15 @@ html.is-ltr .rlog__go::after { content: "→"; }
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
   gap: 1.25rem clamp(1.5rem, 3vw, 2.5rem);
 }
+/* التسمية ورقيّة (الأخضر على الحبري 3.25:1 دون حدّ النصّ الصغير)،
+   ويحمل اللونَ خطٌّ أخضر قصير قبلها */
 .colophon dt {
+  display: flex; align-items: center; gap: .5rem;
   font-size: .7rem; font-weight: 700; letter-spacing: .14em;
   color: var(--green-soft); margin-bottom: .3rem;
+}
+.colophon dt::before {
+  content: ""; flex: none; width: .9rem; height: 2px; background: var(--green);
 }
 .colophon dd { margin: 0; font-size: .9rem; line-height: 1.6; color: var(--on-ink); }
 .footer__bar {
@@ -2216,6 +2203,7 @@ html.is-ltr .rlog__go::after { content: "→"; }
   line-height: .9; letter-spacing: -.05em; color: var(--olive);
   margin: 0 0 clamp(1rem, 2vw, 1.5rem);
 }
+/* المؤسسات تحت العنوان: بالأخضر — لون الهوية عاد (بطلب صاحب المشروع) */
 .ph__orgs {
   margin: clamp(1.25rem, 2.4vw, 1.75rem) 0 0;
   font-size: 1rem; font-weight: 700; color: var(--green); line-height: 1.6;
@@ -2552,7 +2540,7 @@ html.is-ltr { --rp-start: left; }
 }
 .rp-cover .h-page::after {
   content: ""; display: block;
-  width: 4.5rem; height: 3px; border-radius: 2px;
+  width: 4.5rem; height: 4px; border-radius: 2px;
   margin-top: clamp(1rem, 2vw, 1.4rem);
   background: var(--green);
   transform-origin: var(--rp-start);
@@ -2566,9 +2554,9 @@ html.is-ltr { --rp-start: left; }
 .rp-cover__main > :nth-child(3) { animation-delay: .16s; }
 .rp-cover__main > :nth-child(4) { animation-delay: .24s; }
 
-/* بطاقة الوثيقة تبقى في المنظور وأنت تقرأ المقدّمة. إطاران مفرَّغان عند
-   زاويتين متقابلتين — أخضر وزيتوني، خطّاً لا مساحة (هوية قريبة من الأبيض
-   والأسود)؛ الإزاحة أقلّ من حافّة الصفحة فلا تمرير أفقي. */
+/* بطاقة الوثيقة تبقى في المنظور وأنت تقرأ المقدّمة. اللوح الأخضر خلف
+   زاويتها والمربّع الزيتوني المفرَّغ عند الزاوية المقابلة — من مفردات
+   الشرائح؛ الإزاحة أقلّ من حافّة الصفحة فلا تمرير أفقي. */
 .rp-cover__side {
   position: sticky; top: calc(var(--xb, 0px) + 6.5rem);
   animation: rp-rise .9s .2s var(--ease-glass) both;
@@ -2580,7 +2568,7 @@ html.is-ltr { --rp-start: left; }
 .rp-cover__side::before {
   inset-block-start: -.95rem; inset-inline-end: -.95rem;
   width: 46%; height: 36%;
-  border: 2px solid var(--green);
+  background: var(--green);
   animation: rp-pop .8s .55s var(--ease-glass) both;
 }
 .rp-cover__side::after {
@@ -2598,13 +2586,11 @@ html.is-ltr { --rp-start: left; }
   overflow: hidden;
   box-shadow: 0 24px 50px -38px rgba(26,26,26,.55);
 }
-/* شريط البطاقة حبري تُرسم فيه خطوط مائلة واحداً بعد آخر، وتحته خطّ
-   أخضر رفيع — اللون خطّ لا مساحة */
+/* شريط البطاقة أخضر تُرسم فيه خطوط مائلة واحداً بعد آخر */
 .rp-doc__band {
   position: relative; isolation: isolate; overflow: hidden;
   padding: clamp(1.3rem, 2.3vw, 1.65rem) clamp(1.1rem, 2vw, 1.4rem);
-  background: var(--ink);
-  border-bottom: 3px solid var(--green);
+  background: var(--green);
 }
 .rp-doc__lines { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; }
 .rp-doc__lines line {
@@ -2612,10 +2598,9 @@ html.is-ltr { --rp-start: left; }
   stroke-dasharray: 200;
   animation: rp-draw 1.3s calc(.35s + var(--i, 0) * .06s) var(--ease-glass) both;
 }
-/* على الحبري: الختم بخطّه الأحمر المعتاد، والنصّ ورقيّ */
-.rp-doc__band .seal { margin: 0; border-inline-start-color: var(--red); }
-.rp-doc__band .seal__k { color: var(--on-ink); }
-.rp-doc__band .seal__v { color: var(--bg); }
+/* على الأخضر: الورقي الكامل وحده يتجاوز 4.5:1 (الشفّاف 82% يهبط إلى 4.1) */
+.rp-doc__band .seal { margin: 0; border-inline-start-color: var(--bg); }
+.rp-doc__band .seal__k, .rp-doc__band .seal__v { color: var(--bg); }
 .rp-doc__band .seal__v { font-size: 1.12rem; }
 .rp-doc__body { padding: clamp(1.1rem, 2vw, 1.4rem); }
 .rp-doc__file { margin: 0; }
@@ -2636,14 +2621,12 @@ html.is-ltr { --rp-start: left; }
   color: var(--ink-72); text-decoration: none;
   transition: background-color .2s ease, color .2s ease;
 }
-.rp-toc a:hover, .rp-toc a:focus-visible { background: rgba(26,26,26,.05); color: var(--ink); }
-/* الرقم: ورقيّ الأرضية بنصّ وحدّ أخضرين — لا تعبئة خضراء */
+.rp-toc a:hover, .rp-toc a:focus-visible { background: rgba(12,123,63,.07); color: var(--ink); }
 .rp-toc__n {
   flex: none; display: grid; place-items: center;
   min-width: 1.85rem; height: 1.45rem; padding-inline: .3rem;
   border-radius: 5px;
-  border: var(--line) solid var(--green);
-  background: var(--bg); color: var(--green);
+  background: var(--green); color: var(--bg);
   font-size: .7rem; font-weight: 800; letter-spacing: .04em;
   font-variant-numeric: tabular-nums; unicode-bidi: isolate;
   transition: transform .3s var(--ease-glass);
@@ -2760,7 +2743,7 @@ html.is-ltr { --rp-start: left; }
 }
 .rp-kpi__lead::before {
   content: ""; position: absolute; inset-block: 0; inset-inline-start: 0;
-  width: 4px; background: var(--green-soft);
+  width: 4px; background: var(--green);
   transform-origin: 50% 0;
   transition: transform .9s var(--ease-glass) .3s;
 }
@@ -2794,7 +2777,7 @@ html.js-reveal .reveal:not(.is-in) .rp-kpi .fig__v { clip-path: inset(-.25em 100
 }
 .rp-kpi__card::before {
   content: ""; position: absolute; inset-block-start: 0; inset-inline: 0;
-  height: 3px; background: var(--green-soft);
+  height: 3px; background: var(--green);
   transform-origin: var(--rp-start);
   transition: transform .9s var(--ease-glass) calc(.4s + var(--i, 0) * .08s);
 }
@@ -2831,16 +2814,15 @@ html.js-reveal .reveal:not(.is-in) .rp-kpi__card::before { transform: scaleX(0);
 }
 .rp-item__text { margin: 0; line-height: 1.85; }
 
-/* الشارة: مربّع لطيف ورقيّ الأرضية برقم الترتيب وحدّه بالأخضر — لا
-   تعبئة خضراء. عند المرور ينقلب حبرياً (هوية قريبة من الأبيض والأسود).
-   الأرضية على العنصر نفسه لا على عنصر زائف، فمدقّق التباين يقرأ الرقم
-   على أرضيته الحقيقية. */
+/* الشارة: مربّع لطيف أخضر برقم الترتيب بالورقي (5.3:1)؛ عند المرور ينقلب
+   حبرياً. الأرضية على العنصر نفسه لا على عنصر زائف، فمدقّق التباين يقرأ
+   الرقم على أرضيته الحقيقية. */
 .rp-item__no {
   display: grid; place-items: center;
   width: 2.5rem; height: 2.5rem;
   border: var(--line) solid var(--green);
   border-radius: var(--r-sm);
-  background: var(--bg); color: var(--green);
+  background: var(--green); color: var(--bg);
   font-size: .8rem; font-weight: 800;
   font-variant-numeric: tabular-nums; unicode-bidi: isolate;
   transition:
@@ -2933,14 +2915,14 @@ html.js-reveal .reveal:not(.is-in) .rp-item__no { opacity: 0; transform: scale(.
 }
 .rp-list--steps .rp-item:hover::before { width: 100%; }
 html.js-reveal .reveal:not(.is-in) .rp-list--steps .rp-item::before { transform: scaleX(0); }
-/* الرقم الكبير حبريّ؛ الأخضر في السكّة الرفيعة فوقه، ويأخذه الرقم عند المرور */
+/* الرقم الكبير أخضر، ويصير حبرياً عند المرور */
 .rp-list--steps .rp-item__no {
   width: auto; height: auto; place-items: start;
   border: 0; background: none;
   font-size: clamp(1.9rem, 3.2vw, 2.6rem); font-weight: 800; line-height: 1;
-  color: var(--ink);
+  color: var(--green);
 }
-.rp-list--steps .rp-item:hover .rp-item__no { background: none; color: var(--green); }
+.rp-list--steps .rp-item:hover .rp-item__no { background: none; color: var(--ink); }
 
 /* ---------- مسار الفصول ----------
    كلّ محطّة ترسم سكّتها بعرضها كاملاً عند منتصف العلامة، فتتّصل السكّة
@@ -2982,7 +2964,7 @@ html.js-reveal .reveal:not(.is-in) .rp-path__a::after { transform: scaleX(0); }
 .rp-path__mk .ico { width: 2.1rem; height: 2.1rem; }
 html.js-reveal .reveal:not(.is-in) .rp-path__mk { transform: scale(.4); }
 .rp-path__a:hover .rp-path__mk,
-.rp-path__a:focus-visible .rp-path__mk { background: var(--bg); border-color: var(--green); color: var(--green); }
+.rp-path__a:focus-visible .rp-path__mk { background: var(--green); border-color: var(--green); color: var(--bg); }
 .rp-path__a:hover .ico__f { transform: rotate(45deg); }
 .rp-path__a:focus-visible { outline: none; }
 .rp-path__a:focus-visible .rp-path__t { text-decoration: underline; }
@@ -3015,8 +2997,7 @@ html.js-reveal .reveal:not(.is-in) .rp-path__mk { transform: scale(.4); }
   position: sticky; top: calc(var(--xb, 0px) + 7rem);
   isolation: isolate;
 }
-/* إطار أخضر مفرَّغ يبرز من خلف الصورة نحو حافّة الصفحة — خطّ لا مساحة
-   (هوية قريبة من الأبيض والأسود) — ومربّع زيتوني مفرَّغ نحو المتن */
+/* لوح أخضر يبرز من خلف الصورة نحو حافّة الصفحة، ومربّع زيتوني مفرَّغ نحو المتن */
 .rp-ch__media::before, .rp-ch__media::after {
   content: ""; position: absolute; z-index: -1; pointer-events: none;
 }
@@ -3024,7 +3005,7 @@ html.js-reveal .reveal:not(.is-in) .rp-path__mk { transform: scale(.4); }
   inset-block: 2.25rem -1.25rem; inset-inline-start: -1.25rem;
   width: 62%;
   border-radius: calc(var(--r) * 1.3);
-  border: 2px solid var(--green);
+  background: var(--green);
   transition: transform 1s var(--ease-glass) .35s, opacity .6s ease .35s;
 }
 .rp-ch__media::after {
@@ -3084,12 +3065,10 @@ html.js-reveal .reveal:not(.is-in) .rp-ch__badge { opacity: 0; transform: scale(
   margin: 0 0 clamp(.9rem, 1.8vw, 1.2rem);
   font-size: .8rem; font-weight: 800; letter-spacing: .14em; color: var(--olive);
 }
-/* رمز المجال: ورقيّ الأرضية برمز وحدّ أخضرين — لا تعبئة خضراء */
 .rp-ch__ico {
   display: grid; place-items: center;
   width: 2.6rem; height: 2.6rem; border-radius: var(--r-sm);
-  border: var(--line) solid var(--green);
-  background: var(--bg); color: var(--green);
+  background: var(--green); color: var(--bg);
 }
 .rp-ch__ico .ico { width: 1.7rem; height: 1.7rem; }
 .rp-ch__body .h-sec { margin: 0; font-size: clamp(1.75rem, 3vw, 2.6rem); }
@@ -3125,7 +3104,7 @@ html.js-reveal .reveal:not(.is-in) .rp-ch__badge { opacity: 0; transform: scale(
 }
 .rp-closing .rp-sec__in::before {
   inset-block-start: -.75rem; inset-inline-start: -.75rem;
-  border-block-start: 2px solid var(--green); border-inline-start: 2px solid var(--green);
+  border-block-start: 4px solid var(--green); border-inline-start: 4px solid var(--green);
   border-start-start-radius: calc(var(--r) * 1.7);
 }
 .rp-closing .rp-sec__in::after {

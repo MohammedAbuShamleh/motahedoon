@@ -41,6 +41,8 @@
   --color-ink: #1A1A1A;
   --color-paper: #FCFCFA;
   --color-rule: #E3E4E5;
+  /* bg-white في اللوحة هو الورق الرسمي: #FFF ليس من لوحة الألوان */
+  --color-white: #FCFCFA;
   --font-sans: "Thmanyah Sans", "Segoe UI", system-ui, sans-serif;
 }
 

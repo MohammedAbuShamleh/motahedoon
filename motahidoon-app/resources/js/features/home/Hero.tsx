@@ -8,37 +8,55 @@ import type { Pillar } from "@/types";
  *   «في قلب الحصار ..»   وسم صغير على علامة قلم
  *   «تحوّل الدعمُ إلى»   سطر متوسّط
  *   «ثبات»              الكلمة الكبرى بالأحمر
- * المسافات بين القطع محفوظة فيبقى textContent حرفياً كما هو (بصمة
- * tools/verify-strings.js). الكلمة الكبرى في الشعار العربي وحده؛ في
- * اللغات الأخرى لا تُحقن — والنصّ بلا «..» يُعرض سطراً واحداً.
+ * والترتيب نفسه في كلّ لغة (بطلب صاحب المشروع). المسافات بين القطع
+ * محفوظة فيبقى textContent حرفياً كما هو (بصمة tools/verify-strings.js).
  */
+
+/* تقسيم الشعار في كلّ لغة — قاعدة عرض لا نصّ: أين ينتهي الوسم الصغير
+   (cut)، وأيّ كلمة هي الكبرى (word). إن تغيّرت الترجمة فلم يُعثر على
+   أحدهما عُرض الباقي بلا تقسيم — لا يُخترع نصّ ولا يُحذف. */
+const SPLIT: Record<string, { cut: string; word: string }> = {
+  ar: { cut: "..", word: "ثبات" },
+  en: { cut: ",", word: "steadfastness" },
+  tr: { cut: "kalbinde", word: "sebata" },
+};
+
 /* «ثبات» ممدودةً بالتطويل بين الباء والألف — الموضع الوحيد الذي يقبل
    الوصل فيها (الألف لا تتّصل بما بعدها) */
 const STRETCHED = "ثبـــات";
 
-function Tagline({ text }: { text: string }) {
-  const cut = text.indexOf(".. ");
-  const kicker = cut < 0 ? null : text.slice(0, cut + 2);
-  const rest = cut < 0 ? text : text.slice(cut + 3);
-  const at = rest.indexOf("ثبات");
+function Tagline({ text, locale }: { text: string; locale: string }) {
+  const rule = SPLIT[locale];
+  const c = rule ? text.indexOf(rule.cut) : -1;
+  const end = rule && c >= 0 ? c + rule.cut.length : 0;
+  const kicker = c < 0 ? null : text.slice(0, end);
+  const gap = c < 0 ? "" : (/^\s*/.exec(text.slice(end))?.[0] ?? "");
+  const rest = c < 0 ? text : text.slice(end + gap.length);
+  const word = rule?.word ?? "";
+  const at = word ? rest.indexOf(word) : -1;
   const lead = at < 0 ? rest : rest.slice(0, at);
-  const tail = at < 0 ? "" : rest.slice(at + "ثبات".length);
+  const tail = at < 0 ? "" : rest.slice(at + word.length);
 
   return (
     <>
       {kicker !== null && (
         <>
-          <span className="hero__kicker"><span className="hero__mark">{kicker}</span></span>{" "}
+          <span className="hero__kicker"><span className="hero__mark">{kicker}</span></span>{gap}
         </>
       )}
-      <span className="hero__lead">{lead}</span>
-      {at >= 0 && (
+      {lead && <span className="hero__lead">{lead}</span>}
+      {at >= 0 && (locale === "ar" ? (
         /* المدّ (الكشيدة) رسمٌ لا نصّ: يُرسم من data-k في ::before ويُستر
            عن قارئ الشاشة، ويبقى «ثبات» نفسه في textContent للبصمة وللقراءة */
         <em className="hero__word" data-k={STRETCHED}>
-          <span className="hero__wordtxt">ثبات</span>
+          <span className="hero__wordtxt">{word}</span>
         </em>
-      )}
+      ) : (
+        /* بلا كشيدة في اللاتينية؛ --len يقود المقاس فلا تفيض الكلمة الطويلة */
+        <em className="hero__word hero__word--plain" style={{ "--len": word.length } as React.CSSProperties}>
+          {word}
+        </em>
+      ))}
       {tail && <span className="hero__lead">{tail}</span>}
     </>
   );
@@ -61,7 +79,7 @@ export function Hero({
   pillars: Pillar[];
   partnerCount: number;
 }) {
-  const { org } = useSite();
+  const { org, locale } = useSite();
   const U = useU();
   const ref = useRef<HTMLElement>(null);
 
@@ -122,7 +140,7 @@ export function Hero({
       </div>
 
       <div className="hero__card">
-        <h1 className="hero__h"><Tagline text={org.tagline} /></h1>
+        <h1 className="hero__h"><Tagline text={org.tagline} locale={locale} /></h1>
         <p className="hero__sub">{org.name}</p>
       </div>
 
