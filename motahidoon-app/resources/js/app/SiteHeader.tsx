@@ -9,6 +9,92 @@ const LANG_NAME: Record<Locale, string> = {
   tr: "Türkçe",
 };
 
+/**
+ * زرّ اللغة — منفصل عن القائمة الرئيسية.
+ * يعرض اللغة الحالية وحدها؛ والمرور بالفأرة (CSS) أو النقر أو لوحة
+ * المفاتيح يكشف اللغات الأخرى في لوح صغير مستقلّ.
+ */
+function LangSwitch({
+  locale,
+  locales,
+  label,
+}: {
+  locale: Locale;
+  locales: readonly Locale[];
+  label: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const others = locales.filter((code) => code !== locale);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    const onDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onDown);
+    };
+  }, [open]);
+
+  return (
+    <div
+      ref={rootRef}
+      className={open ? "lang is-open" : "lang"}
+      onMouseLeave={() => setOpen(false)}
+      onBlur={(e) => {
+        // يُغلق حين يغادر التركيز الزرّ ولوحه معاً، لا عند التنقّل بينهما
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpen(false);
+      }}
+    >
+      <button
+        className="lang__btn"
+        type="button"
+        aria-haspopup="true"
+        aria-expanded={open}
+        aria-controls="lang-menu"
+        aria-label={`${label}: ${LANG_NAME[locale]}`}
+        onClick={() => setOpen((v) => !v)}
+      >
+        {/* رمز هندسي: كرة بخطوط طول وعرض */}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z" />
+        </svg>
+        <span className="lang__name" lang={locale}>{LANG_NAME[locale]}</span>
+        <svg className="lang__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+
+      <div className="lang__menu" id="lang-menu">
+        <ul className="lang__list" aria-label={label}>
+          {others.map((code) => (
+            <li key={code}>
+              {/* رابط عادي لا Inertia: تبديل اللغة يستحقّ تحميلاً كاملاً
+                  حتى يُعيد الخادم رسم وسوم og: باللغة الجديدة. */}
+              <a
+                className="lang__a"
+                hrefLang={code}
+                lang={code}
+                href={`${window.location.pathname}?lang=${code}`}
+              >
+                {LANG_NAME[code]}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 /** مراسي الرئيسية تعمل داخل الصفحة، وتعود إليها من الصفحات الداخلية. */
 function anchor(onHome: boolean, hash: string, home: string): string {
   return onHome ? `#${hash}` : `${home}#${hash}`;
@@ -42,7 +128,7 @@ export function SiteHeader({ active }: { active?: string }) {
 
   return (
     <header className="site-header">
-      <div className="site-header__in">
+      <div className="site-header__in glass">
         <Link className="brand" href={home}>
           <img src={`/${org.logoMark}`} alt="" />
           <span>
@@ -86,24 +172,9 @@ export function SiteHeader({ active }: { active?: string }) {
               </a>
             ),
           )}
-
-          <span className="langs" role="group" aria-label={U("اللغة")}>
-            {locales.map((code) => (
-              /* رابط عادي لا Inertia: تبديل اللغة يستحقّ تحميلاً كاملاً
-                 حتى يُعيد الخادم رسم وسوم og: باللغة الجديدة. */
-              <a
-                key={code}
-                className={code === locale ? "langs__a is-on" : "langs__a"}
-                hrefLang={code}
-                lang={code}
-                href={`${window.location.pathname}?lang=${code}`}
-                aria-current={code === locale ? "true" : undefined}
-              >
-                {LANG_NAME[code]}
-              </a>
-            ))}
-          </span>
         </nav>
+
+        <LangSwitch locale={locale} locales={locales} label={U("اللغة")} />
       </div>
     </header>
   );
