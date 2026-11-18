@@ -25,3 +25,6 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# ملفات اللوحة المرفوعة — بيانات الخادم لا كود
+/public/uploads

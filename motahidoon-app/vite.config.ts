@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "node:path";
 
 /* مدخلان منفصلان عمداً:
@@ -11,10 +12,15 @@ import { resolve } from "node:path";
 export default defineConfig({
   plugins: [
     laravel({
-      input: ["resources/css/style.css", "resources/js/site.tsx"],
+      input: [
+        "resources/css/style.css", "resources/js/site.tsx",
+        "resources/css/admin.css", "resources/js/admin.tsx",
+      ],
       refresh: true,
     }),
     react(),
+    // Tailwind يعالج admin.css وحده (الملف الوحيد الذي يستورده)؛ style.css لا يمسّه
+    tailwindcss(),
   ],
   resolve: {
     alias: { "@": resolve(import.meta.dirname, "resources/js") },

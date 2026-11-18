@@ -18,8 +18,18 @@ final class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
+    /** اللوحة لها قالبها الجذر (Tailwind، بلا وسوم og:) والموقع قالبه. */
+    public function rootView(Request $request): string
+    {
+        return $this->isAdmin($request) ? 'admin' : 'site';
+    }
+
     public function share(Request $request): array
     {
+        if ($this->isAdmin($request)) {
+            return array_merge(parent::share($request), $this->adminProps($request));
+        }
+
         return array_merge(parent::share($request), [
             'locale'      => app()->getLocale(),
             'locales'     => SetLocale::LOCALES,
@@ -31,6 +41,26 @@ final class HandleInertiaRequests extends Middleware
             'mediaOffice' => $this->content->get('mediaOffice'),
             'footerData'  => $this->footerData(),
         ]);
+    }
+
+    private function isAdmin(Request $request): bool
+    {
+        return $request->is('admin', 'admin/*');
+    }
+
+    /** ما تحتاجه كل صفحات اللوحة: المستخدم ودوره، ورسائل النجاح. @return array<string, mixed> */
+    private function adminProps(Request $request): array
+    {
+        $user = $request->user();
+
+        return [
+            'auth' => $user === null ? null : [
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role->value,
+            ],
+            'flash' => ['success' => $request->session()->get('success')],
+        ];
     }
 
     /** @return array<string, mixed> */

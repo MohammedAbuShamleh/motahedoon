@@ -1,0 +1,21 @@
+/* لوحة التحكم — Tailwind وحده، منفصل تماماً عن style.css المُعايَر للموقع
+   العام، فلا يمسّ preflight تباين الواجهة العامة المُدقَّق.
+   الألوان هي لوحة الموقع المقفلة نفسها — لا لون جديد. */
+@import "tailwindcss";
+
+@source "../js/admin";
+
+@theme {
+  --color-green: #0C7B3F;
+  --color-olive: #5C5B34;
+  --color-red: #CF2129;
+  --color-ink: #1A1A1A;
+  --color-paper: #FCFCFA;
+  --color-rule: #E3E4E5;
+  --font-sans: "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+}
+
+@layer base {
+  html { font-family: var(--font-sans); }
+  :focus-visible { outline: 2px solid var(--color-olive); outline-offset: 2px; }
+}

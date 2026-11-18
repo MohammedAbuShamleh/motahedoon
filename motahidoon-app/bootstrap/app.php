@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,            // قبل Inertia: الوسيط يشارك اللغة
             HandleInertiaRequests::class,
         ]);
+        $middleware->alias(['role' => \App\Http\Middleware\EnsureRole::class]);
+        $middleware->redirectGuestsTo('/admin/login');
+        $middleware->redirectUsersTo('/admin');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
