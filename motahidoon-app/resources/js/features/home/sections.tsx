@@ -212,40 +212,54 @@ export function Partners({ partners }: { partners: Partner[] }) {
 export function Fields({ pillars }: { pillars: Pillar[] }) {
   const U = useU();
   const path = usePath();
+  /* خطّ زمني أفقي: البنود تتناوب فوق الخطّ وتحته — النصّ في جهة والصورة
+     الدائرية في الأخرى. المجال بلا غلاف تحمل دائرته رمزه، لا صورة بديلة
+     (الفجوة تُسدّ من اللوحة لا هنا). عدد الأعمدة مشتقّ من البيانات. */
   return (
-    <Band
-      id="fields"
-      main={
-        <>
+    <section className="band ftl-band" id="fields">
+      <div className="sheet reveal">
+        <div className="sheet__main">
           <h2 className="h-sec">{U("مجالات العمل")}</h2>
-          <ol className="fields stagger">
-            {pillars.map((p) => (
-              <li className="field" key={p.id}>
-                <Link className="field__link" href={path(`/p/${p.id}`)}>
-                  <span className="field__node" aria-hidden="true">
-                    <span className="field__n">{p.num}</span>
-                  </span>
-                  <span className="field__head">
-                    <Icon id={p.id} />
-                    <span className="field__t">{p.title}</span>
-                  </span>
-                  <span className="field__o">{p.orgs}</span>
-                  <span className="field__go">{U("تفاصيل المجال")}</span>
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </>
-      }
-      aside={
-        <>
+        </div>
+        <aside className="sheet__aside">
           <Mark n={ord(3)} label={U("مجالات العمل")} />
           <div className="facts">
             <Fact value={String(pillars.length)} label={U("مجالات دائمة")} />
           </div>
-        </>
-      }
-    />
+        </aside>
+      </div>
+
+      <div className="ftl reveal">
+        <ol className="ftl__row" style={{ "--n": pillars.length } as React.CSSProperties}>
+          {pillars.map((p, i) => (
+            <li
+              /* التناوب مزدوج: الموضع (فوق/تحت الخطّ) واللون (بطاقة حبرية/ورقية) */
+              className={i % 2 ? "ftl__i is-down" : "ftl__i is-up is-ink"}
+              key={p.id}
+              style={{ "--i": i } as React.CSSProperties}
+            >
+              <Link className="ftl__a" href={path(`/p/${p.id}`)}>
+                <span className="ftl__text">
+                  <span className="ftl__card">
+                    <span className="ftl__n">{p.num}</span>
+                    <span className="ftl__t">{p.title}</span>
+                    <span className="ftl__o">{p.orgs}</span>
+                  </span>
+                </span>
+                {/* المحور: قطعة الخطّ في هذا العمود وعقدته؛ القطع تلتحم عبر
+                    الفراغات فتبدو خطّاً واحداً، وتُرسم تباعاً */}
+                <span className="ftl__axis" aria-hidden="true"><span className="ftl__dot" /></span>
+                <span className="ftl__media" aria-hidden="true">
+                  {p.cover?.src
+                    ? <img src={`/${p.cover.src}`} alt="" loading="lazy" decoding="async" />
+                    : <Icon id={p.id} />}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
   );
 }
 
