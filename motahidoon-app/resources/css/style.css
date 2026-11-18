@@ -752,19 +752,20 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
 .hero__lead {
   font-size: clamp(2.35rem, 4.4vw, 4.1rem);
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.2;
   text-shadow: 0 2px 18px rgba(26,26,26,.5);
 }
 
-/* الكلمة الكبرى: Zain بأثقل أوزانه، بالأحمر الأصلي، ممدودة بالكشيدة */
+/* الكلمة الكبرى: بأثقل أوزان الخطّ، بالأحمر الأصلي، ممدودة بالكشيدة */
 .hero__word {
   font-style: normal;
   font-weight: 900;
   font-size: clamp(5rem, 11.6vw, 10.2rem);
-  /* أضيق سطر لا تصعد فيه نقاط «ث» إلى السطر السابق (مقيس بالعين على Zain) */
+  /* أضيق سطر لا تصعد فيه نقاط «ث» إلى السطر السابق (مقيس بالعين على خطّ ثمانية) */
   line-height: .92;
-  /* أقلّ إزاحة تُبعد نقطتَي «ث» عن ذيل «ح» في السطر السابق (مقيسة بلقطة مكبّرة) */
-  margin-top: .12em;
+  /* نقطتا «ث» في خطّ ثمانية أعلى منهما في Zain: إزاحة تُبعدهما عن ذيل
+     «ى» و«ح» في السطر السابق (مقيسة بلقطة مكبّرة) */
+  margin-top: .26em;
   color: var(--red);
   text-shadow: 0 4px 30px rgba(26,26,26,.45);
 }
@@ -780,7 +781,8 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
    فتباعد الحروف يقطع وصل الحرف العربي */
 .hero__sub {
   display: flex; align-items: center; gap: .7em;
-  margin: .5rem 0 0;
+  /* نقطة «ب» في «ثبات» تنزل تحت سطرها: فراغ يمنعها من ملامسة هذا السطر */
+  margin: clamp(1.5rem, 2.9vw, 2.6rem) 0 0;
   font-size: clamp(1.02rem, 1.25vw, 1.2rem); font-weight: 600;
   word-spacing: .45em;
   color: var(--bg);
@@ -903,7 +905,7 @@ html.is-ltr .hero__bar { transform-origin: left; }
       linear-gradient(0deg, rgba(26,26,26,.8) 0%, rgba(26,26,26,0) 26%);
   }
   .hero__kicker { margin-bottom: .45rem; }
-  .hero__sub { margin-top: .6rem; }
+  .hero__sub { margin-top: 1.4rem; }   /* نقطة «ب» تنزل تحت سطرها */
   .hero__dot { width: 28px; }
 }
 
