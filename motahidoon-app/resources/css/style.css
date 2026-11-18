@@ -1388,171 +1388,71 @@ html.js-reveal .reveal:not(.is-in) .areas__a { opacity: 0; transform: translateY
 
 
 /* =====================================================================
-   المؤسسات الشريكة — مسار أفقي رسمي: دوائر الشعارات على خطّ واحد، وتحت
-   كلّ دائرة جذع قصير ورقمها وبطاقة اسمها. لا تخطيط يفترض عدداً: الأعمدة
-   من --n (عدد الشركاء).
-   الحركة قليلة وفي الخطوط المستقيمة وحدها: الخطّ يُرسم من جهة البدء، ثم
-   تنزل الجذوع واحداً بعد الآخر، ثم يمرّ ضوء خافت على الخطّ ببطء.
-   الإخفاء الابتدائي مشروط بـ html.js-reveal و:not(.is-in) — فبلا سكربت
-   أو في الطباعة يظهر كلّ شيء (مزلق معروف في المشروع).
+   المؤسسات الشريكة — شبكة رسمية: خانات ورقية متساوية تفصلها شعرات
+   مشتركة كجدول، في كلّ خانة الشعار داخل مساحة ثابتة الارتفاع فتتّسق
+   الشعارات المختلفة الأبعاد، وتحته الاسم ثم الصفة. لا ألوان ولا حركة ولا
+   تغيير عند المرور — هيئة صفحة الشركاء في المؤسسات الرسمية.
+   الشعرات: كل خانة تحمل حدّاً علوياً وحدّاً على جهة البدء بهامش سالب،
+   والحاوية تقصّ ما يفيض — فتصحّ الشبكة مهما كان عدد الشركاء وعدد الأعمدة.
    ===================================================================== */
-.ptl {
-  --c: clamp(4.4rem, 5.6vw, 5.6rem);           /* قطر الدائرة */
-  position: relative;
-  list-style: none; margin: clamp(2rem, 4vw, 3rem) 0 0; padding: 0;
+.pgrid {
+  list-style: none; padding: 0;
+  margin: clamp(1.75rem, 3.5vw, 2.5rem) 0 0;
   display: grid;
-  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
-  column-gap: clamp(.6rem, 1.3vw, 1.1rem);
-}
-
-/* الخطّ: من مركز أوّل دائرة إلى مركز آخرها، على ارتفاع منتصف الدوائر */
-.ptl__line {
-  position: absolute; z-index: 0;
-  top: calc(var(--c) / 2 - 1px); height: 2px;
-  inset-inline: calc(100% / var(--n) / 2);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
   overflow: hidden;
+  background: var(--paper);
+  --logo-h: clamp(3.75rem, 5vw, 4.75rem);
+  border: var(--line) solid var(--rule);
+  border-radius: var(--r);
 }
-.ptl__line::before {
-  content: ""; position: absolute; inset: 0;
-  background: var(--olive);
-  transform-origin: right;
-  transition: transform 1.3s cubic-bezier(.65, 0, .35, 1) .15s;
-}
-html.is-ltr .ptl__line::before { transform-origin: left; }
-/* ضوء خافت يمرّ على الخطّ — الحركة الوحيدة المستمرّة، بطيئة */
-.ptl__line::after {
-  content: ""; position: absolute; top: 0; bottom: 0;
-  width: 12%; inset-inline-start: -12%;
-  background: var(--green);
-  animation: ptl-sweep 6s cubic-bezier(.45, 0, .55, 1) 2.2s infinite;
-}
-@keyframes ptl-sweep {
-  0%   { inset-inline-start: -12%; }
-  60%, 100% { inset-inline-start: 100%; }
-}
-
-/* نقطة البدء: المعيّن الأحمر خارج الدائرة الأولى مباشرة، على مستوى الخطّ
-   — لمسة لا مساحة (داخل الدائرة كانت تحجبه) */
-.ptl::before {
-  content: ""; position: absolute; z-index: 2;
-  top: calc(var(--c) / 2 - 4px);
-  inset-inline-start: calc(100% / var(--n) / 2 - var(--c) / 2 - 18px);
-  width: 8px; height: 8px;
-  background: var(--red); transform: rotate(45deg);
-}
-
-.ptl__item {
-  position: relative; z-index: 1;
+.pgrid__cell {
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
-  --delay: calc(.9s + var(--i) * .12s);
-}
-
-.ptl__logo {
-  /* ارتفاع صريح لا aspect-ratio وحده: الشعار الطويل كان يمطّ الدائرة فتختلف
-     مستويات الأرقام والبطاقات بين الأعمدة */
-  width: var(--c); height: var(--c); flex: none;
-  overflow: hidden;
-  display: grid; place-items: center;
-  padding: 15%;
-  border-radius: 50%;
-  background: var(--paper);
-  border: var(--line) solid var(--rule);
-  box-shadow: 0 0 0 6px var(--bg), 0 10px 26px -18px rgba(26,26,26,.45);
-}
-.ptl__logo img { width: 100%; height: 100%; object-fit: contain; }
-.ptl__logo .partner__nologo { font-size: .66rem; line-height: 1.3; color: var(--ink-65); }
-
-/* جذع قصير بين الدائرة والرقم */
-.ptl__stem {
-  width: var(--line); height: clamp(1rem, 1.8vw, 1.4rem);
-  background: var(--olive);
-  transform-origin: top;
-  transition: transform .45s cubic-bezier(.22, 1, .36, 1) var(--delay);
-}
-
-.ptl__no {
-  margin: .45rem 0 .7rem;
-  padding: .18rem .6rem;
-  font-size: .74rem; font-weight: 700; letter-spacing: .14em;
-  color: var(--bg); background: var(--olive);
-  border-radius: 2px;
-  transition: background-color .35s ease;
-  font-variant-numeric: tabular-nums;
-}
-
-.ptl__card {
-  flex: 1; width: 100%;
-  display: flex; flex-direction: column; align-items: center; gap: .55rem;
-  padding: clamp(.85rem, 1.5vw, 1.15rem) clamp(.6rem, 1.1vw, .9rem);
-  background: var(--paper);
-  border: var(--line) solid var(--rule);
-  border-top: 2px solid var(--olive);
-  border-radius: 0 0 var(--r-sm) var(--r-sm);
-  transition: opacity .6s ease calc(var(--delay) + .1s),
-              transform .7s cubic-bezier(.22, 1, .36, 1) calc(var(--delay) + .1s);
-}
-.ptl__card .partner__n { font-size: clamp(.86rem, .9vw, .98rem); font-weight: 800; line-height: 1.5; margin: 0; }
-.ptl__card .partner__n a { color: inherit; text-decoration: none; }
-.ptl__card .partner__meta {
-  margin: 0; padding: .55rem 0 0;
+  padding: clamp(1.25rem, 2.2vw, 1.6rem) clamp(.9rem, 1.6vw, 1.2rem);
   border-top: var(--line) solid var(--rule);
-  font-size: .8rem; line-height: 1.55; color: var(--ink-72);
+  border-inline-start: var(--line) solid var(--rule);
+  margin-top: calc(var(--line) * -1);
+  margin-inline-start: calc(var(--line) * -1);
 }
 
-/* ---------- الحالة الابتدائية قبل الظهور (بالسكربت وحده) ---------- */
-html.js-reveal .reveal:not(.is-in) .ptl__line::before { transform: scaleX(0); }
-html.js-reveal .reveal:not(.is-in) .ptl__stem { transform: scaleY(0); }
-html.js-reveal .reveal:not(.is-in) .ptl__card { opacity: 0; transform: translateY(10px); }
-
-/* ---------- التناوب الثابت ----------
-   عنصر ملوّن وعنصر لا: العناصر الزوجية (02، 04…) حلقتها وشارتها خضراء،
-   وبطاقتها زيتونية (البنّي) بحافّة خضراء ونصّ ورقي. ثابت بلا حركة ولا تغيّر عند المرور.
-   (أوّل ابن في القائمة هو الخطّ، فـ:nth-child(odd) بين البنود = 02، 04، 06) */
-.ptl__item:nth-child(odd) .ptl__logo { border-color: var(--green); box-shadow: 0 0 0 6px var(--bg), 0 10px 26px -18px rgba(26,26,26,.45); }
-.ptl__item:nth-child(odd) .ptl__no { background: var(--green); }
-/* البنّي في اللوحة المقفلة هو الزيتوني #5C5B34 — نصّ ورقي عليه ‎6.8:1‎ */
-.ptl__item:nth-child(odd) .ptl__card {
-  background: var(--olive); border-color: var(--olive); border-top-color: var(--green);
+/* مساحة الشعار: ارتفاع ثابت، والشعار يُحتوى بلا قصّ ولا مطّ */
+.pgrid__logo {
+  display: grid; place-items: center;
+  inline-size: 100%; block-size: var(--logo-h);
 }
-.ptl__item:nth-child(odd) .partner__n,
-.ptl__item:nth-child(odd) .partner__n a { color: var(--bg); }
-.ptl__item:nth-child(odd) .partner__meta { color: var(--bg); border-top-color: rgba(252,252,250,.25); }
+/* حدّ صريح لا نسبة مئوية: النسبة من حاوية شبكية لا تقيّد الصورة فتفيض */
+.pgrid__logo img {
+  inline-size: auto; block-size: auto;
+  max-inline-size: 82%; max-block-size: var(--logo-h);
+  object-fit: contain;
+}
+.pgrid__logo .partner__nologo { font-size: .72rem; }
 
-/* ---------- الشاشات الأضيق: المسار عمودي على جانب البدء ---------- */
-@media (max-width: 1000px) {
-  .ptl {
-    --c: 4.2rem;
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 1rem;
-  }
-  .ptl__line {
-    top: calc(var(--c) / 2); bottom: calc(var(--c) / 2);
-    height: auto; width: 2px;
-    inset-inline: auto; inset-inline-start: calc(var(--c) / 2 - 1px);
-  }
-  .ptl__line::before { transform-origin: top; }
-  .ptl::before { top: -14px; inset-inline-start: calc(var(--c) / 2 - 4px); }
-  html.js-reveal .reveal:not(.is-in) .ptl__line::before { transform: scaleY(0); }
-  .ptl__line::after { display: none; }
-  .ptl__item {
-    display: grid;
-    grid-template-columns: var(--c) auto minmax(0, 1fr);
-    align-items: center; column-gap: .9rem;
-    text-align: start;
-  }
-  .ptl__stem { display: none; }
-  .ptl__no { margin: 0; }
-  .ptl__card { align-items: flex-start; border-top: var(--line) solid var(--rule); border-inline-start: 2px solid var(--olive); border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+.pgrid__n {
+  margin: clamp(.85rem, 1.5vw, 1.1rem) 0 0;
+  padding-top: clamp(.75rem, 1.3vw, .95rem);
+  border-top: var(--line) solid var(--rule);
+  inline-size: 100%;
+  font-size: clamp(.88rem, .95vw, .98rem); font-weight: 800; line-height: 1.5;
+  text-wrap: balance;
+  color: var(--ink);
+}
+.pgrid__n a { color: inherit; text-decoration: none; }
+.pgrid__n a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 2px; }
+.pgrid__meta {
+  margin: .35rem 0 0;
+  font-size: .8rem; line-height: 1.55;
+  color: var(--ink-72);
+  text-wrap: balance;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ptl__line::before, .ptl__stem, .ptl__card { transition: none; transform: none !important; opacity: 1 !important; }
-  .ptl__line::after { display: none; }
+/* الجوال: عمودان ثابتان */
+@media (max-width: 620px) {
+  .pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media print {
-  .ptl__line::before, .ptl__stem, .ptl__card { transform: none !important; opacity: 1 !important; }
-  .ptl__line::after { display: none; }
+  .pgrid { break-inside: avoid; }
 }
 
 /* =====================================================================

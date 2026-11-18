@@ -7,7 +7,7 @@ import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
 import { Icon } from "@/components/Icon";
 import {
-  Band, Fact, Filled, Mark, Seal, Slot, Statement,
+  Band, Fact, Filled, Mark, Seal, Section, SectionHead, Slot, Statement,
 } from "@/components/primitives";
 import type { Founding, Identity, Partner, Pillar, Report } from "@/types";
 
@@ -123,53 +123,43 @@ export function Partners({ partners }: { partners: Partner[] }) {
   const U = useU();
   const allBare = partners.every((p) => !p.role && !p.about);
   return (
-    <Band
+    <Section
       id="partners"
-      main={
-        <>
-          <h2 className="h-sec">{U("المؤسسات الشريكة")}</h2>
-          {/* مسار أفقي: دوائر الشعارات على خطّ واحد، وتحت كلّ دائرة رقمها
-              وبطاقة اسمها. عدد الأعمدة من عدد الشركاء (--n) — لا عدد مفترَض. */}
-          <ol className="ptl" style={{ "--n": partners.length } as React.CSSProperties}>
-            <li className="ptl__line" aria-hidden="true" />
-            {partners.map((p, i) => (
-              <li key={p.id} className="ptl__item" style={{ "--i": i } as React.CSSProperties}>
-                <span className="ptl__logo">
-                  {p.logo
-                    ? <img src={`/${p.logo}`} alt={p.name} loading="lazy" />
-                    : <span className="partner__nologo">{U("شعار قيد الاستلام")}</span>}
-                </span>
-                <span className="ptl__stem" aria-hidden="true" />
-                <span className="ptl__no" aria-hidden="true">{ord(i + 1)}</span>
-                <article className="ptl__card">
-                  <h3 className="partner__n">
-                    {p.site
-                      ? <a href={p.site} target="_blank" rel="noopener">{p.name}</a>
-                      : p.name}
-                  </h3>
-                  {(p.role || p.about) && (
-                    <p className="partner__meta">{p.role || p.about}</p>
-                  )}
-                </article>
-              </li>
-            ))}
-          </ol>
-        </>
+      head={
+        <SectionHead
+          title={U("المؤسسات الشريكة")}
+          side={
+            <>
+              {allBare && <Slot label={U("نبذة كل مؤسسة")} />}
+              <Fact value={String(partners.length)} label={U("مؤسسة في المظلة")} />
+            </>
+          }
+        />
       }
-      aside={
-        <>
-          <Mark n={ord(2)} label={U("المؤسسات الشريكة")} />
-          <div className="facts">
-            <Fact value={String(partners.length)} label={U("مؤسسة في المظلة")} />
-          </div>
-          {allBare && (
-            <div style={{ marginTop: "1.5rem" }}>
-              <Slot label={U("نبذة كل مؤسسة")} />
-            </div>
-          )}
-        </>
-      }
-    />
+    >
+      {/* شبكة رسمية: خانات ورقية متساوية بشعرات مشتركة — الشعار في
+          مساحة ثابتة الارتفاع، وتحته الاسم ثم الصفة إن وُجدت. عدد
+          الأعمدة يتبع العرض، لا عدداً مفترَضاً من الشركاء. */}
+      <ul className="pgrid">
+        {partners.map((p) => (
+          <li key={p.id} className="pgrid__cell">
+            <span className="pgrid__logo">
+              {p.logo
+                ? <img src={`/${p.logo}`} alt={p.name} loading="lazy" />
+                : <span className="partner__nologo">{U("شعار قيد الاستلام")}</span>}
+            </span>
+            <h3 className="pgrid__n">
+              {p.site
+                ? <a href={p.site} target="_blank" rel="noopener">{p.name}</a>
+                : p.name}
+            </h3>
+            {(p.role || p.about) && (
+              <p className="pgrid__meta">{p.role || p.about}</p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Section>
   );
 }
 
