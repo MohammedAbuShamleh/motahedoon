@@ -2601,6 +2601,195 @@ html[dir="ltr"] .film::after {
 }
 
 /* =====================================================================
+   صفحة التقرير — وثيقة رسمية: غلاف ببطاقة وثيقة ومحتويات، ثم فصول المجالات
+   بسكّة جانبية، ثم أقسام بخاتم فترة مختصر. أصناف rp- خاصّة بهذه الصفحة؛
+   .ph و.pnav مشتركة مع صفحتَي التعريف والمجال فلا تُمسّ.
+   اللمسة الإبداعية من مفردات الهوية وحدها: نقش الثُّمانيّ الخافت على
+   شريط البطاقة، والرقم المحيطي في سكّة الفصل، والمعيّن الأحمر نقطةً.
+   ===================================================================== */
+.rp-cover__in, .rp-sec__in, .rp-ch__in {
+  width: min(100% - var(--edge) * 2, var(--wrap));
+  margin-inline: auto;
+}
+
+/* ---------- الغلاف ---------- */
+.rp-cover { padding-block-end: clamp(2.5rem, 5vw, 4rem); }
+.rp-cover__in {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+.rp-cover__range { margin-top: clamp(1.1rem, 2.2vw, 1.6rem); }
+.rp-cover__intro { margin-top: clamp(1.5rem, 3vw, 2.2rem); }
+
+/* بطاقة الوثيقة: تبقى في المنظور وأنت تقرأ المقدّمة */
+.rp-doc {
+  position: sticky; top: calc(var(--xb, 0px) + 6.5rem);
+  border: var(--line) solid var(--rule);
+  border-radius: var(--r);
+  background: var(--paper);
+  overflow: hidden;
+  box-shadow: 0 24px 50px -38px rgba(26,26,26,.55);
+}
+.rp-doc__band {
+  position: relative;
+  padding: clamp(1.1rem, 2vw, 1.4rem) clamp(1.1rem, 2vw, 1.4rem);
+  background-color: var(--olive);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M16 0h24l16 16v24L40 56H16L0 40V16z' fill='none' stroke='%23FCFCFA' stroke-opacity='.12' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 56px 56px;
+}
+.rp-doc__band .seal { margin: 0; border-inline-start-color: var(--bg); }
+.rp-doc__band .seal__k { color: rgba(252,252,250,.82); }
+.rp-doc__band .seal__v { color: var(--bg); font-size: 1.12rem; }
+.rp-doc__body { padding: clamp(1.1rem, 2vw, 1.4rem); }
+.rp-doc__file { margin: 0; }
+.rp-doc__file .btn { width: 100%; max-width: none; justify-content: center; }
+
+/* المحتويات */
+.rp-toc { margin-top: 1.25rem; padding-top: 1.1rem; border-top: var(--line) solid var(--rule); }
+.rp-toc__h {
+  margin: 0 0 .6rem;
+  font-size: .74rem; font-weight: 800; letter-spacing: .14em; color: var(--olive);
+}
+.rp-toc ol { list-style: none; margin: 0; padding: 0; }
+.rp-toc a {
+  display: flex; align-items: center; gap: .65rem;
+  padding: .42rem .45rem; margin-inline: -.45rem;
+  border-radius: var(--r-sm);
+  font-size: .88rem; font-weight: 600; line-height: 1.45;
+  color: var(--ink-72); text-decoration: none;
+  transition: background-color .2s ease, color .2s ease;
+}
+.rp-toc a:hover, .rp-toc a:focus-visible { background: rgba(92,91,52,.08); color: var(--ink); }
+.rp-toc__n {
+  flex: none; display: grid; place-items: center;
+  min-width: 1.85rem; height: 1.45rem; padding-inline: .3rem;
+  border-radius: 5px;
+  background: var(--olive); color: var(--bg);
+  font-size: .7rem; font-weight: 800; letter-spacing: .04em;
+  font-variant-numeric: tabular-nums; unicode-bidi: isolate;
+}
+.rp-toc__d {
+  flex: none; width: 1.85rem; display: grid; place-items: center;
+}
+.rp-toc__d::before {
+  content: ""; width: 6px; height: 6px;
+  border: var(--line) solid var(--olive); transform: rotate(45deg);
+}
+
+/* ---------- وسم الفترة المختصر ---------- */
+.rp-tag {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .26rem .65rem;
+  border: var(--line) solid var(--rule); border-radius: 6px;
+  background: var(--paper);
+  font-size: .74rem; font-weight: 800; color: var(--ink-72);
+  white-space: nowrap;
+}
+.rp-tag::before {
+  content: ""; width: 5px; height: 5px;
+  background: var(--red); transform: rotate(45deg);
+}
+
+/* ---------- رأس قسم موحّد ---------- */
+.rp-sec__head {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+  gap: .9rem 1.5rem;
+  padding-bottom: clamp(.9rem, 1.8vw, 1.25rem);
+  margin-bottom: clamp(1.4rem, 2.8vw, 2rem);
+  border-bottom: var(--line) solid var(--rule);
+}
+.rp-sec__head .h-sec { margin: 0; }
+.rp-sec__head .h-sec::after {
+  content: ""; display: block; width: 2.4rem; height: 2px;
+  margin-top: .75rem; background: var(--red);
+}
+.rp-sec .entries, .rp-sec .bullets { margin-top: 0; }
+
+/* ---------- التنبيه التوثيقي ---------- */
+.rp-notice {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(.9rem, 2vw, 1.4rem);
+  padding: clamp(1.2rem, 2.4vw, 1.7rem);
+  border: var(--line) solid rgba(92,91,52,.24);
+  border-inline-start: 3px solid var(--olive);
+  border-radius: var(--r);
+  background: rgba(92,91,52,.055);
+}
+.rp-notice .h-sub { margin: 0 0 .5rem; }
+.rp-notice .prose p { margin: 0; }
+.rp-notice .prose p + p { margin-top: .6rem; }
+.rp-notice__ico {
+  display: grid; place-items: center;
+  width: 2.5rem; height: 2.5rem; border-radius: var(--r-sm);
+  background: var(--olive); color: var(--bg);
+}
+.rp-notice__ico svg { width: 56%; height: 56%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+
+/* ---------- فصول المجالات ---------- */
+.rp-ch { padding-block: clamp(3rem, 6vw, 4.75rem); }
+.rp-ch__in {
+  display: grid;
+  grid-template-columns: clamp(5rem, 9vw, 7.5rem) minmax(0, 1fr);
+  gap: clamp(1.25rem, 3.5vw, 3rem);
+}
+/* السكّة: الرقم المحيطي ثم الرمز ثم شعرة تنزل بطول الفصل */
+.rp-ch__rail {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: .9rem;
+}
+.rp-ch__rail::after {
+  content: ""; flex: 1; width: var(--line); min-height: 3rem;
+  background: linear-gradient(var(--olive), rgba(92,91,52,0));
+}
+.rp-ch__n {
+  font-weight: 900; font-size: clamp(3.2rem, 6vw, 5.2rem); line-height: .9;
+  color: transparent; -webkit-text-stroke: 1.5px var(--olive);
+  font-variant-numeric: tabular-nums; unicode-bidi: isolate;
+}
+.rp-ch__ico {
+  display: grid; place-items: center;
+  width: 3rem; height: 3rem; border-radius: var(--r-sm);
+  border: var(--line) solid var(--rule); background: var(--paper);
+  color: var(--olive);
+}
+.rp-ch__ico .ico { width: 2rem; height: 2rem; }
+.rp-ch__k {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .7rem;
+  margin: 0 0 clamp(.8rem, 1.6vw, 1.1rem);
+  font-size: .78rem; font-weight: 800; letter-spacing: .14em; color: var(--olive);
+}
+.rp-ch__body .h-sec { margin: 0; }
+.rp-ch__cta { margin: clamp(1.4rem, 2.8vw, 2rem) 0 0; }
+
+/* شريط الأرقام داخل الفصل: الفواصل حدود خانات لا أرضية تظهر من الفجوات —
+   فالسطر الناقص لا يكشف مساحة رمادية فارغة */
+.rp-ch .stats { background: var(--paper); gap: 0; }
+.rp-ch .stat { box-shadow: 0 0 0 var(--line) var(--rule); }
+
+/* ---------- الخاتمة ---------- */
+.rp-signoff { margin-top: clamp(1.8rem, 3.6vw, 2.6rem); }
+
+/* ---------- الشاشات الأضيق ---------- */
+@media (max-width: 960px) {
+  .rp-cover__in { grid-template-columns: minmax(0, 1fr); }
+  .rp-doc { position: static; }
+}
+@media (max-width: 680px) {
+  .rp-ch__in { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .rp-ch__rail { flex-direction: row; justify-content: flex-start; }
+  .rp-ch__rail::after { flex: 1; height: var(--line); width: auto; min-height: 0;
+    background: linear-gradient(to left, var(--olive), rgba(92,91,52,0)); }
+  html.is-ltr .rp-ch__rail::after { background: linear-gradient(to right, var(--olive), rgba(92,91,52,0)); }
+  .rp-ch__n { font-size: 3rem; }
+}
+@media print {
+  .rp-doc { position: static; box-shadow: none; }
+  .rp-toc { display: none; }
+}
+
+/* =====================================================================
    الطباعة الورقية
    ===================================================================== */
 
