@@ -1764,101 +1764,110 @@ html.is-ltr .ftl.is-in .ftl__axis::after { animation-name: ftl-run-ltr; }
    لمحة الأثر — القسم الوحيد المؤرَّخ في الرئيسية
    ===================================================================== */
 
-/* ---------- لمحة أثر في الرئيسية: بطاقات رسمية على الحبري ----------
-   عنوان ورقي تحته شريط زيتوني قصير، ثم بطاقة لكلّ مؤشّر: حدّ شعري،
-   وشريط لوني في أعلاها يتناوب أخضر وزيتونياً، ورقم ترتيب محفور بخطّ
-   محيطي في ركنها كعلامة مائية، والقيمة كبيرة خفيفة، وتحتها التسمية.
-   المؤشّر المبرَز بطاقة زيتونية كاملة — لمسة اللون الوحيدة الكبيرة.
-   ألوان اللوحة وحدها: ورق على زيتوني ‎6.8:1‎، و--on-ink على الحبري ‎9:1‎.
+/* ---------- لمحة أثر في الرئيسية: شريط أرقام رسمي على الحبري ----------
+   أرضية --ink (#1A1A1A) عليها شبكة مثمّنات هندسية خافتة جدّاً، والعنوان
+   في الوسط وتحته ختم الفترة. الأعمدة متساوية بينها شعرات رأسية: رقم
+   الترتيب صغيراً، ثم القيمة كبيرة ثقيلة بالورقي، ثم وحدتها، ثم التسمية.
+   لا بطاقات ولا ألوان؛ الأحمر في خطّ الختم وحده. --on-ink على الحبري 9:1.
    الإخفاء الابتدائي مشروط بـ html.js-reveal و:not(.is-in) — فبلا سكربت
    أو في الطباعة يظهر كلّ شيء. (.figs أدناه باقية لصفحة التقرير.) */
-.impact__title { margin: 0; }
-.impact__title span { display: inline-block; }
-.impact__title::after {
-  content: ""; display: block;
-  width: 3.25rem; height: 3px;
-  margin-top: clamp(.8rem, 1.5vw, 1.1rem);
-  background: var(--olive);
+.band--dark.impact {
+  /* حيّز مضغوط: نصف حشوة الأقسام العامّة تقريباً */
+  padding-block: calc(var(--sec) * .55);
+  background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cpath d='M28 0h40l28 28v40L68 96H28L0 68V28z' fill='none' stroke='%23FCFCFA' stroke-opacity='.045' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 96px 96px;
+  background-position: 50% 0;
+}
+.impact__in {
+  width: min(100% - var(--edge) * 2, var(--wrap));
+  margin-inline: auto;
 }
 
+.impact__head {
+  display: flex; flex-direction: column; align-items: center; gap: .6rem;
+  text-align: center;
+}
+.impact__title { margin: 0; font-size: clamp(1.6rem, 2.6vw, 2.2rem); }
+.band--dark .impact__head .seal { margin: 0; }
+
+/* الأعمدة: الشعرة الرأسية على جهة بدء كل عمود، والحاوية تقصّ شعرة أول
+   عمود في كل سطر (هامش سالب + overflow) — فتصحّ الفواصل مهما التفّت */
 .impact__cols {
   list-style: none; padding: 0;
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  margin: clamp(1.4rem, 2.8vw, 2rem) 0 0;
   display: grid;
   grid-template-columns: repeat(var(--n), minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
+  overflow: hidden;
 }
 .impact__col {
-  position: relative; overflow: hidden;
-  display: flex; flex-direction: column;
-  padding: clamp(1.4rem, 2.6vw, 2rem);
-  padding-top: clamp(1.8rem, 3vw, 2.4rem);
-  background: rgba(252,252,250,.035);
-  border: var(--line) solid var(--rule-ink);
-  border-radius: var(--r);
-  --bar: var(--green);
-  --delay: calc(.2s + var(--i) * .14s);
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  padding: .35rem clamp(.6rem, 1.4vw, 1.1rem);
+  border-inline-start: var(--line) solid var(--rule-ink);
+  margin-inline-start: calc(var(--line) * -1);
+  --delay: calc(.15s + var(--i) * .1s);
   transition: opacity .7s ease var(--delay), transform .8s cubic-bezier(.22, 1, .36, 1) var(--delay);
 }
-.impact__col:nth-child(even) { --bar: var(--olive); }
-/* الشريط اللوني في أعلى البطاقة — يُرسم من جهة البدء عند الظهور */
-.impact__col::before {
-  content: ""; position: absolute; inset-inline: 0; top: 0;
-  height: 3px; background: var(--bar);
-  transform-origin: right;
-  transition: transform .9s cubic-bezier(.65, 0, .35, 1) calc(var(--delay) + .25s);
-}
-html.is-ltr .impact__col::before { transform-origin: left; }
 
-/* رقم الترتيب: محفور بخطّ محيطي في الركن، لا يُقطع ولا يزاحم القيمة */
+/* رقم الترتيب: صغير في رأس العمود، مكان الرمز في الأشرطة الرسمية */
 .impact__no {
-  position: absolute; top: clamp(.9rem, 1.6vw, 1.2rem); inset-inline-end: clamp(1rem, 1.8vw, 1.4rem);
-  font-family: var(--f-display); font-weight: 800;
-  font-size: clamp(2.6rem, 4vw, 3.6rem); line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(252,252,250,.28);
-  unicode-bidi: isolate; pointer-events: none;
+  font-size: .78rem; font-weight: 800; letter-spacing: .16em;
+  color: var(--on-ink-dim);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
 }
-
+/* القيمة كما هي حرفياً — كبيرة ثقيلة، لا تُختصر ولا تُقطع */
 .impact__v {
-  margin: clamp(1.6rem, 3vw, 2.4rem) 0 0;
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .55rem;
-  font-weight: 200; font-size: clamp(2rem, 3.4vw, 3.1rem);
-  line-height: 1.05; letter-spacing: -.035em; color: var(--bg);
+  margin: .4rem 0 0;
+  font-family: var(--f-display); font-weight: 800;
+  font-size: clamp(1.7rem, 2.55vw, 2.6rem);
+  line-height: 1.1; letter-spacing: -.01em;
+  color: var(--bg);
+  white-space: nowrap;
 }
 .impact__v > bdi { direction: ltr; unicode-bidi: isolate; }
-.impact__u { font-size: .95rem; font-weight: 700; letter-spacing: 0; color: var(--on-ink); }
-
+.impact__u {
+  margin: .2rem 0 0;
+  font-size: .86rem; font-weight: 700;
+  color: var(--bg);
+}
 .impact__l {
-  flex: 1; margin: clamp(1rem, 1.8vw, 1.3rem) 0 0;
-  padding-top: clamp(.9rem, 1.6vw, 1.1rem);
-  border-top: var(--line) solid var(--rule-ink);
-  font-size: .95rem; line-height: 1.75; color: var(--on-ink);
+  margin: .35rem 0 0;
+  max-width: 26ch;
+  font-size: .84rem; line-height: 1.6;
+  color: var(--on-ink);
+  text-wrap: balance;
 }
 
-/* المؤشّر المبرَز: بطاقة زيتونية كاملة */
-.impact__col.is-accent {
-  background: var(--olive); border-color: var(--olive);
-  --bar: var(--green);
-}
-.impact__col.is-accent .impact__no { -webkit-text-stroke-color: rgba(252,252,250,.4); }
-.impact__col.is-accent .impact__u,
-.impact__col.is-accent .impact__l { color: var(--bg); }
-.impact__col.is-accent .impact__l { border-top-color: rgba(252,252,250,.28); }
-
-.impact__cta { margin: clamp(2rem, 4vw, 3rem) 0 0; }
+.impact__cta { margin: clamp(1.3rem, 2.6vw, 1.8rem) 0 0; text-align: center; }
 
 html.js-reveal .reveal:not(.is-in) .impact__col { opacity: 0; transform: translateY(14px); }
-html.js-reveal .reveal:not(.is-in) .impact__col::before { transform: scaleX(0); }
 
-@media (max-width: 860px) {
+/* الشاشات المتوسّطة: ثلاثة أعمدة في سطرين، وشعرة أفقية بين السطرين
+   (هامش علوي سالب يُقصّ في السطر الأول) */
+@media (max-width: 1100px) {
+  .impact__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .impact__col {
+    padding-block: clamp(.8rem, 1.6vw, 1.1rem);
+    border-top: var(--line) solid var(--rule-ink);
+    margin-top: calc(var(--line) * -1);
+  }
+}
+/* الجوال: عمود واحد، والشعرات الأفقية وحدها تفصل الأرقام */
+@media (max-width: 620px) {
   .impact__cols { grid-template-columns: minmax(0, 1fr); }
+  .impact__col { border-inline-start: 0; margin-inline-start: 0; }
+  .impact__v { font-size: clamp(1.7rem, 8vw, 2.2rem); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .impact__col, .impact__col::before { transition: none; transform: none !important; opacity: 1 !important; }
+  .impact__col { transition: none; transform: none !important; opacity: 1 !important; }
 }
 @media print {
-  .impact__col, .impact__col::before { transform: none !important; opacity: 1 !important; }
+  .impact__col { transform: none !important; opacity: 1 !important; }
+  .band--dark.impact { background-image: none; }
+  .impact__v, .impact__u, .impact__l, .impact__no, .impact__title { color: #000 !important; }
+  .impact__col { border-color: #ccc !important; }
 }
 /* ---------- نهاية لمحة أثر في الرئيسية ---------- */
 

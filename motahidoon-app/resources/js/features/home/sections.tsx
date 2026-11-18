@@ -223,41 +223,42 @@ export function Impact({ report, count }: { report: Report; count: number }) {
   const U = useU();
   const path = usePath();
   const metrics = report.metrics.slice(0, count);
+  /* شريط أرقام رسمي على الحبري: العنوان في الوسط وتحته ختم الفترة (كل
+     رقم مؤرَّخ يحمل فترته — حدّ أحمر)، ثم أعمدة متساوية بينها شعرات
+     رأسية: الترتيب، فالقيمة كما هي حرفياً، فوحدتها، فالتسمية. */
   return (
-    <Band
-      id="impact"
-      cls="band--dark impact"
-      main={
-        <>
-          <h2 className="h-sec impact__title"><span>{U("لمحة أثر")}</span></h2>
-          <ol className="impact__cols" style={{ "--n": metrics.length } as React.CSSProperties}>
-            {metrics.map((m, i) => {
-              const shown = (m.prefix ? `${m.prefix} ` : "") + m.value;
-              return (
-                <li
-                  key={`${m.label}-${i}`}
-                  className={m.accent ? "impact__col is-accent" : "impact__col"}
-                  style={{ "--i": i } as React.CSSProperties}
-                >
-                  <span className="impact__no" aria-hidden="true">{ord(i + 1)}</span>
-                  <p className="impact__v">
-                    <bdi>{shown}</bdi>
-                    {m.unit ? <span className="impact__u">{m.unit}</span> : null}
-                  </p>
-                  <p className="impact__l">{m.label}</p>
-                </li>
-              );
-            })}
-          </ol>
-          <p className="impact__cta">
-            <Link className="btn btn--light" href={path("/reports")}>
-              {U("الإنجازات الكاملة")}
-            </Link>
-          </p>
-        </>
-      }
-      aside={<><Mark n={ord(4)} label={U("لمحة أثر")} /><Seal value={report.label} /></>}
-    />
+    <section className="band band--dark impact" id="impact">
+      <div className="impact__in reveal">
+        <header className="impact__head">
+          <h2 className="h-sec impact__title">{U("لمحة أثر")}</h2>
+          <Seal value={report.label} />
+        </header>
+
+        <ol className="impact__cols" style={{ "--n": metrics.length } as React.CSSProperties}>
+          {metrics.map((m, i) => {
+            const shown = (m.prefix ? `${m.prefix} ` : "") + m.value;
+            return (
+              <li
+                key={`${m.label}-${i}`}
+                className="impact__col"
+                style={{ "--i": i } as React.CSSProperties}
+              >
+                <span className="impact__no" aria-hidden="true">{ord(i + 1)}</span>
+                <p className="impact__v"><bdi>{shown}</bdi></p>
+                {m.unit ? <p className="impact__u">{m.unit}</p> : null}
+                <p className="impact__l">{m.label}</p>
+              </li>
+            );
+          })}
+        </ol>
+
+        <p className="impact__cta">
+          <Link className="btn btn--light" href={path("/reports")}>
+            {U("الإنجازات الكاملة")}
+          </Link>
+        </p>
+      </div>
+    </section>
   );
 }
 
