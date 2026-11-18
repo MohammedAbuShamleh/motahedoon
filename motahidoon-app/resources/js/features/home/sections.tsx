@@ -74,7 +74,6 @@ export function About({
     <section className={photo ? "band about" : "band about about--solo"} id="about">
       <div className="about__in reveal">
         <div className="about__text">
-          <Mark n={ord(1)} label={U("من نحن")} />
           <h2 className="h-sec about__title">{U("من نحن")}</h2>
           {/* شعرة حمراء تنتهي بالنقطة المعيّنية — من استعمالات الأحمر المعدودة */}
           <span className="about__rule" aria-hidden="true" />
@@ -94,9 +93,10 @@ export function About({
             {founding.year
               ? <div className="facts"><Fact value={founding.year} label={U("سنة التأسيس")} /></div>
               : <Slot label={U("سنة التأسيس")} />}
-            {governance
-              ? <Filled label={U("الحوكمة واتخاذ القرار")} value={governance} />
-              : <Slot label={U("الحوكمة واتخاذ القرار")} />}
+            {/* الحوكمة: في الرئيسية تظهر حين تُعتمد وحدها — خانتها المحجوزة
+                تبقى في صفحة «التعريف الكامل» (قرار صاحب المشروع، استثناءً من
+                قاعدة «الحقل الفارغ يظهر ولا يُخفى» في هذا الموضع فقط). */}
+            {governance && <Filled label={U("الحوكمة واتخاذ القرار")} value={governance} />}
           </div>
 
           <p className="about__cta">
