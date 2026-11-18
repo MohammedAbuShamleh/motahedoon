@@ -242,6 +242,81 @@ html.is-ltr .h-sub { letter-spacing: -.025em; }
 .sheet__aside .pos { margin: 0; }
 .band--dark .sheet__aside { border-bottom-color: var(--rule-ink); }
 
+/* ---------- قسم الرئيسية ورأسه الموحّد ----------
+   العنوان وشعرته الحمراء في جهة البدء، والحقائق في الجهة الأخرى على السطر
+   نفسه: الرقم كبير ثقيل بجانبه شعرة زيتونية رأسية وتسميته تحته — هيئة رأس
+   القسم في المواقع المؤسسية الرسمية. ثم شعرة تفصل الرأس عن المحتوى. */
+.sec__in {
+  width: min(100% - var(--edge) * 2, var(--wrap));
+  margin-inline: auto;
+}
+.shead {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+  gap: 1.25rem clamp(1.5rem, 4vw, 3.5rem);
+  padding-bottom: clamp(1.1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+  border-bottom: var(--line) solid var(--rule);
+}
+/* رأس وحده في حاويته (المحتوى بعده بعرضه الخاص): الهامش للمحتوى لا للرأس */
+.sec__in > .shead:only-child { margin-bottom: 0; }
+.shead__main { min-width: 0; }
+/* أخصّ من .h-sec التي تأتي بعدها في الملف */
+.shead .shead__title { font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: -.02em; }
+/* شعرة حمراء قصيرة تنتهي بالمعيّن — الأحمر خطّ لا مساحة */
+.shead__rule {
+  position: relative; display: block;
+  width: 3.75rem; height: 2px;
+  margin-top: clamp(.75rem, 1.4vw, 1rem);
+  background: var(--red);
+}
+.shead__rule::after {
+  content: ""; position: absolute; top: 50%; inset-inline-end: -11px;
+  width: 7px; height: 7px; margin-top: -3.5px;
+  background: var(--red); transform: rotate(45deg);
+}
+
+.shead__side {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 1rem clamp(1.25rem, 2.6vw, 2.25rem);
+}
+.shead__side .fact {
+  display: flex; align-items: center; gap: .85rem;
+  padding-inline-start: 1rem;
+  border-inline-start: 2px solid var(--olive);
+}
+.shead__side .fact__v {
+  font-size: clamp(2.2rem, 3.4vw, 3rem); font-weight: 800; line-height: 1;
+  color: var(--ink);
+}
+.shead__side .fact__l {
+  margin: 0; max-width: 9ch;
+  font-size: .86rem; line-height: 1.45; color: var(--ink-72);
+}
+.shead__side .slot {
+  margin: 0; padding: .45rem .8rem;
+  background: none; border-style: dashed;
+}
+.shead__side .slot__label { font-size: .7rem; }
+.shead__side .slot__state { margin-top: .1rem; font-size: .82rem; }
+.shead__side .btn { margin: 0; }
+/* رابط «الكلّ»: نصّ زيتوني بسهم يشير إلى جهة نهاية السطر */
+.shead__more {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-size: .92rem; font-weight: 800; color: var(--olive);
+  text-decoration: none;
+}
+.shead__more::after { content: "←"; font-weight: 400; }
+html.is-ltr .shead__more::after { content: "→"; }
+.shead__more:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 2px; }
+
+/* المحتوى تحت الرأس: الرأس يحمل الهامش، فلا هامش علوياً مضاعفاً */
+.sec__in > .pgrid { margin-top: 0; }
+
+@media (max-width: 640px) {
+  .shead { align-items: flex-start; }
+  .shead__side { width: 100%; }
+}
+
 .prose { max-width: 66ch; }
 
 @media (max-width: 999px) {

@@ -23,7 +23,42 @@ export function Band({
     <section className={`band ${cls ?? ""}`} id={id}>
       <div className={noReveal ? "sheet" : "sheet reveal"}>
         <div className="sheet__main">{main}</div>
-        <aside className="sheet__aside">{aside}</aside>
+        {/* بلا محتوى جانبي لا يُرسم الهامش — وإلا بقيت شعرته الفاصلة وحدها */}
+        {aside && <aside className="sheet__aside">{aside}</aside>}
+      </div>
+    </section>
+  );
+}
+
+/** رأس قسم موحّد في الرئيسية: العنوان وتحته شعرة حمراء تنتهي بمعيّن في جهة
+    البدء، والحقائق والخانات المحجوزة في الجهة الأخرى على السطر نفسه، وشعرة
+    تفصل الرأس عن المحتوى. لا نصّ تعريفي تحت العنوان — لا يُخترع نصّ. */
+export function SectionHead({ title, side }: { title: ReactNode; side?: ReactNode }) {
+  return (
+    <header className="shead">
+      <div className="shead__main">
+        <h2 className="h-sec shead__title">{title}</h2>
+        <span className="shead__rule" aria-hidden="true" />
+      </div>
+      {side && <div className="shead__side">{side}</div>}
+    </header>
+  );
+}
+
+/** قسم الرئيسية: حاوية بعرض العمود، رأس موحّد ثم المحتوى بعرض كامل تحته. */
+export function Section({
+  id, cls, head, children,
+}: {
+  id?: string;
+  cls?: string;
+  head: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <section className={`band sec ${cls ?? ""}`} id={id}>
+      <div className="sec__in reveal">
+        {head}
+        {children}
       </div>
     </section>
   );
