@@ -3,6 +3,7 @@
    بلا تعديل حرف. */
 
 import { Link } from "@inertiajs/react";
+import { useCardCycle } from "@/hooks/useCardCycle";
 import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
 import { Icon } from "@/components/Icon";
@@ -164,50 +165,81 @@ export function Partners({ partners }: { partners: Partner[] }) {
 }
 
 /* ---------- مجالات العمل ---------- */
+/* بطاقات منقسمة: الصورة في جهة بدء السطر والنصّ في جهة نهايته. أربع ظاهرة،
+   وكل بضع ثوانٍ تُستبدل أقدمها ظهوراً بالمجال التالي (useCardCycle) فتمرّ
+   المجالات كلّها. يتوقّف الدوران تحت المؤشّر والتركيز، ومع «تقليل الحركة»
+   تُعرض المجالات كلّها ثابتة. المجال بلا غلاف لوحٌ زيتوني برمزه — لا صورة
+   بديلة (الفجوة تُسدّ من اللوحة). وللطباعة شبكة بالمجالات كلّها. */
+const FIELD_SLOTS = 4;
+
+function FieldCard({ p, href, more }: { p: Pillar; href: string; more: string }) {
+  return (
+    <Link className="fcard" href={href}>
+      <span className="fcard__media" aria-hidden="true">
+        {p.cover?.src
+          ? <img src={`/${p.cover.src}`} alt="" loading="lazy" decoding="async" />
+          : <span className="fcard__panel"><Icon id={p.id} /></span>}
+        <span className="fcard__n">{p.num}</span>
+      </span>
+      <span className="fcard__body">
+        <span className="fcard__ico" aria-hidden="true"><Icon id={p.id} /></span>
+        <span className="fcard__t">{p.title}</span>
+        <span className="fcard__o">{p.orgs}</span>
+        <span className="fcard__go">{more}</span>
+      </span>
+    </Link>
+  );
+}
+
 export function Fields({ pillars }: { pillars: Pillar[] }) {
   const U = useU();
   const path = usePath();
-  /* خطّ زمني أفقي: البنود تتناوب فوق الخطّ وتحته — النصّ في جهة والصورة
-     الدائرية في الأخرى. المجال بلا غلاف تحمل دائرته رمزه، لا صورة بديلة
-     (الفجوة تُسدّ من اللوحة لا هنا). عدد الأعمدة مشتقّ من البيانات. */
+  const { shown, rotates, calm, hold } = useCardCycle(pillars.length, FIELD_SLOTS);
+  const live = calm ? pillars.map((_, i) => i) : shown;
+  const more = U("تفاصيل المجال");
+
   return (
-    <section className="band sec ftl-band" id="fields">
+    <section className="band sec fields-band" id="fields">
       <div className="sec__in reveal">
         <SectionHead
           title={U("مجالات العمل")}
           side={<Fact value={String(pillars.length)} label={U("مجالات دائمة")} />}
         />
-      </div>
 
-      <div className="ftl reveal">
-        <ol className="ftl__row" style={{ "--n": pillars.length } as React.CSSProperties}>
-          {pillars.map((p, i) => (
-            <li
-              /* التناوب مزدوج: الموضع (فوق/تحت الخطّ) واللون (بطاقة حبرية/ورقية) */
-              className={i % 2 ? "ftl__i is-down" : "ftl__i is-up is-ink"}
-              key={p.id}
-              style={{ "--i": i } as React.CSSProperties}
-            >
-              <Link className="ftl__a" href={path(`/p/${p.id}`)}>
-                <span className="ftl__text">
-                  <span className="ftl__card">
-                    <span className="ftl__n">{p.num}</span>
-                    <span className="ftl__t">{p.title}</span>
-                    <span className="ftl__o">{p.orgs}</span>
-                  </span>
-                </span>
-                {/* المحور: قطعة الخطّ في هذا العمود وعقدته؛ القطع تلتحم عبر
-                    الفراغات فتبدو خطّاً واحداً، وتُرسم تباعاً */}
-                <span className="ftl__axis" aria-hidden="true"><span className="ftl__dot" /></span>
-                <span className="ftl__media" aria-hidden="true">
-                  {p.cover?.src
-                    ? <img src={`/${p.cover.src}`} alt="" loading="lazy" decoding="async" />
-                    : <Icon id={p.id} />}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ol>
+        <div
+          className="fcards-wrap"
+          onPointerEnter={() => hold(true)}
+          onPointerLeave={() => hold(false)}
+          onFocus={() => hold(true)}
+          onBlur={() => hold(false)}
+        >
+          <ul className="fcards fcards--live">
+            {live.map((idx, slot) => {
+              const p = pillars[idx];
+              return (
+                /* المفتاح يحمل المجال: تبدّله يعيد تركيب البطاقة فيجري تلاشيها */
+                <li key={`${slot}-${p.id}`} className="fcards__slot">
+                  <FieldCard p={p} href={path(`/p/${p.id}`)} more={more} />
+                </li>
+              );
+            })}
+          </ul>
+
+          {rotates && (
+            <p className="fcards__dots" aria-hidden="true">
+              {pillars.map((p, i) => <i key={p.id} className={shown.includes(i) ? "is-on" : undefined} />)}
+            </p>
+          )}
+
+          {/* للطباعة: المجالات كلّها — مخفية على الشاشة فلا تُقرأ ولا تُبلَغ بالتبويب */}
+          <ul className="fcards fcards--print" aria-hidden="true">
+            {pillars.map((p) => (
+              <li key={p.id} className="fcards__slot">
+                <FieldCard p={p} href={path(`/p/${p.id}`)} more={more} />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );
