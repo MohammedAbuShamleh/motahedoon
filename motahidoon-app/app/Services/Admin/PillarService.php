@@ -6,6 +6,7 @@ use App\Http\Requests\Admin\PillarRequest;
 use App\Models\Pillar;
 use App\Models\User;
 use App\Services\Media\MediaService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -15,6 +16,24 @@ final class PillarService
         private readonly MediaService $media,
         private readonly TranslationService $translations,
     ) {}
+
+    /** @return Collection<int, Pillar> قائمة اللوحة بترتيب العرض، مع الغلاف */
+    public function listing(): Collection
+    {
+        return Pillar::query()->ordered()->with('cover')->get();
+    }
+
+    /** المجال جاهزاً لنموذج التحرير: الغلاف والترجمات محمَّلة */
+    public function forEdit(Pillar $pillar): Pillar
+    {
+        return $pillar->load(['cover', 'translations']);
+    }
+
+    /** @return Collection<int, Pillar> المجالات خياراتٍ لقائمة منسدلة (المعرّف والاسم المختصر) */
+    public function options(): Collection
+    {
+        return Pillar::query()->ordered()->get(['id', 'short']);
+    }
 
     /** @param array<string, mixed> $data */
     public function save(?Pillar $pillar, array $data, User $by): Pillar
@@ -50,14 +69,20 @@ final class PillarService
         return str_pad((string) ($max + 1), $width, '0', STR_PAD_LEFT);
     }
 
-    /** المجال الذي تذكره تقارير لا يُحذف: الحذف يُسقط أقسامها معه (cascade). */
+    /**
+     * المجال الذي تذكره تقارير لا يُحذف: الحذف يُسقط أقسامها معه (cascade).
+     * الفحص والحذف (وترجماته في حدث deleting) معاملة واحدة، فلا يتسلّل قسم
+     * جديد بين الفحص والحذف ولا يبقى المجال بلا ترجماته إن فشل الحذف.
+     */
     public function delete(Pillar $pillar): void
     {
-        if ($pillar->reportSections()->exists()) {
-            throw ValidationException::withMessages([
-                'pillar' => 'لهذا المجال أقسام في تقارير منشورة. أخفِه بإلغاء النشر بدل حذفه.',
-            ]);
-        }
-        $pillar->delete();
+        DB::transaction(function () use ($pillar): void {
+            if ($pillar->reportSections()->exists()) {
+                throw ValidationException::withMessages([
+                    'pillar' => 'لهذا المجال أقسام في تقارير منشورة. أخفِه بإلغاء النشر بدل حذفه.',
+                ]);
+            }
+            $pillar->delete();
+        });
     }
 }

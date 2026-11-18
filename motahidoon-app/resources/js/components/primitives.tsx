@@ -146,10 +146,11 @@ export function FigureCell({ m }: { m: Metric }) {
   );
 }
 
-export function StatStrip({ stats }: { stats: Stat[] }) {
+/* cls اختياري: صفحة التقرير تمرّر stagger فتتتابع الخانات عند الظهور */
+export function StatStrip({ stats, cls }: { stats: Stat[]; cls?: string }) {
   if (!stats.length) return null;
   return (
-    <div className="stats">
+    <div className={cls ? `stats ${cls}` : "stats"}>
       {stats.map((s, i) => (
         <div className="stat" key={`${s.value}-${s.unit}-${i}`}>
           <span className="stat__v" style={{ "--len": s.value.length } as React.CSSProperties}>

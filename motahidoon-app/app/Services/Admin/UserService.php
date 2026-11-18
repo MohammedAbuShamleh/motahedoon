@@ -4,11 +4,18 @@ namespace App\Services\Admin;
 
 use App\Enums\UserRole;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 final class UserService
 {
+    /** @return Collection<int, User> المستخدمون مرتّبين بالاسم */
+    public function listing(): Collection
+    {
+        return User::query()->orderBy('name')->get();
+    }
+
     /** @param array<string, mixed> $data */
     public function save(?User $user, array $data): User
     {

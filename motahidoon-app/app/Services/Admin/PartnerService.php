@@ -5,6 +5,7 @@ namespace App\Services\Admin;
 use App\Models\Partner;
 use App\Models\User;
 use App\Services\Media\MediaService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 final class PartnerService
@@ -13,6 +14,18 @@ final class PartnerService
         private readonly MediaService $media,
         private readonly TranslationService $translations,
     ) {}
+
+    /** @return Collection<int, Partner> قائمة اللوحة بترتيب العرض، مع الشعار */
+    public function listing(): Collection
+    {
+        return Partner::query()->ordered()->with('logo')->get();
+    }
+
+    /** الشريك جاهزاً لنموذج التحرير: الشعار والترجمات محمَّلة */
+    public function forEdit(Partner $partner): Partner
+    {
+        return $partner->load(['logo', 'translations']);
+    }
 
     /** @param array<string, mixed> $data */
     public function save(?Partner $partner, array $data, User $by): Partner
@@ -32,8 +45,9 @@ final class PartnerService
         });
     }
 
+    /** الحذف خطوتان (ترجمات الشريك في حدث deleting، ثم الشريك) — فهو معاملة واحدة */
     public function delete(Partner $partner): void
     {
-        $partner->delete();
+        DB::transaction(fn () => $partner->delete());
     }
 }

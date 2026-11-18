@@ -25,10 +25,12 @@ final class ReportController extends Controller
 
         return Inertia::render('Report', [
             'report'  => $rep,
+            // الغلاف يصحب المجال ليُرسم بجانب فصله؛ مجال بلا غلاف يأخذ لوحاً هندسياً
             'pillars' => collect($content->get('pillars'))
                 ->map(fn (array $p) => [
                     'id' => $p['id'], 'num' => $p['num'],
                     'title' => $p['title'], 'short' => $p['short'], 'orgs' => $p['orgs'],
+                    'cover' => $p['cover'] ?? null,
                 ])->all(),
             'others'  => $items->filter(fn (array $r) => $r['id'] !== $rep['id'])
                 ->map(fn (array $r) => [

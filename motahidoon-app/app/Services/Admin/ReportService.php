@@ -9,6 +9,7 @@ use App\Models\Report;
 use App\Models\User;
 use App\Services\Media\MediaService;
 use App\Traits\SyncsChildren;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -21,6 +22,19 @@ final class ReportService
         private readonly MediaService $media,
         private readonly TranslationService $translations,
     ) {}
+
+    /** @return Collection<int, Report> التقارير الأحدث أوّلاً، بعدد أقسام كلٍّ منها */
+    public function listing(): Collection
+    {
+        return Report::query()->latestFirst()->withCount('sections')
+            ->get(['id', 'slug', 'label', 'range', 'status', 'is_current', 'published_at']);
+    }
+
+    /** التقرير جاهزاً لنموذج التحرير: ملفاته وأسطره وأرقامه وجداوله وأقسامه وترجماته محمَّلة */
+    public function forEdit(Report $report): Report
+    {
+        return $report->load(['reportFile', 'appealPhoto', 'lines', 'metrics', 'tables', 'sections.pillar', 'translations']);
+    }
 
     /** @param array<string, mixed> $data */
     public function save(?Report $report, array $data, User $by): Report

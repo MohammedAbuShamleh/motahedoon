@@ -22,11 +22,9 @@ final class ReportSectionController extends Controller
         return to_route('admin.sections.edit', $section)->with('success', 'أُضيف القسم.');
     }
 
-    public function edit(ReportSection $section): Response
+    public function edit(ReportSection $section, ReportSectionService $service): Response
     {
-        $section->load(['report', 'pillar', 'groups.items', 'blocks.figures', 'table', 'gallery.media', 'translations']);
-
-        return Inertia::render('Admin/Reports/Section', ['section' => ReportSectionResource::make($section)->resolve()]);
+        return Inertia::render('Admin/Reports/Section', ['section' => ReportSectionResource::make($service->forEdit($section))->resolve()]);
     }
 
     public function update(ReportSectionRequest $request, ReportSection $section, ReportSectionService $service): RedirectResponse

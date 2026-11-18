@@ -14,9 +14,9 @@ use Inertia\Response;
 
 final class FieldPhotoController extends Controller
 {
-    public function index(): Response
+    public function index(FieldPhotoService $service): Response
     {
-        $photos = FieldPhoto::query()->ordered()->with('media')->get()
+        $photos = $service->listing()
             ->map(fn (FieldPhoto $p) => ['id' => $p->id, 'media' => MediaResource::brief($p->media)]);
 
         return Inertia::render('Admin/FieldPhotos/Index', ['photos' => $photos]);

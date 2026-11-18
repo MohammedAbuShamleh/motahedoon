@@ -22,6 +22,12 @@ final class ReportSectionService
         private readonly TranslationService $translations,
     ) {}
 
+    /** القسم جاهزاً لمحرّره: تقريره ومجاله ومجموعاته وكتله وجدوله ومعرضه وترجماته محمَّلة */
+    public function forEdit(ReportSection $section): ReportSection
+    {
+        return $section->load(['report', 'pillar', 'groups.items', 'blocks.figures', 'table', 'gallery.media', 'translations']);
+    }
+
     public function create(Report $report, int $pillarId): ReportSection
     {
         return $report->sections()->create(['pillar_id' => $pillarId]);

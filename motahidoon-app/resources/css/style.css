@@ -785,7 +785,9 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
    لا صندوق يحجب الصورة؛ ظلّ حبري محايد ناعم خلف الكتلة وحدها. */
 .hero__card {
   position: relative; z-index: 2;
-  width: min(100% - var(--edge) * 2, 54rem);
+  /* على قدّ النصّ: فتبقى الهالة خلف الحروف لا خلف فراغ الكرت */
+  width: fit-content;
+  max-width: min(100% - var(--edge) * 2, 54rem);
   /* حافّة عمود المحتوى نفسها (var(--wrap)): الخطّ الذي تبدأ منه أقسام
      الصفحة كلّها تحته، والترويسة بعد التمرير — فيصطفّ العنوان مع ما بعده */
   /* أقرب إلى حافّة الصورة من عمود المحتوى: نصف المسافة بين الحافّة والعمود */
@@ -793,6 +795,17 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
   /* فوق منتصف المساحة الظاهرة قليلاً: العين تبدأ من الثلث الأعلى */
   margin-block: calc(var(--xb, 0px) + 3rem) calc(var(--strip) + 3rem);
   color: var(--bg);
+}
+/* هالة حبرية ناعمة تتبع كتلة العنوان نفسها — بأي لغة وأي عرض. الظلّ
+   الشعاعي على الصورة وحده لا يكفي: فوق مساحة بيضاء (سترة، سماء) كان
+   سطر التعريف يهبط إلى 2.3:1. معها يبقى النصّ الفاتح فوق 4.5:1 حيث تقع
+   الحروف، والصورة مكشوفة خارجها. */
+.hero__card::before {
+  content: ""; position: absolute; z-index: -1;
+  inset: -1.75rem -2.75rem;
+  background: rgba(26,26,26,.55);
+  filter: blur(34px);
+  pointer-events: none;
 }
 /* إيقاع رأسي واحد: كل درجة بسطرها الكامل (لا هوامش سالبة)، فلا تصعد
    نقاط «ث» ولا رؤوس الألف إلى السطر الذي فوقها. */
@@ -968,6 +981,7 @@ html.is-ltr .hero__bar { transform-origin: left; }
   }
   .hero__card {
     width: calc(100% - var(--edge) * 2);
+    max-width: none;
     margin-inline: var(--edge);
     margin-block: calc(var(--xb, 0px) + 6.25rem) calc(var(--strip) + 1rem);
   }
@@ -977,7 +991,8 @@ html.is-ltr .hero__bar { transform-origin: left; }
       linear-gradient(180deg,
         rgba(26,26,26,.78) 0%, rgba(26,26,26,.6) 32%,
         rgba(26,26,26,.2) 52%, rgba(26,26,26,0) 62%),
-      linear-gradient(0deg, rgba(26,26,26,.8) 0%, rgba(26,26,26,0) 26%);
+      /* أعمق قليلاً: عنوان الشريحة على الجوّال كان يهبط تحت 4.5:1 فوق الأرضيات الفاتحة */
+      linear-gradient(0deg, rgba(26,26,26,.86) 0%, rgba(26,26,26,.62) 19%, rgba(26,26,26,0) 36%);
   }
   .hero__kicker { margin-bottom: .45rem; }
   .hero__sub { margin-top: 1.4rem; }   /* نقطة «ب» تنزل تحت سطرها */

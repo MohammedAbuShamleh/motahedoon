@@ -15,6 +15,12 @@ final class SiteSettingService
         private readonly TranslationService $translations,
     ) {}
 
+    /** الإعدادات جاهزةً لنموذج التحرير: الشعاران وكود QR والترجمات محمَّلة */
+    public function forEdit(): SiteSetting
+    {
+        return SiteSetting::query()->with(['logoFull', 'logoMark', 'donateQr', 'translations'])->firstOrFail();
+    }
+
     /** @param array<string, mixed> $data */
     public function update(array $data, User $by): SiteSetting
     {

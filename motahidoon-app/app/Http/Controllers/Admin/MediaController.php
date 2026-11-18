@@ -13,11 +13,9 @@ use Inertia\Response;
 
 final class MediaController extends Controller
 {
-    public function index(): Response
+    public function index(MediaService $service): Response
     {
-        $media = Media::query()->orderByDesc('id')->paginate(48);
-
-        return Inertia::render('Admin/Media/Index', ['media' => MediaResource::collection($media)->response()->getData(true)]);
+        return Inertia::render('Admin/Media/Index', ['media' => MediaResource::collection($service->paginate())->response()->getData(true)]);
     }
 
     public function store(MediaStoreRequest $request, MediaService $service): RedirectResponse

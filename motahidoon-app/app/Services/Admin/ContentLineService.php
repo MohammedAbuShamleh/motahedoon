@@ -5,11 +5,18 @@ namespace App\Services\Admin;
 use App\Enums\ContentLineGroup;
 use App\Models\ContentLine;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 final class ContentLineService
 {
     public function __construct(private readonly TranslationService $translations) {}
+
+    /** @return Collection<int, ContentLine> كل الأسطر بترتيبها، مع ترجماتها */
+    public function listing(): Collection
+    {
+        return ContentLine::query()->ordered()->with('translations')->get();
+    }
 
     /** @param array<string, mixed> $data */
     public function create(array $data, User $by): ContentLine
@@ -41,8 +48,9 @@ final class ContentLineService
         });
     }
 
+    /** الحذف خطوتان (ترجمات السجل في حدث deleting، ثم السجل) — فهو معاملة واحدة */
     public function delete(ContentLine $line): void
     {
-        $line->delete();
+        DB::transaction(fn () => $line->delete());
     }
 }

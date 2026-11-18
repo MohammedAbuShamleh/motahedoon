@@ -6,8 +6,8 @@ use App\Enums\ReportLineGroup;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ReportRequest;
 use App\Http\Resources\Admin\ReportResource;
-use App\Models\Pillar;
 use App\Models\Report;
+use App\Services\Admin\PillarService;
 use App\Services\Admin\ReportService;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -15,17 +15,14 @@ use Inertia\Response;
 
 final class ReportController extends Controller
 {
-    public function index(): Response
+    public function index(ReportService $service): Response
     {
-        $reports = Report::query()->latestFirst()->withCount('sections')
-            ->get(['id', 'slug', 'label', 'range', 'status', 'is_current', 'published_at']);
-
-        return Inertia::render('Admin/Reports/Index', ['reports' => $reports]);
+        return Inertia::render('Admin/Reports/Index', ['reports' => $service->listing()]);
     }
 
-    public function create(): Response
+    public function create(PillarService $pillars): Response
     {
-        return Inertia::render('Admin/Reports/Form', $this->formProps(null));
+        return Inertia::render('Admin/Reports/Form', $this->formProps(null, $pillars));
     }
 
     public function store(ReportRequest $request, ReportService $service): RedirectResponse
@@ -35,11 +32,9 @@ final class ReportController extends Controller
         return to_route('admin.reports.edit', $report)->with('success', 'أُنشئ التقرير. أضف أقسام المجالات أدناه.');
     }
 
-    public function edit(Report $report): Response
+    public function edit(Report $report, ReportService $service, PillarService $pillars): Response
     {
-        $report->load(['reportFile', 'appealPhoto', 'lines', 'metrics', 'tables', 'sections.pillar', 'translations']);
-
-        return Inertia::render('Admin/Reports/Form', $this->formProps($report));
+        return Inertia::render('Admin/Reports/Form', $this->formProps($service->forEdit($report), $pillars));
     }
 
     public function update(ReportRequest $request, Report $report, ReportService $service): RedirectResponse
@@ -57,14 +52,14 @@ final class ReportController extends Controller
     }
 
     /** @return array<string, mixed> */
-    private function formProps(?Report $report): array
+    private function formProps(?Report $report, PillarService $pillars): array
     {
         return [
             'report' => $report === null ? null : ReportResource::make($report)->resolve(),
             'lineGroups' => collect(ReportLineGroup::cases())->map(fn ($g) => [
                 'value' => $g->value, 'label' => $g->label(), 'hasTerm' => $g->hasTerm(),
             ]),
-            'pillars' => Pillar::query()->ordered()->get(['id', 'short']),
+            'pillars' => $pillars->options(),
         ];
     }
 }

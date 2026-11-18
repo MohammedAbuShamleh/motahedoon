@@ -15,10 +15,10 @@ use Inertia\Response;
 
 final class UserController extends Controller
 {
-    public function index(): Response
+    public function index(UserService $service): Response
     {
         return Inertia::render('Admin/Users/Index', [
-            'users' => UserResource::collection(User::query()->orderBy('name')->get())->resolve(),
+            'users' => UserResource::collection($service->listing())->resolve(),
         ]);
     }
 

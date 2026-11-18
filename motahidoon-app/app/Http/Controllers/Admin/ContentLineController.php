@@ -14,12 +14,10 @@ use Inertia\Response;
 
 final class ContentLineController extends Controller
 {
-    public function index(): Response
+    public function index(ContentLineService $service): Response
     {
-        $lines = ContentLine::query()->ordered()->with('translations')->get();
-
         return Inertia::render('Admin/ContentLines/Index', [
-            'lines' => ContentLineResource::collection($lines)->resolve(),
+            'lines' => ContentLineResource::collection($service->listing())->resolve(),
             'groups' => collect(ContentLineGroup::cases())->map(fn ($g) => [
                 'value' => $g->value, 'label' => $g->label(), 'hasTerm' => $g->hasTerm(),
             ]),

@@ -5,12 +5,19 @@ namespace App\Services\Admin;
 use App\Models\FieldPhoto;
 use App\Models\User;
 use App\Services\Media\MediaService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
 final class FieldPhotoService
 {
     public function __construct(private readonly MediaService $media) {}
+
+    /** @return Collection<int, FieldPhoto> صور الميدان بترتيب العرض، مع ملفاتها */
+    public function listing(): Collection
+    {
+        return FieldPhoto::query()->ordered()->with('media')->get();
+    }
 
     /** @param list<UploadedFile> $files */
     public function add(array $files, User $by): void

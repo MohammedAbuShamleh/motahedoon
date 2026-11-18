@@ -13,11 +13,9 @@ use Inertia\Response;
 
 final class PartnerController extends Controller
 {
-    public function index(): Response
+    public function index(PartnerService $service): Response
     {
-        $partners = Partner::query()->ordered()->with('logo')->get();
-
-        return Inertia::render('Admin/Partners/Index', ['partners' => PartnerResource::collection($partners)->resolve()]);
+        return Inertia::render('Admin/Partners/Index', ['partners' => PartnerResource::collection($service->listing())->resolve()]);
     }
 
     public function create(): Response
@@ -32,11 +30,9 @@ final class PartnerController extends Controller
         return to_route('admin.partners.index')->with('success', 'أُضيف الشريك.');
     }
 
-    public function edit(Partner $partner): Response
+    public function edit(Partner $partner, PartnerService $service): Response
     {
-        $partner->load(['logo', 'translations']);
-
-        return Inertia::render('Admin/Partners/Form', ['partner' => PartnerResource::make($partner)->resolve()]);
+        return Inertia::render('Admin/Partners/Form', ['partner' => PartnerResource::make($service->forEdit($partner))->resolve()]);
     }
 
     public function update(PartnerRequest $request, Partner $partner, PartnerService $service): RedirectResponse

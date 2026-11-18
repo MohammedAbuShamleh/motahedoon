@@ -13,9 +13,9 @@ use Inertia\Response;
 
 final class UiStringController extends Controller
 {
-    public function index(): Response
+    public function index(UiStringService $service): Response
     {
-        $strings = UiString::query()->ordered()->with('translations')->get()
+        $strings = $service->listing()
             ->map(fn (UiString $u) => ['id' => $u->id, 'key' => $u->key, 'translations' => Translations::of($u, ['value'])]);
 
         return Inertia::render('Admin/UiStrings/Index', ['strings' => $strings]);

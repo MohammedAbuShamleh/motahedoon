@@ -13,11 +13,9 @@ use Inertia\Response;
 
 final class PillarController extends Controller
 {
-    public function index(): Response
+    public function index(PillarService $service): Response
     {
-        $pillars = Pillar::query()->ordered()->with('cover')->get();
-
-        return Inertia::render('Admin/Pillars/Index', ['pillars' => PillarResource::collection($pillars)->resolve()]);
+        return Inertia::render('Admin/Pillars/Index', ['pillars' => PillarResource::collection($service->listing())->resolve()]);
     }
 
     public function create(PillarService $service): Response
@@ -32,11 +30,9 @@ final class PillarController extends Controller
         return to_route('admin.pillars.index')->with('success', 'أُضيف المجال.');
     }
 
-    public function edit(Pillar $pillar): Response
+    public function edit(Pillar $pillar, PillarService $service): Response
     {
-        $pillar->load(['cover', 'translations']);
-
-        return Inertia::render('Admin/Pillars/Form', ['pillar' => PillarResource::make($pillar)->resolve()]);
+        return Inertia::render('Admin/Pillars/Form', ['pillar' => PillarResource::make($service->forEdit($pillar))->resolve()]);
     }
 
     public function update(PillarRequest $request, Pillar $pillar, PillarService $service): RedirectResponse
