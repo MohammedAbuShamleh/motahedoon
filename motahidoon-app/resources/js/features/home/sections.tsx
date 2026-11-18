@@ -8,7 +8,7 @@ import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
 import { Icon } from "@/components/Icon";
 import {
-  Band, Fact, FigureCell, Filled, Mark, Seal, Slot, Statement,
+  Band, Fact, Filled, Mark, Seal, Slot, Statement,
 } from "@/components/primitives";
 import type { Founding, Identity, Partner, Pillar, Report } from "@/types";
 
@@ -294,23 +294,41 @@ export function Filmstrip({ photos }: { photos: string[] }) {
 }
 
 /* ---------- لمحة أثر ----------
-   القسم الوحيد المؤرَّخ في الرئيسية، ويحمل ختمه. */
+   القسم الوحيد المؤرَّخ في الرئيسية، ويحمل ختمه. قسم داكن ببطاقة لكلّ
+   مؤشّر: رقم ترتيب محفور في ركنها، والقيمة كما كُتبت حرفياً (لا جمع ولا
+   تقريب)، ثم التسمية. عدد البطاقات من عدد المؤشّرات المختارة (--n). */
 export function Impact({ report, count }: { report: Report; count: number }) {
   const U = useU();
   const path = usePath();
+  const metrics = report.metrics.slice(0, count);
   return (
     <Band
       id="impact"
+      cls="band--dark impact"
       main={
         <>
-          <h2 className="h-sec">{U("لمحة أثر")}</h2>
-          <div className="figs figs--tiles stagger">
-            {report.metrics.slice(0, count).map((m, i) => (
-              <FigureCell m={m} key={`${m.label}-${i}`} />
-            ))}
-          </div>
-          <p style={{ marginTop: "clamp(2rem,4vw,3rem)" }}>
-            <Link className="btn btn--ghost" href={path("/reports")}>
+          <h2 className="h-sec impact__title"><span>{U("لمحة أثر")}</span></h2>
+          <ol className="impact__cols" style={{ "--n": metrics.length } as React.CSSProperties}>
+            {metrics.map((m, i) => {
+              const shown = (m.prefix ? `${m.prefix} ` : "") + m.value;
+              return (
+                <li
+                  key={`${m.label}-${i}`}
+                  className={m.accent ? "impact__col is-accent" : "impact__col"}
+                  style={{ "--i": i } as React.CSSProperties}
+                >
+                  <span className="impact__no" aria-hidden="true">{ord(i + 1)}</span>
+                  <p className="impact__v">
+                    <bdi>{shown}</bdi>
+                    {m.unit ? <span className="impact__u">{m.unit}</span> : null}
+                  </p>
+                  <p className="impact__l">{m.label}</p>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="impact__cta">
+            <Link className="btn btn--light" href={path("/reports")}>
               {U("الإنجازات الكاملة")}
             </Link>
           </p>
