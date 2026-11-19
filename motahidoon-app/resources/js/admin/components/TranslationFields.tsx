@@ -1,9 +1,10 @@
 import type { Translations } from "../types";
-import { LocaleTag, TextArea, TextField } from "./ui";
+import { LOCALE_NAME, LocaleTag, TextArea, TextField } from "./ui";
 
 /**
  * حقول الترجمة الإنجليزية والتركية لنموذج. العربية في الحقول الأصلية.
  * أي تعديل هنا يُحفَظ بحالة «بانتظار المراجعة» حتى يعتمده المدير.
+ * العناوين عربية واللوح بالاتجاه العربي؛ خانات الكتابة وحدها لاتينية الاتجاه.
  */
 export function TranslationFields({ fields, value, onChange, errors = {} }: {
   fields: { key: string; label: string; multiline?: boolean }[];
@@ -17,10 +18,10 @@ export function TranslationFields({ fields, value, onChange, errors = {} }: {
   return (
     <div className="grid gap-5 md:grid-cols-2">
       {(["en", "tr"] as const).map((locale) => (
-        <div key={locale} dir="ltr" className="space-y-3 rounded-lg border border-rule bg-rule/15 p-4 text-start">
+        <div key={locale} className={`space-y-3 rounded-lg border border-rule border-t-[3px] bg-rule/15 p-4 ${locale === "en" ? "border-t-green" : "border-t-olive"}`}>
           <p className="flex items-center gap-2 text-sm font-bold">
             <LocaleTag locale={locale} />
-            {locale === "en" ? "English" : "Türkçe"}
+            {LOCALE_NAME[locale]}
           </p>
           {fields.map((f) => {
             const props = {

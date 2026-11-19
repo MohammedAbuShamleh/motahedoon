@@ -8,7 +8,7 @@ import { Glyph } from "./icons";
    مربّعات ليّنة، ومؤشّرات القوائم مربّعة، والعلامات معيّن الشعار.
    الاتجاه RTL والخصائص منطقية (ms/me/ps/pe/start/end). */
 
-/** قسم الصفحة في القائمة («المتن — دائم»…): توفّره AdminLayout ويعرضه رأس الصفحة. */
+/** قسم الصفحة في القائمة («المحتوى الثابت»…): توفّره AdminLayout ويعرضه رأس الصفحة. */
 export const SectionContext = createContext("");
 
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
@@ -57,11 +57,12 @@ export function Card({ title, actions, children, className = "", flush = false, 
 
 type Variant = "primary" | "secondary" | "danger" | "ghost";
 type Size = "md" | "sm" | "icon";
-/* الزرّ الرئيس حبري ويصير زيتونياً عند المرور — كأزرار الموقع العام */
+/* الزرّ الرئيس أخضر ويصير زيتونياً عند المرور (الورقي على الأخضر 5.2:1).
+   زرّ الحذف أحمر خطّاً لا مساحة: يُصبغ صبغة خفيفة عند المرور فقط. */
 const VARIANTS: Record<Variant, string> = {
-  primary: "bg-ink text-paper hover:bg-olive",
-  secondary: "border border-rule bg-paper text-ink hover:border-olive hover:text-olive",
-  danger: "border border-red/35 bg-paper text-red hover:border-red hover:bg-red hover:text-paper",
+  primary: "bg-green text-paper hover:bg-olive",
+  secondary: "border border-rule bg-paper text-ink hover:border-green hover:text-green",
+  danger: "border border-red/40 bg-paper text-red hover:border-red hover:bg-red/6",
   ghost: "text-ink/70 hover:bg-rule/60 hover:text-ink",
 };
 const SIZES: Record<Size, string> = { md: "h-10 px-4 text-sm", sm: "h-8 px-2.5 text-xs", icon: "size-8 text-xs" };
@@ -129,10 +130,10 @@ export const inputClass =
   "w-full rounded-lg border border-rule bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-ink/35 " +
   "focus:border-olive focus:ring-4 focus:ring-olive/15 aria-[invalid=true]:border-red/70";
 
-/** زرّ اختيار الملف بلغة الأزرار: حبري يصير زيتونياً. */
+/** زرّ اختيار الملف: زيتوني يصير أخضر — يتميّز عن زرّ الحفظ الأخضر. */
 export const fileInputClass =
-  "max-w-full text-xs text-ink/70 file:me-3 file:h-9 file:cursor-pointer file:rounded-md file:border-0 file:bg-ink file:px-3.5 " +
-  "file:text-xs file:font-bold file:text-paper file:transition hover:file:bg-olive";
+  "max-w-full text-xs text-ink/70 file:me-3 file:h-9 file:cursor-pointer file:rounded-md file:border-0 file:bg-olive file:px-3.5 " +
+  "file:text-xs file:font-bold file:text-paper file:transition hover:file:bg-green";
 
 type TextProps = {
   label: string;
@@ -187,7 +188,7 @@ export function Select({ label, value, onChange, options, error, className }: {
 export function Toggle({ label, checked, onChange, hint }: { label: string; checked: boolean; onChange: (v: boolean) => void; hint?: string }) {
   return (
     <label className="flex cursor-pointer items-start gap-2.5 text-sm">
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-0.5 size-4 shrink-0 cursor-pointer accent-olive" />
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-0.5 size-4 shrink-0 cursor-pointer accent-green" />
       <span>
         <span className="font-bold">{label}</span>
         {hint && <span className="mt-0.5 block text-xs leading-5 text-ink/60">{hint}</span>}
@@ -216,11 +217,11 @@ export function FileField({ label, current, file, remove, onFile, onRemove, erro
             الملف الحالي
           </a>
         ) : (
-          <span className="grid size-16 shrink-0 place-items-center rounded-md border border-rule bg-paper text-xs text-ink/45">لا شيء</span>
+          <span className="grid size-16 shrink-0 place-items-center rounded-md border border-rule bg-paper text-xs text-ink/45">لا يوجد</span>
         )}
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
           <input type="file" accept={accept} aria-label={label} onChange={(e) => onFile(e.target.files?.[0] ?? null)} className={fileInputClass} />
-          {current && !file && <Toggle label="إزالة الحالي" checked={remove} onChange={onRemove} />}
+          {current && !file && <Toggle label="حذف الملف الحالي" checked={remove} onChange={onRemove} />}
         </div>
       </div>
     </Field>
@@ -241,7 +242,7 @@ export function ErrorSummary({ errors }: { errors: Record<string, string | undef
   const list = Object.values(errors).filter(Boolean);
   if (list.length === 0) return null;
   return (
-    <div role="alert" className="mb-6 rounded-lg border border-rule border-s-[3px] border-s-red bg-red/[0.04] px-4 py-3 text-sm">
+    <div role="alert" className="mb-6 rounded-lg border border-rule border-s-[3px] border-s-red bg-red/4 px-4 py-3 text-sm">
       <p className="font-bold">تعذّر الحفظ — راجع الحقول:</p>
       <ul className="mt-1.5 list-[square] space-y-0.5 ps-5 text-ink/80 marker:text-red">{list.slice(0, 8).map((e, i) => <li key={i}>{e}</li>)}</ul>
     </div>
@@ -268,10 +269,18 @@ export function IndexChip({ children }: { children: ReactNode }) {
   return <span className="grid h-8 min-w-8 shrink-0 place-items-center rounded-md bg-olive/10 px-1.5 text-xs font-black tabular-nums text-olive">{children}</span>;
 }
 
-/** وسم اللغة اللاتيني: EN / TR على الحبري. */
+/** وسم اللغة: EN على الأخضر وTR على الزيتوني — لون ثابت لكل لغة يُعرف به في كل الصفحات. */
 export function LocaleTag({ locale }: { locale: string }) {
-  return <span dir="ltr" className="inline-flex h-6 items-center rounded-md bg-ink px-2 text-[0.7rem] font-black tracking-wide text-paper">{locale.toUpperCase()}</span>;
+  const tone = locale === "en" ? "bg-green" : locale === "tr" ? "bg-olive" : "bg-ink";
+  return <span dir="ltr" className={`inline-flex h-6 items-center rounded-md px-2 text-[0.7rem] font-black tracking-wide text-paper ${tone}`}>{locale.toUpperCase()}</span>;
 }
+
+/** أسماء اللغات بالعربية للعناوين. */
+export const LOCALE_NAME: Record<string, string> = { en: "الإنجليزية", tr: "التركية" };
+
+/** لون وسم حالة الترجمة: المعتمدة خضراء، والمنتظرة زيتونية، والآلية محايدة. */
+export const statusTone = (status: string): "green" | "olive" | "neutral" =>
+  status === "approved" ? "green" : status === "pending" ? "olive" : "neutral";
 
 export function Pagination({ links }: { links: { url: string | null; label: string; active: boolean }[] }) {
   if (links.length <= 3) return null;
@@ -283,7 +292,7 @@ export function Pagination({ links }: { links: { url: string | null; label: stri
           href={l.url ?? "#"}
           preserveScroll
           aria-current={l.active ? "page" : undefined}
-          className={`inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold tabular-nums transition ${l.active ? "bg-ink text-paper" : "border border-rule bg-paper text-ink hover:border-olive hover:text-olive"} ${l.url ? "" : "pointer-events-none opacity-40"}`}
+          className={`inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold tabular-nums transition ${l.active ? "bg-green text-paper" : "border border-rule bg-paper text-ink hover:border-green hover:text-green"} ${l.url ? "" : "pointer-events-none opacity-40"}`}
           dangerouslySetInnerHTML={{ __html: l.label.replace("&laquo; Previous", "السابق").replace("Next &raquo;", "التالي") }}
         />
       ))}

@@ -11,7 +11,7 @@ enum TranslationStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::Machine => 'آلية',
+            self::Machine => 'ترجمة آلية',
             self::Pending => 'بانتظار المراجعة',
             self::Approved => 'معتمدة',
         };

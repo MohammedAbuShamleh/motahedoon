@@ -26,20 +26,20 @@ final class FieldPhotoController extends Controller
     {
         $service->add($request->validated('photos'), $request->user());
 
-        return back()->with('success', 'رُفعت الصور (حُوّلت إلى أبيض وأسود).');
+        return back()->with('success', 'تم رفع الصور وتحويلها إلى الأبيض والأسود.');
     }
 
     public function reorder(ReorderRequest $request, FieldPhotoService $service): RedirectResponse
     {
         $service->reorder($request->validated('ids'));
 
-        return back()->with('success', 'حُفظ الترتيب.');
+        return back()->with('success', 'تم حفظ الترتيب.');
     }
 
     public function destroy(FieldPhoto $photo, FieldPhotoService $service): RedirectResponse
     {
         $service->delete($photo);
 
-        return back()->with('success', 'حُذفت الصورة.');
+        return back()->with('success', 'تم حذف الصورة.');
     }
 }

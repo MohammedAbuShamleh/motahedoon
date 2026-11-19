@@ -32,13 +32,13 @@ final class TranslationController extends Controller
     {
         $service->update($translation, $request->validated('value'), $request->user());
 
-        return back()->with('success', 'حُفظت الترجمة — بانتظار الاعتماد.');
+        return back()->with('success', 'تم حفظ الترجمة، وهي الآن بانتظار اعتماد المدير.');
     }
 
     public function approve(TranslationApproveRequest $request, TranslationService $service): RedirectResponse
     {
         $n = $service->approve($request->validated('ids'), $request->user());
 
-        return back()->with('success', "اعتُمدت {$n} ترجمة.");
+        return back()->with('success', "تم اعتماد {$n} ترجمة.");
     }
 }

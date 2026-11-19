@@ -20,12 +20,12 @@ export default function Index({ media }: { media: Paginated<Media> }) {
 
   return (
     <AdminLayout>
-      <Head title="مكتبة الملفات" />
-      <PageHeader title="مكتبة الملفات" subtitle="الملفات تُحفظ في public/uploads مباشرة. أصول الموقع الأصلية (assets/) لا تُحذف من هنا." />
+      <Head title="مكتبة الصور والملفات" />
+      <PageHeader title="مكتبة الصور والملفات" subtitle="كل الصور والملفات المرفوعة للموقع. ملفات الموقع الأصلية (المعلَّمة «أصلي») لا تُحذف من هنا." />
       <Card title="رفع ملفات" className="mb-6">
         <form onSubmit={submit} className="flex flex-wrap items-center gap-x-6 gap-y-4">
           <input type="file" multiple accept="image/jpeg,image/png,image/webp,application/pdf" aria-label="الملفات" onChange={(e) => form.setData("files", Array.from(e.target.files ?? []))} className={fileInputClass} />
-          <Toggle label="أبيض وأسود (للصور الميدانية)" checked={form.data.bw} onChange={(v) => form.setData("bw", v)} hint="أطفئه للشعارات." />
+          <Toggle label="تحويلها إلى الأبيض والأسود (للصور الميدانية)" checked={form.data.bw} onChange={(v) => form.setData("bw", v)} hint="ألغِ التحديد عند رفع الشعارات." />
           <Button type="submit" disabled={form.processing || form.data.files.length === 0}>رفع</Button>
         </form>
         {error && <ErrorText className="mt-3">{error}</ErrorText>}
@@ -44,7 +44,7 @@ export default function Index({ media }: { media: Paginated<Media> }) {
               <p className="truncate text-end font-bold" dir="ltr" title={m.path}>{m.path.split("/").pop()}</p>
               <p className="tabular-nums text-ink/55">{m.width ? `${m.width}×${m.height} · ` : ""}{kb(m.bytes)}</p>
               <div className="mt-auto flex items-center justify-between gap-2 pt-2">
-                {m.uploaded ? <Badge tone="olive">مرفوع</Badge> : <Badge>أصل</Badge>}
+                {m.uploaded ? <Badge tone="green">مرفوع</Badge> : <Badge tone="olive">أصلي</Badge>}
                 {m.uploaded && <DeleteButton small url={`/admin/media/${m.id}`} confirm="حذف الملف؟ يُرفض إن كان مستعملاً في المحتوى." />}
               </div>
             </figcaption>

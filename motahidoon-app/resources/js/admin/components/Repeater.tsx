@@ -7,7 +7,7 @@ import { Button, IndexChip } from "./ui";
  * الترتيب المرئي هو الترتيب المحفوظ (position) — يُرسل كاملاً ويزامنه
  * SyncsChildren في الخادم. العنصر على أرضية مصبوغة خفيفاً ليتميّز عن البطاقة.
  */
-export function Repeater<T>({ items, onChange, make, render, addLabel = "إضافة", empty = "لا عناصر بعد.", compact = false }: {
+export function Repeater<T>({ items, onChange, make, render, addLabel = "عنصر", empty = "لا عناصر بعد.", compact = false }: {
   items: T[];
   onChange: (items: T[]) => void;
   make: () => T;
@@ -40,7 +40,7 @@ export function Repeater<T>({ items, onChange, make, render, addLabel = "إضا�
           {render(item, (patch) => onChange(items.map((x, k) => (k === i ? { ...x, ...patch } : x))), i)}
         </div>
       ))}
-      <Button variant="secondary" onClick={() => onChange([...items, make()])}>+ {addLabel}</Button>
+      <Button variant="secondary" onClick={() => onChange([...items, make()])}>+ إضافة {addLabel}</Button>
     </div>
   );
 }

@@ -11,22 +11,22 @@ export default function Index({ pillars }: { pillars: Pillar[] }) {
   return (
     <AdminLayout>
       <Head title="مجالات العمل" />
-      <PageHeader title="مجالات العمل" subtitle="مجال بلا غلاف لا شريحة له في سلايدر الافتتاحية — ولا يكسر شيئاً." actions={<LinkButton href="/admin/pillars/create" variant="primary">+ مجال</LinkButton>} />
+      <PageHeader title="مجالات العمل" subtitle="المجال الذي لا صورة غلاف له لا يظهر في شرائح أعلى الصفحة الرئيسية، ولا يؤثّر ذلك على بقية الموقع." actions={<LinkButton href="/admin/pillars/create" variant="primary">+ إضافة مجال</LinkButton>} />
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {pillars.map((p) => (
           <article key={p.id} className="flex flex-col overflow-hidden rounded-xl border border-rule bg-paper shadow-[0_1px_2px_rgba(26,26,26,.04)]">
             <div className="relative">
               {p.cover
                 ? <img src={p.cover.url} alt="" className="aspect-video w-full object-cover" />
-                : <div className="grid aspect-video place-items-center bg-rule/40 text-xs text-ink/50">بلا غلاف</div>}
-              <span className="absolute start-3 top-3 grid h-8 min-w-8 place-items-center rounded-md bg-ink px-2 text-sm font-black tabular-nums text-paper">{p.num}</span>
+                : <div className="grid aspect-video place-items-center bg-rule/40 text-xs text-ink/50">بلا صورة غلاف</div>}
+              <span className="absolute start-3 top-3 grid h-8 min-w-8 place-items-center rounded-md bg-green px-2 text-sm font-black tabular-nums text-paper">{p.num}</span>
             </div>
-            <div className="flex flex-1 flex-col p-4">
-              <Link href={`/admin/pillars/${p.id}/edit`} className="font-bold leading-7 transition hover:text-olive">{p.short}</Link>
+            <div className="flex flex-1 flex-col border-t-[3px] border-olive p-4">
+              <Link href={`/admin/pillars/${p.id}/edit`} className="font-bold leading-7 transition hover:text-green">{p.short}</Link>
               {(p.definition === null || !p.is_published) && (
                 <div className="mt-2 flex flex-wrap gap-1.5">
-                  {p.definition === null && <Badge>التعريف بانتظار الاعتماد</Badge>}
-                  {!p.is_published && <Badge tone="red">مخفي</Badge>}
+                  {p.definition === null && <Badge>التعريف لم يُعتمد بعد</Badge>}
+                  {!p.is_published && <Badge tone="red">مخفيّ عن الموقع</Badge>}
                 </div>
               )}
               <div className="flex-1" />

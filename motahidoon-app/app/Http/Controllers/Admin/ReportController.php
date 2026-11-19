@@ -29,7 +29,7 @@ final class ReportController extends Controller
     {
         $report = $service->save(null, $request->validated(), $request->user());
 
-        return to_route('admin.reports.edit', $report)->with('success', 'أُنشئ التقرير. أضف أقسام المجالات أدناه.');
+        return to_route('admin.reports.edit', $report)->with('success', 'تم إنشاء التقرير. أضف أقسام المجالات في الأسفل.');
     }
 
     public function edit(Report $report, ReportService $service, PillarService $pillars): Response
@@ -41,14 +41,14 @@ final class ReportController extends Controller
     {
         $service->save($report, $request->validated(), $request->user());
 
-        return back()->with('success', 'حُفظ التقرير.');
+        return back()->with('success', 'تم حفظ التقرير.');
     }
 
     public function destroy(Report $report, ReportService $service): RedirectResponse
     {
         $service->delete($report);
 
-        return to_route('admin.reports.index')->with('success', 'حُذف التقرير.');
+        return to_route('admin.reports.index')->with('success', 'تم حذف التقرير.');
     }
 
     /** @return array<string, mixed> */

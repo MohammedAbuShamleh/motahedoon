@@ -21,6 +21,6 @@ final class SiteSettingController extends Controller
     {
         $service->update($request->validated(), $request->user());
 
-        return back()->with('success', 'حُفظت الهوية والإعدادات.');
+        return back()->with('success', 'تم حفظ بيانات التجمّع.');
     }
 }

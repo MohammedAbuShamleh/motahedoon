@@ -52,3 +52,45 @@
   /* التحديد بصبغة زيتونية — من اللوحة لا أزرق المتصفّح */
   ::selection { background: rgb(92 91 52 / .22); color: var(--color-ink); }
 }
+
+/* شريط التمرير بهوية اللوحة: رفيع بلا أسهم، ومقبضه مستطيل بزوايا ناعمة
+   على مسار شفّاف — لا كبسولة، فلا دوائر في المشروع. زيتونيّ مخفّف على
+   الورق، ورقيّ مخفّف على الحبري (ink-scrollbar)، وأخضر ما دام يُسحب.
+   الشكل كلّه من ::-webkit-scrollbar (Chromium وSafari)؛ Firefox لا يعرفه
+   فيأخذ اللون والنحافة وحدهما، محصورَين فيه عمداً: Chromium ‏121+ يُسقط
+   ::-webkit-scrollbar كلّه عن أي عنصر عليه scrollbar-color أو
+   scrollbar-width (والأولى موروثة). لذلك لا تُستعمل في اللوحة أدوات
+   Tailwind من عائلة scrollbar- (thin وnone وthumb وtrack): تُعيد شريط النظام. */
+@layer base {
+  :root {
+    --sb-thumb: rgb(92 91 52 / .5);
+    --sb-thumb-hover: var(--color-olive);
+  }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner { background: transparent; }
+  ::-webkit-scrollbar-button { display: none; }
+  /* الإطار الشفّاف يُبقي الإمساك على 10px والظاهر منه 6px،
+     والزاوية الظاهرة 3.5 − 2 = 1.5px */
+  ::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb) padding-box;
+    border: 2px solid transparent;
+    border-radius: 3.5px;
+  }
+  ::-webkit-scrollbar-thumb:vertical { min-height: 2.5rem; }
+  ::-webkit-scrollbar-thumb:horizontal { min-width: 2.5rem; }
+  ::-webkit-scrollbar-thumb:hover { background-color: var(--sb-thumb-hover); }
+  ::-webkit-scrollbar-thumb:active { background-color: var(--color-green); }
+
+  @supports not selector(::-webkit-scrollbar) {
+    * { scrollbar-width: thin; scrollbar-color: var(--sb-thumb) transparent; }
+  }
+}
+
+/* على الحبري (القائمة الجانبية): ورقيّ مخفّف بدل الزيتوني، فالزيتوني على
+   الحبري 2.5:1 وحسب. الاسم خارج بادئة scrollbar- كي لا يلتبس بأدوات
+   Tailwind التي تكسر الشكل في Chromium */
+@utility ink-scrollbar {
+  --sb-thumb: rgb(252 252 250 / .3);
+  --sb-thumb-hover: rgb(252 252 250 / .55);
+}

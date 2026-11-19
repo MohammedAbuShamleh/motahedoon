@@ -71,12 +71,12 @@ export default function Form({ report: r, lineGroups, pillars }: Props) {
       <form onSubmit={submit} className="space-y-6">
         <Card title="بيانات التقرير">
           <div className="grid gap-4 md:grid-cols-3">
-            <TextField label="التسمية" value={data.label} onChange={(v) => setData("label", v)} error={e.label} hint="الربع الثالث 2026" />
-            <TextField label="المعرّف (slug)" dir="ltr" value={data.slug} onChange={(v) => setData("slug", v)} error={e.slug} hint="q3-2026 — يظهر في الرابط" />
-            <Select label="الحالة" value={data.status} onChange={(v) => setData("status", v)} options={{ draft: "مسودّة", published: "منشور" }} error={e.status} />
-            <TextField className="md:col-span-3" label="الفترة" value={data.range} onChange={(v) => setData("range", v)} error={e.range} />
+            <TextField label="اسم الفترة" value={data.label} onChange={(v) => setData("label", v)} error={e.label} hint="مثل: الربع الثالث 2026" />
+            <TextField label="المعرّف في الرابط" dir="ltr" value={data.slug} onChange={(v) => setData("slug", v)} error={e.slug} hint="مثل q3-2026 — يظهر في رابط التقرير" />
+            <Select label="الحالة" value={data.status} onChange={(v) => setData("status", v)} options={{ draft: "مسودّة (غير منشور)", published: "منشور" }} error={e.status} />
+            <TextField className="md:col-span-3" label="الفترة الزمنية" value={data.range} onChange={(v) => setData("range", v)} error={e.range} hint="مثل: الربع الثالث: 1 يوليو – 30 سبتمبر 2026م" />
             <TextField className="md:col-span-3" label="عنوان التقرير" value={data.report_title} onChange={(v) => setData("report_title", v)} error={e.report_title} />
-            <Toggle label="التقرير الحالي" checked={data.is_current} onChange={(v) => setData("is_current", v)} hint="واحد فقط؛ تفعيله هنا يلغي غيره. يجب أن يكون منشوراً." />
+            <Toggle label="التقرير الحالي" checked={data.is_current} onChange={(v) => setData("is_current", v)} hint="يظهر في الصفحة الرئيسية. تقرير واحد فقط يكون حالياً، ويجب أن يكون منشوراً." />
             <FileField label="ملف التقرير (PDF)" accept="application/pdf" isImage={false} current={r?.report_file ?? null} file={data.report_file} remove={data.remove_report_file} onFile={(f) => setData("report_file", f)} onRemove={(v) => setData("remove_report_file", v)} error={e.report_file} />
           </div>
           {e.is_current && <ErrorText className="mt-3">{e.is_current}</ErrorText>}
@@ -91,24 +91,24 @@ export default function Form({ report: r, lineGroups, pillars }: Props) {
         {lineGroups.map((g) => (
           <Card key={g.value} title={g.label}>
             {TITLED[g.value] && (
-              <TextField className="mb-4" label={TITLED[g.value].label} value={titles[TITLED[g.value].title]} onChange={(v) => setTitle(TITLED[g.value].title, v)} hint="فارغ = لا يظهر القسم." />
+              <TextField className="mb-4" label={TITLED[g.value].label} value={titles[TITLED[g.value].title]} onChange={(v) => setTitle(TITLED[g.value].title, v)} hint="اتركه فارغاً لإخفاء هذا القسم من التقرير." />
             )}
             {g.value === "closing_paragraph" && (
               <TextField className="mb-4" label="توقيع الخاتمة" value={data.closing_signoff} onChange={(v) => setData("closing_signoff", v)} />
             )}
             {g.value === "appeal_item" && (
               <div className="mb-4 grid gap-4 md:grid-cols-2">
-                <TextField label="عنوان نداء الدعم" value={data.appeal_title} onChange={(v) => setData("appeal_title", v)} hint="فارغ = لا نداء." />
-                <TextField label="تعليق الصورة" value={data.appeal_photo_caption} onChange={(v) => setData("appeal_photo_caption", v)} />
+                <TextField label="عنوان نداء الدعم" value={data.appeal_title} onChange={(v) => setData("appeal_title", v)} hint="اتركه فارغاً لإخفاء نداء الدعم." />
+                <TextField label="وصف الصورة" value={data.appeal_photo_caption} onChange={(v) => setData("appeal_photo_caption", v)} />
                 <TextArea className="md:col-span-2" label="افتتاحية النداء" value={data.appeal_lead} onChange={(v) => setData("appeal_lead", v)} />
                 <FileField label="صورة النداء" current={r?.appeal_photo ?? null} file={data.appeal_photo} remove={data.remove_appeal_photo} onFile={(f) => setData("appeal_photo", f)} onRemove={(v) => setData("remove_appeal_photo", v)} error={e.appeal_photo} />
               </div>
             )}
-            <Repeater<LineRow> compact items={data.lines[g.value] ?? []} make={() => ({ term: "", body: "" })} addLabel="سطر"
+            <Repeater<LineRow> compact items={data.lines[g.value] ?? []} make={() => ({ term: "", body: "" })} addLabel="فقرة"
               onChange={(rows) => setData("lines", { ...data.lines, [g.value]: rows })}
               render={(l, update, i) => (
                 <div className="space-y-2">
-                  {g.hasTerm && <TextField label="المصطلح" value={l.term} onChange={(v) => update({ term: v })} />}
+                  {g.hasTerm && <TextField label="العنوان" value={l.term} onChange={(v) => update({ term: v })} />}
                   <TextArea label="النصّ" value={l.body} onChange={(v) => update({ body: v })} error={e[`lines.${g.value}.${i}.body`]} rows={2} />
                 </div>
               )} />
@@ -119,12 +119,12 @@ export default function Form({ report: r, lineGroups, pillars }: Props) {
           <TableEditor value={data.summary} onChange={(t) => setData("summary", t)} />
         </Card>
 
-        <Card title="الترجمات">
+        <Card title="الترجمة الإنجليزية والتركية">
           <TranslationFields value={data.translations} onChange={(t) => setData("translations", t)} errors={e} fields={[
-            { key: "label", label: "Label" }, { key: "range", label: "Range" },
-            { key: "report_title", label: "Report title" }, { key: "metrics_title", label: "Metrics title" },
+            { key: "label", label: "اسم الفترة" }, { key: "range", label: "الفترة الزمنية" },
+            { key: "report_title", label: "عنوان التقرير" }, { key: "metrics_title", label: "عنوان المؤشّرات" },
           ]} />
-          <p className="mt-3 text-xs text-ink/60">ترجمات المؤشّرات والمقدّمة وافتتاحيات الأقسام تُحرَّر من «طابور الترجمات». السرد الطويل لا يُعرض مترجماً — كما في القواعد.</p>
+          <p className="mt-3 text-xs leading-5 text-ink/60">ترجمة المؤشّرات والمقدّمة وافتتاحيات الأقسام من صفحة «مراجعة الترجمات». الفقرات الطويلة تبقى بالعربية وحدها، ولا تُعرض في الصفحات الإنجليزية والتركية.</p>
         </Card>
 
         <SubmitBar processing={form.processing} label={r ? "حفظ التقرير" : "إنشاء التقرير"} />
@@ -138,7 +138,7 @@ export default function Form({ report: r, lineGroups, pillars }: Props) {
                 <li key={s.id} className="flex items-center justify-between gap-3 px-5 py-3">
                   <span className="flex min-w-0 items-center gap-3">
                     <IndexChip>{i + 1}</IndexChip>
-                    <Link href={`/admin/sections/${s.id}/edit`} className="truncate font-bold transition hover:text-olive">{s.pillar}</Link>
+                    <Link href={`/admin/sections/${s.id}/edit`} className="truncate font-bold transition hover:text-green">{s.pillar}</Link>
                   </span>
                   <div className="flex gap-2">
                     <LinkButton href={`/admin/sections/${s.id}/edit`} size="sm">تحرير</LinkButton>

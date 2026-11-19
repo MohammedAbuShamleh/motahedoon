@@ -19,7 +19,7 @@ final class ReportSectionController extends Controller
     {
         $section = $service->create($report, (int) $request->validated('pillar_id'));
 
-        return to_route('admin.sections.edit', $section)->with('success', 'أُضيف القسم.');
+        return to_route('admin.sections.edit', $section)->with('success', 'تمت إضافة القسم.');
     }
 
     public function edit(ReportSection $section, ReportSectionService $service): Response
@@ -31,7 +31,7 @@ final class ReportSectionController extends Controller
     {
         $service->update($section, $request->validated(), $request->user());
 
-        return back()->with('success', 'حُفظ القسم.');
+        return back()->with('success', 'تم حفظ القسم.');
     }
 
     public function destroy(ReportSection $section, ReportSectionService $service): RedirectResponse
@@ -39,6 +39,6 @@ final class ReportSectionController extends Controller
         $report = $section->report_id;
         $service->delete($section);
 
-        return to_route('admin.reports.edit', $report)->with('success', 'حُذف القسم.');
+        return to_route('admin.reports.edit', $report)->with('success', 'تم حذف القسم.');
     }
 }

@@ -17,7 +17,7 @@ type Settings = {
 };
 
 const SOCIAL: Record<string, string> = { facebook: "فيسبوك", instagram: "إنستغرام", youtube: "يوتيوب", telegram: "تيليجرام", x: "X" };
-const PENDING = "فارغ = خانة محجوزة «بانتظار اعتماد التجمع» في الموقع. لا تضع نصّاً مؤقّتاً.";
+const PENDING = "اتركه فارغاً إن لم يُعتمد بعد؛ سيظهر في الموقع «بانتظار اعتماد التجمع». لا تضع نصّاً مؤقّتاً.";
 
 export default function Edit({ settings: s }: { settings: Settings }) {
   const form = useForm({
@@ -41,17 +41,17 @@ export default function Edit({ settings: s }: { settings: Settings }) {
 
   return (
     <AdminLayout>
-      <Head title="الهوية والإعدادات" />
-      <PageHeader title="الهوية والإعدادات" subtitle="المتن الدائم: لا يبلى بفترة. العربية مصدر السجل." />
+      <Head title="بيانات التجمّع" />
+      <PageHeader title="بيانات التجمّع" subtitle="المعلومات الأساسية التي لا تتغيّر بتغيّر الفترات. النصّ العربي هو الأصل، والترجمات تتبعه." />
       <ErrorSummary errors={e} />
       <form onSubmit={submit} className="space-y-6">
         <Card title="الاسم والشعار">
           <div className="grid gap-4 md:grid-cols-2">
             <TextField label="الاسم الكامل" value={data.name} onChange={(v) => setData("name", v)} error={e.name} />
             <TextField label="الاسم المختصر" value={data.short_name} onChange={(v) => setData("short_name", v)} error={e.short_name} />
-            <TextField className="md:col-span-2" label="الشعار النصّي (Tagline)" value={data.tagline} onChange={(v) => setData("tagline", v)} error={e.tagline} hint="الكلمة الأخيرة تُبرَز بالأحمر في الافتتاحية." />
+            <TextField className="md:col-span-2" label="العبارة التعريفية" value={data.tagline} onChange={(v) => setData("tagline", v)} error={e.tagline} hint="تظهر كبيرةً أعلى الصفحة الرئيسية، وكلمتها الأخيرة بالأحمر." />
             <FileField label="الشعار الكامل" current={s.logo_full} file={data.logo_full} remove={data.remove_logo_full} onFile={(f) => setData("logo_full", f)} onRemove={(v) => setData("remove_logo_full", v)} error={e.logo_full} />
-            <FileField label="رمز الشعار" current={s.logo_mark} file={data.logo_mark} remove={data.remove_logo_mark} onFile={(f) => setData("logo_mark", f)} onRemove={(v) => setData("remove_logo_mark", v)} error={e.logo_mark} />
+            <FileField label="الشعار المصغّر (الأيقونة)" current={s.logo_mark} file={data.logo_mark} remove={data.remove_logo_mark} onFile={(f) => setData("logo_mark", f)} onRemove={(v) => setData("remove_logo_mark", v)} error={e.logo_mark} />
           </div>
         </Card>
 
@@ -69,7 +69,7 @@ export default function Edit({ settings: s }: { settings: Settings }) {
 
         <Card title="التواصل والدعم">
           <div className="grid gap-4 md:grid-cols-3">
-            <TextField label="البريد" dir="ltr" value={data.contact_email} onChange={(v) => setData("contact_email", v)} error={e.contact_email} hint={PENDING} />
+            <TextField label="البريد الإلكتروني" dir="ltr" value={data.contact_email} onChange={(v) => setData("contact_email", v)} error={e.contact_email} hint={PENDING} />
             <TextField label="الهاتف" dir="ltr" value={data.contact_phone} onChange={(v) => setData("contact_phone", v)} hint={PENDING} />
             <TextField label="العنوان" value={data.contact_address} onChange={(v) => setData("contact_address", v)} hint={PENDING} />
             {Object.entries(SOCIAL).map(([k, label]) => (
@@ -77,7 +77,7 @@ export default function Edit({ settings: s }: { settings: Settings }) {
             ))}
             <TextField label="رابط التبرّع" dir="ltr" value={data.donate_url} onChange={(v) => setData("donate_url", v)} error={e.donate_url} />
             <TextField label="نصّ زرّ الدعم" value={data.donate_label} onChange={(v) => setData("donate_label", v)} error={e.donate_label} />
-            <TextField label="عدد مؤشّرات «لمحة أثر»" type="number" dir="ltr" value={data.home_metrics_count} onChange={(v) => setData("home_metrics_count", v)} error={e.home_metrics_count} />
+            <TextField label="عدد الأرقام في «لمحة أثر»" type="number" dir="ltr" value={data.home_metrics_count} onChange={(v) => setData("home_metrics_count", v)} error={e.home_metrics_count} />
             <FileField label="رمز QR للتبرّع" current={s.donate_qr} file={data.donate_qr} remove={data.remove_donate_qr} onFile={(f) => setData("donate_qr", f)} onRemove={(v) => setData("remove_donate_qr", v)} error={e.donate_qr} />
           </div>
         </Card>
@@ -88,13 +88,13 @@ export default function Edit({ settings: s }: { settings: Settings }) {
             onChange={(t) => setData("translations", t)}
             errors={e}
             fields={[
-              { key: "name", label: "Name" },
-              { key: "short_name", label: "Short name" },
-              { key: "tagline", label: "Tagline" },
-              { key: "media_office", label: "Media office" },
-              { key: "vision", label: "Vision", multiline: true },
-              { key: "mission", label: "Mission", multiline: true },
-              { key: "unapproved_notice", label: "Unapproved-translation notice", multiline: true },
+              { key: "name", label: "الاسم الكامل" },
+              { key: "short_name", label: "الاسم المختصر" },
+              { key: "tagline", label: "العبارة التعريفية" },
+              { key: "media_office", label: "اسم المكتب الإعلامي" },
+              { key: "vision", label: "الرؤية", multiline: true },
+              { key: "mission", label: "الرسالة", multiline: true },
+              { key: "unapproved_notice", label: "تنويه «ترجمة غير معتمدة»", multiline: true },
             ]}
           />
         </Card>

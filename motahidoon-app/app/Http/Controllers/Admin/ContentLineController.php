@@ -28,20 +28,20 @@ final class ContentLineController extends Controller
     {
         $service->create($request->validated(), $request->user());
 
-        return back()->with('success', 'أُضيف السطر.');
+        return back()->with('success', 'تمت إضافة النصّ.');
     }
 
     public function update(ContentLineRequest $request, ContentLine $line, ContentLineService $service): RedirectResponse
     {
         $service->update($line, $request->validated(), $request->user());
 
-        return back()->with('success', 'حُفظ السطر.');
+        return back()->with('success', 'تم حفظ النصّ.');
     }
 
     public function destroy(ContentLine $line, ContentLineService $service): RedirectResponse
     {
         $service->delete($line);
 
-        return back()->with('success', 'حُذف السطر.');
+        return back()->with('success', 'تم حذف النصّ.');
     }
 }

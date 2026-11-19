@@ -60,31 +60,31 @@ export default function SectionPage({ section: s }: { section: Section }) {
                 <div className="grid gap-3 sm:grid-cols-[6rem_1fr_auto]">
                   <TextField label="الرقم" dir="ltr" value={g.num} onChange={(v) => update({ num: v })} />
                   <TextField label="العنوان" value={g.title} onChange={(v) => update({ title: v })} />
-                  <div className="flex items-end pb-2"><Toggle label="خلاصة" checked={g.is_recap} onChange={(v) => update({ is_recap: v })} /></div>
+                  <div className="flex items-end pb-2"><Toggle label="ملخّص" checked={g.is_recap} onChange={(v) => update({ is_recap: v })} /></div>
                 </div>
                 <Repeater<ItemRow> compact items={g.items} onChange={(items) => update({ items })} addLabel="بند"
                   make={() => ({ term: "", body: "", is_recap: false })}
                   render={(it, upd, ii) => (
                     <div className="grid gap-2 sm:grid-cols-[12rem_1fr_auto]">
-                      <TextField label="مصطلح (اختياري)" value={it.term} onChange={(v) => upd({ term: v })} />
+                      <TextField label="عنوان (اختياري)" value={it.term} onChange={(v) => upd({ term: v })} />
                       <TextArea label="النصّ" rows={2} value={it.body} onChange={(v) => upd({ body: v })} error={e[`groups.${gi}.items.${ii}.body`]} />
-                      <div className="flex items-end pb-2"><Toggle label="خلاصة" checked={it.is_recap} onChange={(v) => upd({ is_recap: v })} /></div>
+                      <div className="flex items-end pb-2"><Toggle label="ملخّص" checked={it.is_recap} onChange={(v) => upd({ is_recap: v })} /></div>
                     </div>
                   )} />
               </div>
             )} />
         </Card>
 
-        <Card title="كتل الأرقام">
-          <Repeater<BlockRow> items={data.blocks} onChange={(b) => setData("blocks", b)} addLabel="كتلة"
+        <Card title="مجموعات الأرقام">
+          <Repeater<BlockRow> items={data.blocks} onChange={(b) => setData("blocks", b)} addLabel="مجموعة أرقام"
             make={() => ({ title: "", note_term: "", note_body: "", figures: [] })}
             render={(b, update, bi) => (
               <div className="space-y-3">
-                <TextField label="عنوان الكتلة" value={b.title} onChange={(v) => update({ title: v })} error={e[`blocks.${bi}.title`]} />
+                <TextField label="عنوان المجموعة" value={b.title} onChange={(v) => update({ title: v })} error={e[`blocks.${bi}.title`]} />
                 <Repeater<FigureRow> compact items={b.figures} onChange={(figures) => update({ figures })} make={newFigure} addLabel="رقم"
                   render={(f, upd, fi) => <FigureFields row={f} update={upd} errors={e} prefix={`blocks.${bi}.figures.${fi}`} />} />
                 <div className="grid gap-3 sm:grid-cols-[12rem_1fr]">
-                  <TextField label="مصطلح الملاحظة" value={b.note_term} onChange={(v) => update({ note_term: v })} />
+                  <TextField label="عنوان الملاحظة" value={b.note_term} onChange={(v) => update({ note_term: v })} />
                   <TextArea label="الملاحظة" rows={2} value={b.note_body} onChange={(v) => update({ note_body: v })} />
                 </div>
               </div>
@@ -106,16 +106,16 @@ export default function SectionPage({ section: s }: { section: Section }) {
                 <div className="space-y-2">
                   <input type="file" accept="image/jpeg,image/png,image/webp" aria-label="الصورة" onChange={(ev) => update({ file: ev.target.files?.[0] ?? null })} className={fileInputClass} />
                   {e[`gallery.${pi}.file`] && <ErrorText>{e[`gallery.${pi}.file`]}</ErrorText>}
-                  <TextField label="التعليق" value={p.caption} onChange={(v) => update({ caption: v })} error={e[`gallery.${pi}.caption`]} hint="بلا اسم مكان أو حيّ." />
+                  <TextField label="وصف الصورة" value={p.caption} onChange={(v) => update({ caption: v })} error={e[`gallery.${pi}.caption`]} hint="بلا اسم مكان أو حيّ." />
                 </div>
               </div>
             )} />
-          <p className="mt-2 text-xs text-ink/60">الصور الجديدة تُحوَّل أبيض وأسود عند الرفع.</p>
+          <p className="mt-2 text-xs text-ink/60">الصور الجديدة تتحوّل تلقائياً إلى الأبيض والأسود عند الرفع.</p>
         </Card>
 
         <Card title="ترجمة الافتتاحية">
-          <TranslationFields fields={[{ key: "lead", label: "Lead", multiline: true }]} value={data.translations} onChange={(t) => setData("translations", t)} errors={e} />
-          <p className="mt-3 text-xs text-ink/60">في العرض الأجنبي تظهر الافتتاحية والأرقام وحدها، ورابط «التفاصيل الكاملة بالعربية».</p>
+          <TranslationFields fields={[{ key: "lead", label: "الافتتاحية", multiline: true }]} value={data.translations} onChange={(t) => setData("translations", t)} errors={e} />
+          <p className="mt-3 text-xs leading-5 text-ink/60">في الصفحات الإنجليزية والتركية تظهر الافتتاحية والأرقام فقط، مع رابط «التفاصيل الكاملة بالعربية».</p>
         </Card>
 
         <SubmitBar processing={form.processing} />

@@ -10,17 +10,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /** @mixin Translation */
 final class TranslationResource extends JsonResource
 {
-    /** تسميات أنواع السجلات في طابور الترجمة. */
+    /** تسميات أنواع السجلات في صفحة «مراجعة الترجمات» — بلغة المحرّر لا بمصطلحات البنية. */
     public const TYPES = [
-        'site_setting' => 'الهوية',
-        'content_line' => 'المتن',
-        'partner' => 'شريك',
-        'pillar' => 'مجال',
+        'site_setting' => 'بيانات التجمّع',
+        'content_line' => 'نصوص التعريف',
+        'partner' => 'مؤسسة شريكة',
+        'pillar' => 'مجال عمل',
         'report' => 'تقرير',
-        'report_line' => 'سطر تقرير',
-        'report_metric' => 'مؤشّر',
+        'report_line' => 'فقرة تقرير',
+        'report_metric' => 'مؤشّر تقرير',
         'report_section' => 'قسم تقرير',
-        'ui_string' => 'نصّ واجهة',
+        'ui_string' => 'زرّ أو عنوان',
     ];
 
     public function toArray(Request $request): array

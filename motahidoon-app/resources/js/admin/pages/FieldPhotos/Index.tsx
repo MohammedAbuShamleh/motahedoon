@@ -30,8 +30,8 @@ export default function Index({ photos }: { photos: Photo[] }) {
 
   return (
     <AdminLayout>
-      <Head title="صور الميدان" />
-      <PageHeader title="صور الميدان" subtitle="شريط الصور في الصفحة الرئيسية. تُحوَّل أبيض وأسود عند الرفع — قرار هوية في الملف نفسه." />
+      <Head title="الصور الميدانية" />
+      <PageHeader title="الصور الميدانية" subtitle="صور قسم «من الميدان» في الصفحة الرئيسية. تتحوّل تلقائياً إلى الأبيض والأسود عند الرفع." />
 
       <Card title="رفع صور" className="mb-6">
         <form onSubmit={submit} className="flex flex-wrap items-center gap-4">
@@ -39,7 +39,7 @@ export default function Index({ photos }: { photos: Photo[] }) {
           <Button type="submit" disabled={upload.processing || upload.data.photos.length === 0}>رفع {upload.data.photos.length || ""}</Button>
         </form>
         {error && <ErrorText className="mt-3">{error}</ErrorText>}
-        <p className="mt-3 text-xs leading-5 text-ink/60">لا وجوه أطفال قريبة، ولا اسم مكان أو حيّ، ولا شعار جهة خارجية.</p>
+        <p className="mt-3 text-xs leading-5 text-ink/60">قبل الرفع تأكّد: لا وجوه أطفال قريبة، ولا اسم مكان أو حيّ، ولا شعار جهة خارجية.</p>
       </Card>
 
       <Card
@@ -54,8 +54,8 @@ export default function Index({ photos }: { photos: Photo[] }) {
                 <IndexChip>{i + 1}</IndexChip>
                 {/* في الاتجاه العربي ما قبلُ على اليمين: «قبل» سهمه يمين و«بعد» يسار */}
                 <span className="flex gap-1">
-                  <Button variant="ghost" size="icon" onClick={() => move(i, -1)} disabled={i === 0} aria-label="قبل"><Glyph name="right" className="size-4" /></Button>
-                  <Button variant="ghost" size="icon" onClick={() => move(i, 1)} disabled={i === order.length - 1} aria-label="بعد"><Glyph name="left" className="size-4" /></Button>
+                  <Button variant="ghost" size="icon" onClick={() => move(i, -1)} disabled={i === 0} aria-label="تقديم الصورة" title="تقديم"><Glyph name="right" className="size-4" /></Button>
+                  <Button variant="ghost" size="icon" onClick={() => move(i, 1)} disabled={i === order.length - 1} aria-label="تأخير الصورة" title="تأخير"><Glyph name="left" className="size-4" /></Button>
                   <DeleteButton small url={`/admin/field-photos/${p.id}`} />
                 </span>
               </figcaption>

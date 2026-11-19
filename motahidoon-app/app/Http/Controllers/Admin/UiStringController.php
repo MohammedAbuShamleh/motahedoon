@@ -25,20 +25,20 @@ final class UiStringController extends Controller
     {
         $service->save(null, $request->validated(), $request->user());
 
-        return back()->with('success', 'أُضيف النصّ.');
+        return back()->with('success', 'تمت إضافة الكلمة.');
     }
 
     public function update(UiStringRequest $request, UiString $string, UiStringService $service): RedirectResponse
     {
         $service->save($string, $request->validated(), $request->user());
 
-        return back()->with('success', 'حُفظت الترجمات.');
+        return back()->with('success', 'تم حفظ الترجمة.');
     }
 
     public function destroy(UiString $string, UiStringService $service): RedirectResponse
     {
         $service->delete($string);
 
-        return back()->with('success', 'حُذف النصّ.');
+        return back()->with('success', 'تم حذف الكلمة.');
     }
 }

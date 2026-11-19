@@ -27,7 +27,7 @@ final class PartnerController extends Controller
     {
         $service->save(null, $request->validated(), $request->user());
 
-        return to_route('admin.partners.index')->with('success', 'أُضيف الشريك.');
+        return to_route('admin.partners.index')->with('success', 'تمت إضافة المؤسسة.');
     }
 
     public function edit(Partner $partner, PartnerService $service): Response
@@ -39,13 +39,13 @@ final class PartnerController extends Controller
     {
         $service->save($partner, $request->validated(), $request->user());
 
-        return to_route('admin.partners.index')->with('success', 'حُفظ الشريك.');
+        return to_route('admin.partners.index')->with('success', 'تم حفظ بيانات المؤسسة.');
     }
 
     public function destroy(Partner $partner, PartnerService $service): RedirectResponse
     {
         $service->delete($partner);
 
-        return to_route('admin.partners.index')->with('success', 'حُذف الشريك.');
+        return to_route('admin.partners.index')->with('success', 'تم حذف المؤسسة.');
     }
 }

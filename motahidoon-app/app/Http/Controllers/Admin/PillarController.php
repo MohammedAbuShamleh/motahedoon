@@ -27,7 +27,7 @@ final class PillarController extends Controller
     {
         $service->save(null, $request->validated(), $request->user());
 
-        return to_route('admin.pillars.index')->with('success', 'أُضيف المجال.');
+        return to_route('admin.pillars.index')->with('success', 'تمت إضافة المجال.');
     }
 
     public function edit(Pillar $pillar, PillarService $service): Response
@@ -39,13 +39,13 @@ final class PillarController extends Controller
     {
         $service->save($pillar, $request->validated(), $request->user());
 
-        return to_route('admin.pillars.index')->with('success', 'حُفظ المجال.');
+        return to_route('admin.pillars.index')->with('success', 'تم حفظ المجال.');
     }
 
     public function destroy(Pillar $pillar, PillarService $service): RedirectResponse
     {
         $service->delete($pillar);
 
-        return to_route('admin.pillars.index')->with('success', 'حُذف المجال.');
+        return to_route('admin.pillars.index')->with('success', 'تم حذف المجال.');
     }
 }

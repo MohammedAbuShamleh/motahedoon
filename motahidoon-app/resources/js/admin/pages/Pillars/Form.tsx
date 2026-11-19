@@ -35,28 +35,28 @@ export default function Form({ pillar: p, nextNum }: { pillar: Pillar | null; ne
       <PageHeader title={p ? p.short : "مجال جديد"} actions={<LinkButton href="/admin/pillars">رجوع</LinkButton>} />
       <ErrorSummary errors={e} />
       <form onSubmit={submit} className="space-y-6">
-        <Card>
+        <Card title="بيانات المجال">
           <div className="grid gap-4 md:grid-cols-3">
-            <TextField label="الرقم" dir="ltr" value={data.num} onChange={(v) => setData("num", v)} error={e.num} hint={p ? "مثل 01" : "يُملأ تلقائياً بالرقم التالي · فارغ = التالي"} />
-            <TextField label="المعرّف (slug)" dir="ltr" value={data.slug} onChange={(v) => setData("slug", v)} error={e.slug} hint="يظهر في الرابط: /p/dawah" />
-            <TextField label="الترتيب" type="number" dir="ltr" value={data.position} onChange={(v) => setData("position", v)} error={e.position} hint="فارغ = آخر القائمة" />
+            <TextField label="الرقم" dir="ltr" value={data.num} onChange={(v) => setData("num", v)} error={e.num} hint={p ? "مثل 01" : "يُملأ تلقائياً بالرقم التالي، ويمكن تركه فارغاً"} />
+            <TextField label="المعرّف في الرابط" dir="ltr" value={data.slug} onChange={(v) => setData("slug", v)} error={e.slug} hint="يظهر في رابط صفحة المجال، مثل /p/dawah" />
+            <TextField label="الترتيب" type="number" dir="ltr" value={data.position} onChange={(v) => setData("position", v)} error={e.position} hint="اتركه فارغاً ليكون في آخر القائمة" />
             <TextField className="md:col-span-3" label="العنوان الكامل" value={data.title} onChange={(v) => setData("title", v)} error={e.title} />
             <TextField label="العنوان المختصر" value={data.short} onChange={(v) => setData("short", v)} error={e.short} />
-            <TextField className="md:col-span-2" label="الجهات المنفّذة" value={data.orgs} onChange={(v) => setData("orgs", v)} error={e.orgs} hint="تُفصل بـ |" />
-            <TextArea className="md:col-span-3" rows={5} label="التعريف" value={data.definition} onChange={(v) => setData("definition", v)} hint="فارغ = خانة محجوزة «بانتظار اعتماد التجمع». لا تكتب نصّاً من عندك." />
+            <TextField className="md:col-span-2" label="الجهات المنفّذة" value={data.orgs} onChange={(v) => setData("orgs", v)} error={e.orgs} hint="افصل بين الجهات بالرمز |" />
+            <TextArea className="md:col-span-3" rows={5} label="التعريف" value={data.definition} onChange={(v) => setData("definition", v)} hint="اتركه فارغاً إن لم يُعتمد بعد؛ سيظهر في الموقع «بانتظار اعتماد التجمع». لا تكتب نصّاً من عندك." />
           </div>
         </Card>
-        <Card title="الغلاف">
+        <Card title="صورة الغلاف">
           <div className="grid gap-4 md:grid-cols-2">
-            <FileField label="صورة الغلاف" current={p?.cover ?? null} file={data.cover} remove={data.remove_cover} onFile={(f) => setData("cover", f)} onRemove={(v) => setData("remove_cover", v)} error={e.cover} hint="تُحوَّل أبيض وأسود في الملف نفسه. لا اسم مكان ولا وجوه قريبة لأطفال." />
-            <TextField label="تعليق الغلاف" value={data.cover_caption} onChange={(v) => setData("cover_caption", v)} hint="بلا اسم مكان أو حيّ." />
+            <FileField label="الصورة" current={p?.cover ?? null} file={data.cover} remove={data.remove_cover} onFile={(f) => setData("cover", f)} onRemove={(v) => setData("remove_cover", v)} error={e.cover} hint="تتحوّل تلقائياً إلى الأبيض والأسود. بلا اسم مكان ولا وجوه أطفال قريبة." />
+            <TextField label="وصف الصورة" value={data.cover_caption} onChange={(v) => setData("cover_caption", v)} hint="بلا اسم مكان أو حيّ." />
           </div>
-          <div className="mt-4"><Toggle label="منشور في الموقع" checked={data.is_published} onChange={(v) => setData("is_published", v)} /></div>
+          <div className="mt-4"><Toggle label="ظاهر في الموقع" checked={data.is_published} onChange={(v) => setData("is_published", v)} /></div>
         </Card>
-        <Card title="الترجمات">
+        <Card title="الترجمة الإنجليزية والتركية">
           <TranslationFields value={data.translations} onChange={(t) => setData("translations", t)} errors={e} fields={[
-            { key: "title", label: "Title" }, { key: "short", label: "Short title" }, { key: "orgs", label: "Organisations" },
-            { key: "cover_caption", label: "Cover caption" }, { key: "definition", label: "Definition", multiline: true },
+            { key: "title", label: "العنوان الكامل" }, { key: "short", label: "العنوان المختصر" }, { key: "orgs", label: "الجهات المنفّذة" },
+            { key: "cover_caption", label: "وصف الصورة" }, { key: "definition", label: "التعريف", multiline: true },
           ]} />
         </Card>
         <SubmitBar processing={form.processing} />

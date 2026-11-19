@@ -10,13 +10,13 @@ export function FigureFields({ row, update, errors, prefix }: {
 }) {
   return (
     <div className="grid gap-3 sm:grid-cols-4">
-      <TextField label="القيمة" hint="حرفياً: 12,013,597" dir="ltr" value={row.value} onChange={(v) => update({ value: v })} error={errors[`${prefix}.value`]} />
-      <TextField label="بادئة" hint="مثل $" dir="ltr" value={row.prefix ?? ""} onChange={(v) => update({ prefix: v })} />
-      <TextField label="الوحدة" value={row.unit ?? ""} onChange={(v) => update({ unit: v })} />
+      <TextField label="القيمة" hint="كما في المصدر تماماً، مثل 12,013,597" dir="ltr" value={row.value} onChange={(v) => update({ value: v })} error={errors[`${prefix}.value`]} />
+      <TextField label="رمز قبل الرقم" hint="مثل $" dir="ltr" value={row.prefix ?? ""} onChange={(v) => update({ prefix: v })} />
+      <TextField label="الوحدة" hint="مثل: مستفيد" value={row.unit ?? ""} onChange={(v) => update({ unit: v })} />
       <div className="flex items-end pb-2">
-        <Toggle label="إبراز" checked={row.accent} onChange={(v) => update({ accent: v })} />
+        <Toggle label="إبراز الرقم" checked={row.accent} onChange={(v) => update({ accent: v })} />
       </div>
-      <TextField className="sm:col-span-4" label="التسمية" value={row.label} onChange={(v) => update({ label: v })} error={errors[`${prefix}.label`]} />
+      <TextField className="sm:col-span-4" label="وصف الرقم" value={row.label} onChange={(v) => update({ label: v })} error={errors[`${prefix}.label`]} />
     </div>
   );
 }

@@ -22,7 +22,7 @@ export function TableEditor({ value, onChange }: { value: TableData | null; onCh
       <TextField label="عنوان الجدول" value={value.title ?? ""} onChange={(v) => onChange({ ...value, title: v })} />
       <div className="overflow-x-auto rounded-lg border border-rule">
         <table className="w-full border-collapse text-sm">
-          <thead className="bg-rule/50">
+          <thead className="bg-olive/10">
             <tr>
               {value.head.map((h, c) => (
                 <th key={c} className="p-1.5">
@@ -61,17 +61,17 @@ export function TableEditor({ value, onChange }: { value: TableData | null; onCh
         </table>
       </div>
       <div className="flex flex-wrap gap-2">
-        <Button variant="secondary" onClick={() => onChange({ ...value, rows: [...value.rows, Array(width).fill("")] })}>+ صف</Button>
-        <Button variant="secondary" onClick={() => onChange({ ...value, head: [...value.head, ""], rows: value.rows.map((r) => [...r, ""]), foot: value.foot ? [...value.foot, ""] : null })}>+ عمود</Button>
+        <Button variant="secondary" onClick={() => onChange({ ...value, rows: [...value.rows, Array(width).fill("")] })}>+ إضافة صف</Button>
+        <Button variant="secondary" onClick={() => onChange({ ...value, head: [...value.head, ""], rows: value.rows.map((r) => [...r, ""]), foot: value.foot ? [...value.foot, ""] : null })}>+ إضافة عمود</Button>
         {width > 1 && (
-          <Button variant="secondary" onClick={() => onChange({ ...value, head: value.head.slice(0, -1), rows: value.rows.map((r) => r.slice(0, width - 1)), foot: value.foot ? value.foot.slice(0, width - 1) : null })}>− آخر عمود</Button>
+          <Button variant="secondary" onClick={() => onChange({ ...value, head: value.head.slice(0, -1), rows: value.rows.map((r) => r.slice(0, width - 1)), foot: value.foot ? value.foot.slice(0, width - 1) : null })}>حذف آخر عمود</Button>
         )}
         <Button variant="secondary" onClick={() => onChange({ ...value, foot: value.foot ? null : Array(width).fill("") })}>
-          {value.foot ? "إزالة التذييل" : "+ صف تذييل (إجمالي)"}
+          {value.foot ? "حذف صف الإجمالي" : "+ إضافة صف الإجمالي"}
         </Button>
         <Button variant="danger" onClick={() => onChange(null)}>حذف الجدول</Button>
       </div>
-      <TextField label="حاشية الجدول" value={value.foot_note ?? ""} onChange={(v) => onChange({ ...value, foot_note: v })} />
+      <TextField label="ملاحظة أسفل الجدول" value={value.foot_note ?? ""} onChange={(v) => onChange({ ...value, foot_note: v })} />
     </div>
   );
 }

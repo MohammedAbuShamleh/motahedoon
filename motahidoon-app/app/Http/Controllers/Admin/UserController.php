@@ -31,7 +31,7 @@ final class UserController extends Controller
     {
         $service->save(null, $request->validated());
 
-        return to_route('admin.users.index')->with('success', 'أُضيف المستخدم.');
+        return to_route('admin.users.index')->with('success', 'تمت إضافة المستخدم.');
     }
 
     public function edit(User $user): Response
@@ -43,14 +43,14 @@ final class UserController extends Controller
     {
         $service->save($user, $request->validated());
 
-        return to_route('admin.users.index')->with('success', 'حُفظ المستخدم.');
+        return to_route('admin.users.index')->with('success', 'تم حفظ بيانات المستخدم.');
     }
 
     public function destroy(Request $request, User $user, UserService $service): RedirectResponse
     {
         $service->delete($user, $request->user());
 
-        return to_route('admin.users.index')->with('success', 'حُذف المستخدم.');
+        return to_route('admin.users.index')->with('success', 'تم حذف المستخدم.');
     }
 
     /** @return array<string, string> */

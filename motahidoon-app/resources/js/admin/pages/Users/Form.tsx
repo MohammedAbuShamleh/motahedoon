@@ -21,11 +21,11 @@ export default function Form({ user: u, roles }: { user: User | null; roles: Rec
       <PageHeader title={u ? u.name : "مستخدم جديد"} actions={<LinkButton href="/admin/users">رجوع</LinkButton>} />
       <ErrorSummary errors={e} />
       <form onSubmit={submit}>
-        <Card>
+        <Card title="بيانات المستخدم">
           <div className="grid gap-4 md:grid-cols-2">
             <TextField label="الاسم" value={form.data.name} onChange={(v) => form.setData("name", v)} error={e.name} />
-            <TextField label="البريد" dir="ltr" type="email" value={form.data.email} onChange={(v) => form.setData("email", v)} error={e.email} />
-            <Select label="الدور" value={form.data.role} onChange={(v) => form.setData("role", v)} options={roles} error={e.role} />
+            <TextField label="البريد الإلكتروني" dir="ltr" type="email" value={form.data.email} onChange={(v) => form.setData("email", v)} error={e.email} />
+            <Select label="الصلاحية" value={form.data.role} onChange={(v) => form.setData("role", v)} options={roles} error={e.role} />
             <TextField label={u ? "كلمة مرور جديدة (اختياري)" : "كلمة المرور"} dir="ltr" type="password" value={form.data.password} onChange={(v) => form.setData("password", v)} error={e.password} hint="10 أحرف على الأقل." />
           </div>
         </Card>

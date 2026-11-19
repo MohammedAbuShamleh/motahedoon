@@ -24,13 +24,13 @@ final class MediaController extends Controller
             $service->upload($file, $request->boolean('bw'), $request->user()->id);
         }
 
-        return back()->with('success', 'رُفعت الملفات.');
+        return back()->with('success', 'تم رفع الملفات.');
     }
 
     public function destroy(Media $media, MediaService $service): RedirectResponse
     {
         $service->delete($media);
 
-        return back()->with('success', 'حُذف الملف.');
+        return back()->with('success', 'تم حذف الملف.');
     }
 }

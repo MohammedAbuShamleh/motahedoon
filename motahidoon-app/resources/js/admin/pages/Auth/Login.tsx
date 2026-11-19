@@ -125,7 +125,7 @@ export default function Login() {
                 type="checkbox"
                 checked={form.data.remember}
                 onChange={(e) => form.setData("remember", e.target.checked)}
-                className="size-4 accent-olive"
+                className="size-4 accent-green"
               />
               تذكّرني على هذا الجهاز
             </label>
@@ -133,7 +133,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={form.processing}
-              className="h-12 w-full rounded-lg bg-ink text-[0.95rem] font-bold text-paper transition hover:bg-olive disabled:opacity-60"
+              className="h-12 w-full rounded-lg bg-green text-[0.95rem] font-bold text-paper transition hover:bg-olive disabled:opacity-60"
             >
               {form.processing ? "جارٍ الدخول…" : "دخول"}
             </button>

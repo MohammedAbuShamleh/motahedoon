@@ -5,44 +5,57 @@ import { Glyph, type GlyphName } from "./icons";
 import { Flash, SectionContext } from "./ui";
 
 /* هيكل اللوحة بهوية الموقع: قائمة جانبية بالحبري كشريط الموقع الداكن،
-   فيها الشعار على بلاطة ورقية (كالتذييل وصفحة الدخول)، والعنصر الحالي
-   بخطّ أخضر على جهة البدء. المحتوى على الورق. على الجوال: شريط علوي
-   وقائمة منزلقة تُغلق بالخلفية أو Esc. */
+   يعلوها شريط ألوان الشعار، وفيها الشعار على بلاطة ورقية (كالتذييل وصفحة
+   الدخول)، والصفحة الحالية على مربّع ليّن أخضر. المحتوى على الورق. على
+   الجوال: شريط علوي وقائمة منزلقة تُغلق بالخلفية أو Esc. */
 
 type NavItem = { href: string; label: string; icon: GlyphName; roles: Role[]; also?: string[] };
 
+/* التسميات بلغة يفهمها المحرّر: «المحتوى الثابت» لما لا يتغيّر بالفترة
+   (كان «المتن»)، و«التقارير الدورية» لما يُؤرَّخ بفترة (كان «الحاشية»). */
 const NAV: { title: string; items: NavItem[] }[] = [
-  { title: "", items: [{ href: "/admin", label: "البداية", icon: "home", roles: ["admin", "editor", "translator"] }] },
+  { title: "", items: [{ href: "/admin", label: "الرئيسية", icon: "home", roles: ["admin", "editor", "translator"] }] },
   {
-    title: "المتن — دائم",
+    title: "المحتوى الثابت",
     items: [
-      { href: "/admin/settings", label: "الهوية والإعدادات", icon: "settings", roles: ["admin", "editor"] },
-      { href: "/admin/content-lines", label: "القيم والأهداف والسرد", icon: "lines", roles: ["admin", "editor"] },
+      { href: "/admin/settings", label: "بيانات التجمّع", icon: "settings", roles: ["admin", "editor"] },
+      { href: "/admin/content-lines", label: "نصوص التعريف", icon: "lines", roles: ["admin", "editor"] },
       { href: "/admin/partners", label: "المؤسسات الشريكة", icon: "partners", roles: ["admin", "editor"] },
       { href: "/admin/pillars", label: "مجالات العمل", icon: "pillars", roles: ["admin", "editor"] },
-      { href: "/admin/field-photos", label: "صور الميدان", icon: "photos", roles: ["admin", "editor"] },
+      { href: "/admin/field-photos", label: "الصور الميدانية", icon: "photos", roles: ["admin", "editor"] },
     ],
   },
   {
-    title: "الحاشية — مؤرَّخة",
+    title: "التقارير الدورية",
     // محرّر قسم التقرير (/admin/sections/…) تابع للتقارير
     items: [{ href: "/admin/reports", label: "التقارير الربعية", icon: "reports", roles: ["admin", "editor"], also: ["/admin/sections"] }],
   },
   {
-    title: "الترجمة",
+    title: "اللغات والترجمة",
     items: [
-      { href: "/admin/translations", label: "طابور الترجمات", icon: "translations", roles: ["admin", "editor", "translator"] },
-      { href: "/admin/ui-strings", label: "نصوص الواجهة", icon: "strings", roles: ["admin", "editor", "translator"] },
+      { href: "/admin/translations", label: "مراجعة الترجمات", icon: "translations", roles: ["admin", "editor", "translator"] },
+      { href: "/admin/ui-strings", label: "ترجمة الأزرار والعناوين", icon: "strings", roles: ["admin", "editor", "translator"] },
     ],
   },
   {
-    title: "النظام",
+    title: "الإدارة",
     items: [
-      { href: "/admin/media", label: "مكتبة الملفات", icon: "media", roles: ["admin", "editor"] },
+      { href: "/admin/media", label: "مكتبة الصور والملفات", icon: "media", roles: ["admin", "editor"] },
       { href: "/admin/users", label: "المستخدمون", icon: "users", roles: ["admin"] },
     ],
   },
 ];
+
+/** شريط ألوان الشعار: أخضر ثم زيتوني ثم أحمر قصير — الأحمر خطّاً لا مساحة. */
+function BrandStrip({ className = "" }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={`flex h-1 ${className}`}>
+      <span className="flex-3 bg-green" />
+      <span className="flex-2 bg-olive" />
+      <span className="flex-1 bg-red" />
+    </div>
+  );
+}
 
 const ROLE_LABEL: Record<Role, string> = { admin: "مدير", editor: "محرّر", translator: "مترجم" };
 const MARK = "/assets/img/logos/mutahidoon-mark.png";
@@ -75,8 +88,9 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
       <aside
         id="admin-nav"
-        className={`${open ? "fixed inset-y-0 start-0 z-40 flex w-[17rem] shadow-[0_0_40px_rgba(26,26,26,.35)]" : "hidden"} flex-col bg-ink text-paper lg:sticky lg:top-0 lg:z-auto lg:flex lg:h-screen lg:w-auto lg:shadow-none`}
+        className={`${open ? "fixed inset-y-0 start-0 z-40 flex w-[17rem] shadow-[0_0_40px_rgba(26,26,26,.35)]" : "hidden"} flex-col bg-ink ink-scrollbar text-paper lg:sticky lg:top-0 lg:z-auto lg:flex lg:h-screen lg:w-auto lg:shadow-none`}
       >
+        <BrandStrip className="shrink-0" />
         <div className="flex items-center justify-between gap-3 border-b border-paper/10 px-5 py-5">
           <Link href="/admin" onClick={() => setOpen(false)} className="flex min-w-0 items-center gap-3">
             <span className="shrink-0 rounded-lg bg-paper p-1.5">
@@ -97,7 +111,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             <div key={g.title || "home"}>
               {g.title && (
                 <p className="mb-2 flex items-center gap-2 px-3 text-[0.72rem] font-bold text-paper/55">
-                  <span aria-hidden="true" className="h-px w-3 bg-paper/30" />
+                  <span aria-hidden="true" className="h-0.5 w-3 bg-olive" />
                   {g.title}
                 </p>
               )}
@@ -110,9 +124,8 @@ export function AdminLayout({ children }: { children: ReactNode }) {
                         href={i.href}
                         onClick={() => setOpen(false)}
                         aria-current={on ? "page" : undefined}
-                        className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${on ? "bg-paper/[0.08] font-bold text-paper" : "text-paper/75 hover:bg-paper/[0.05] hover:text-paper"}`}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${on ? "bg-green font-bold text-paper" : "text-paper/75 hover:bg-paper/6 hover:text-paper"}`}
                       >
-                        {on && <span aria-hidden="true" className="absolute inset-y-2 start-0 w-[3px] rounded-sm bg-green" />}
                         <Glyph name={i.icon} className={`size-[1.15rem] shrink-0 ${on ? "text-paper" : "text-paper/55"}`} />
                         {i.label}
                       </Link>
@@ -151,7 +164,8 @@ export function AdminLayout({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="min-w-0">
-        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 bg-ink px-4 py-3 text-paper lg:hidden">
+        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 bg-ink px-4 pb-3.5 pt-3 text-paper lg:hidden">
+          <BrandStrip className="absolute inset-x-0 bottom-0" />
           <Link href="/admin" className="flex items-center gap-2.5">
             <span className="rounded-md bg-paper p-1"><img src={MARK} alt="" className="size-6 object-contain" /></span>
             <span className="text-sm font-black">لوحة التحكم</span>
