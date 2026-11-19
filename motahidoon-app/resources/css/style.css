@@ -844,7 +844,7 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
      «ى» و«ح» في السطر السابق (مقيسة بلقطة مكبّرة) */
   margin-top: .26em;
   color: var(--red);
-  text-shadow: 0 2px 6px rgba(26,26,26,.4), 0 6px 34px rgba(26,26,26,.6);
+  text-shadow: 0 2px 8px rgba(26,26,26,.25);
   position: relative;
 }
 /* هالة حبرية موضعية خلف الكلمة وحدها: الأحمر لا يبلغ 3:1 إلا على أرضية
@@ -853,8 +853,10 @@ html.is-ltr .hero__layer.is-on { clip-path: inset(0 0 0 0); }
 .hero__word::after {
   content: ""; position: absolute; z-index: -1;
   inset: -2% -5% -6%;
-  background: var(--ink);
-  filter: blur(20px);
+  /* مخفّفة بطلب صاحب المشروع (2026-11-19): كانت حبراً مصمتاً. «ثبات» بها
+     دون 3:1 في أغلب الشرائح، وأبقاها استثناءً بقراره — HANDOFF ٧-ب */
+  background: rgba(26,26,26,.5);
+  filter: blur(28px);
   pointer-events: none;
 }
 /* اللاتينية: الكلمة نفسها بلا كشيدة، ومقاسها يتقلّص بطولها (--len) فلا
@@ -1008,7 +1010,7 @@ html.is-ltr .hero__bar { transform-origin: left; }
   .hero__kicker { margin-bottom: .45rem; }
   .hero__sub { margin-top: 1.4rem; }   /* نقطة «ب» تنزل تحت سطرها */
   /* الكلمة أصغر فالهالة الموضعية أعرض وأحدّ: تحفظ الأحمر فوق 3:1 */
-  .hero__word::after { inset: -8% -8% -12%; filter: blur(14px); }
+  .hero__word::after { inset: -8% -8% -12%; filter: blur(20px); }
   .hero__dot { width: 28px; }
 }
 
