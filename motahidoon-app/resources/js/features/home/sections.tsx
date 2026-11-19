@@ -106,12 +106,12 @@ export function About({
             <VmItem
               label={U("الرؤية")}
               value={identity.vision}
-              icon={<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></svg>}
+              icon={<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><path d="M12 9l3 3-3 3-3-3z" /></svg>}
             />
             <VmItem
               label={U("الرسالة")}
               value={identity.mission}
-              icon={<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="1" /></svg>}
+              icon={<svg viewBox="0 0 24 24"><path d="M12 2.5l9.5 9.5-9.5 9.5L2.5 12zM12 6.5l5.5 5.5-5.5 5.5L6.5 12zM12 10.4l1.6 1.6-1.6 1.6-1.6-1.6z" /></svg>}
             />
           </div>
 

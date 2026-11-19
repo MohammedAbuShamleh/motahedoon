@@ -69,7 +69,7 @@ export default function Index({ lines, groups }: { lines: Line[]; groups: Option
         {groups.map((g) => (
           <button key={g.value} type="button" role="tab" aria-selected={g.value === active}
             onClick={() => { setActive(g.value); setEditing(null); }}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold ${g.value === active ? "bg-olive text-paper" : "border border-rule bg-white"}`}>
+            className={`rounded-md px-4 py-1.5 text-sm font-semibold ${g.value === active ? "bg-olive text-paper" : "border border-rule bg-white"}`}>
             {g.label} <span className="opacity-70">({lines.filter((l) => l.group === g.value).length})</span>
           </button>
         ))}

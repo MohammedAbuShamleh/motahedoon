@@ -594,7 +594,7 @@ html.is-scrolled .brand__s { max-height: 1.4em; opacity: 1; }
 }
 html.is-scrolled .nav__a { font-size: .9rem; padding: .55rem .62rem; }
 .nav__a:hover { color: var(--ink); }
-/* الصفحة الحالية: خط شعري زيتوني، لا كبسولة — الكبسولات محجوزة للّغات */
+/* الصفحة الحالية: خط شعري زيتوني تحت الرابط، بلا إطار */
 .nav__a[aria-current="page"] { color: var(--olive); font-weight: 700; }
 .nav__a[aria-current="page"]::after {
   content: ""; position: absolute;
@@ -612,7 +612,8 @@ html.is-scrolled .nav__a { font-size: .9rem; padding: .55rem .62rem; }
 }
 .nav-toggle:hover { border-color: var(--olive); color: var(--olive); }
 
-/* ---------- زرّ اللغة — كبسولة في طرف اللوح ----------
+/* ---------- زرّ اللغة — مربّع ليّن في طرف اللوح، كزرّ القائمة ----------
+   لا دوائر ولا كبسولات في الهوية (طلب صاحب المشروع 2026-11-19).
    زرّ واحد باللغة الحالية؛ عند المرور أو النقر تنسدل اللغات الأخرى
    في لوح صغير منفصل عن القائمة. */
 .lang { grid-area: lang; justify-self: end; position: relative; }
@@ -620,7 +621,7 @@ html.is-scrolled .nav__a { font-size: .9rem; padding: .55rem .62rem; }
   display: inline-flex; align-items: center; gap: .45rem;
   min-height: 34px; padding: .3rem .7rem;
   background: none;
-  border: var(--line) solid rgba(26,26,26,.12); border-radius: 999px;
+  border: var(--line) solid rgba(26,26,26,.12); border-radius: var(--r-sm);
   font: inherit; font-size: .84rem; font-weight: 700; color: var(--ink);
   cursor: pointer;
   transition: border-color .2s ease, color .2s ease;

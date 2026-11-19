@@ -202,7 +202,7 @@ export function Badge({ children, tone = "neutral" }: { children: ReactNode; ton
     olive: "bg-olive/10 text-olive",
     red: "bg-red/10 text-red",
   };
-  return <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${tones[tone]}`}>{children}</span>;
+  return <span className={`inline-block rounded-md px-2 py-0.5 text-xs font-semibold ${tones[tone]}`}>{children}</span>;
 }
 
 export function Pagination({ links }: { links: { url: string | null; label: string; active: boolean }[] }) {

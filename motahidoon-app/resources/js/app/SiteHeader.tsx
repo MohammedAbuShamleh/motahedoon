@@ -62,10 +62,10 @@ function LangSwitch({
         aria-label={`${label}: ${LANG_NAME[locale]}`}
         onClick={() => setOpen((v) => !v)}
       >
-        {/* رمز هندسي: كرة بخطوط طول وعرض */}
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z" />
+        {/* رمز هندسي بلا دوائر: مربّع ليّن بخطّ استواء ومعيّنِ خطّ طول — هندسة معيّن الشعار */}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5" />
+          <path d="M3 12h18M12 3l4 9-4 9-4-9z" />
         </svg>
         <span className="lang__name" lang={locale}>{LANG_NAME[locale]}</span>
         <svg className="lang__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
