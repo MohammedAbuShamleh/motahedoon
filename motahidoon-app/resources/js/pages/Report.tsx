@@ -172,7 +172,8 @@ export default function Report({ report: rep, pillars, others }: Props) {
           <div className="rp-sec__in reveal">
             <div className="rp-notice" role="note">
               <span className="rp-notice__ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></svg>
+                {/* مربّع لطيف لا دائرة — قرار الهوية: لا أشكال دائرية في الموقع */}
+                <svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5" /><path d="M12 11v6M12 7.5v.5" /></svg>
               </span>
               <div>
                 <h2 className="h-sub">{U("تنبيه توثيقي")}</h2>
