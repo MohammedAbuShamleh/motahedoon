@@ -2775,7 +2775,8 @@ html.js-reveal .reveal:not(.is-in) .rp-kpi__lead::before { transform: scaleY(0);
   clip-path: inset(-.25em -.25em -.25em -.25em);
   transition: clip-path 1.1s var(--ease-glass) calc(.35s + var(--i, 0) * .07s);
 }
-html.js-reveal .reveal:not(.is-in) .rp-kpi .fig__v { clip-path: inset(-.25em 100% -.25em -.25em); }
+/* .rp-kpi على القسم نفسه، و.reveal داخله — فالترتيب: القسم ثم الحاوية */
+html.js-reveal .rp-kpi .reveal:not(.is-in) .fig__v { clip-path: inset(-.25em 100% -.25em -.25em); }
 
 
 /* البطاقات: رقم ترتيب صغير، وشريط علوي يمتلئ من جهة البدء */
@@ -3190,7 +3191,7 @@ html.js-reveal .rp-closing .reveal:not(.is-in)::after { opacity: 0; transform: s
     animation: none !important; opacity: 1 !important; transform: none !important;
   }
   .rp-ch__fig, html.js-reveal .reveal:not(.is-in) .rp-ch__fig { clip-path: none !important; }
-  .rp-kpi .fig__v, html.js-reveal .reveal:not(.is-in) .rp-kpi .fig__v { clip-path: none !important; }
+  .rp-kpi .fig__v, html.js-reveal .rp-kpi .reveal:not(.is-in) .fig__v { clip-path: none !important; }
   .rp-ch__fig img, .rp-ch__badge, .rp-item__no,
   .rp-kpi__card::before, .rp-kpi__lead::before,
   .rp-list--steps .rp-item::before {
