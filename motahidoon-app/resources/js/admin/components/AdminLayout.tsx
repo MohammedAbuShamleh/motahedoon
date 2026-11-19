@@ -1,103 +1,172 @@
 import { Link, router, usePage } from "@inertiajs/react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Role, SharedProps } from "../types";
-import { Flash } from "./ui";
+import { Glyph, type GlyphName } from "./icons";
+import { Flash, SectionContext } from "./ui";
 
-type NavItem = { href: string; label: string; roles: Role[] };
+/* هيكل اللوحة بهوية الموقع: قائمة جانبية بالحبري كشريط الموقع الداكن،
+   فيها الشعار على بلاطة ورقية (كالتذييل وصفحة الدخول)، والعنصر الحالي
+   بخطّ أخضر على جهة البدء. المحتوى على الورق. على الجوال: شريط علوي
+   وقائمة منزلقة تُغلق بالخلفية أو Esc. */
+
+type NavItem = { href: string; label: string; icon: GlyphName; roles: Role[]; also?: string[] };
 
 const NAV: { title: string; items: NavItem[] }[] = [
-  { title: "", items: [{ href: "/admin", label: "البداية", roles: ["admin", "editor", "translator"] }] },
+  { title: "", items: [{ href: "/admin", label: "البداية", icon: "home", roles: ["admin", "editor", "translator"] }] },
   {
     title: "المتن — دائم",
     items: [
-      { href: "/admin/settings", label: "الهوية والإعدادات", roles: ["admin", "editor"] },
-      { href: "/admin/content-lines", label: "القيم والأهداف والسرد", roles: ["admin", "editor"] },
-      { href: "/admin/partners", label: "المؤسسات الشريكة", roles: ["admin", "editor"] },
-      { href: "/admin/pillars", label: "مجالات العمل", roles: ["admin", "editor"] },
-      { href: "/admin/field-photos", label: "صور الميدان", roles: ["admin", "editor"] },
+      { href: "/admin/settings", label: "الهوية والإعدادات", icon: "settings", roles: ["admin", "editor"] },
+      { href: "/admin/content-lines", label: "القيم والأهداف والسرد", icon: "lines", roles: ["admin", "editor"] },
+      { href: "/admin/partners", label: "المؤسسات الشريكة", icon: "partners", roles: ["admin", "editor"] },
+      { href: "/admin/pillars", label: "مجالات العمل", icon: "pillars", roles: ["admin", "editor"] },
+      { href: "/admin/field-photos", label: "صور الميدان", icon: "photos", roles: ["admin", "editor"] },
     ],
   },
   {
     title: "الحاشية — مؤرَّخة",
-    items: [{ href: "/admin/reports", label: "التقارير الربعية", roles: ["admin", "editor"] }],
+    // محرّر قسم التقرير (/admin/sections/…) تابع للتقارير
+    items: [{ href: "/admin/reports", label: "التقارير الربعية", icon: "reports", roles: ["admin", "editor"], also: ["/admin/sections"] }],
   },
   {
     title: "الترجمة",
     items: [
-      { href: "/admin/translations", label: "طابور الترجمات", roles: ["admin", "editor", "translator"] },
-      { href: "/admin/ui-strings", label: "نصوص الواجهة", roles: ["admin", "editor", "translator"] },
+      { href: "/admin/translations", label: "طابور الترجمات", icon: "translations", roles: ["admin", "editor", "translator"] },
+      { href: "/admin/ui-strings", label: "نصوص الواجهة", icon: "strings", roles: ["admin", "editor", "translator"] },
     ],
   },
   {
     title: "النظام",
     items: [
-      { href: "/admin/media", label: "مكتبة الملفات", roles: ["admin", "editor"] },
-      { href: "/admin/users", label: "المستخدمون", roles: ["admin"] },
+      { href: "/admin/media", label: "مكتبة الملفات", icon: "media", roles: ["admin", "editor"] },
+      { href: "/admin/users", label: "المستخدمون", icon: "users", roles: ["admin"] },
     ],
   },
 ];
 
+const ROLE_LABEL: Record<Role, string> = { admin: "مدير", editor: "محرّر", translator: "مترجم" };
+const MARK = "/assets/img/logos/mutahidoon-mark.png";
+
 export function AdminLayout({ children }: { children: ReactNode }) {
   const { auth, flash } = usePage<SharedProps>().props;
-  const url = usePage().url;
+  const path = usePage().url.split("?")[0];
   const [open, setOpen] = useState(false);
   const role = auth?.role ?? "translator";
 
-  const isActive = (href: string) => (href === "/admin" ? url === "/admin" : url.startsWith(href));
+  const under = (href: string) => path === href || path.startsWith(`${href}/`);
+  const isActive = (i: NavItem) => (i.href === "/admin" ? path === "/admin" : [i.href, ...(i.also ?? [])].some(under));
+
+  const groups = NAV
+    .map((g) => ({ ...g, items: g.items.filter((i) => i.roles.includes(role)) }))
+    .filter((g) => g.items.length > 0);
+  const section = groups.find((g) => g.items.some(isActive))?.title || "لوحة التحكم";
+
+  // Esc يغلق القائمة المنزلقة على الجوال
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-[16rem_1fr]">
-      <aside className={`${open ? "block" : "hidden"} border-e border-rule bg-white lg:block`}>
-        <div className="sticky top-0 flex h-screen flex-col overflow-y-auto p-4">
-          <Link href="/admin" className="mb-6 flex items-center gap-2">
-            <img src="/assets/img/logos/mutahidoon-mark.png" alt="" className="h-8 w-auto" />
-            <span className="text-sm font-bold leading-tight">متحدون<br /><span className="font-normal text-ink/60">لوحة التحكم</span></span>
+    <div className="min-h-screen bg-rule/30 lg:grid lg:grid-cols-[17rem_minmax(0,1fr)]">
+      {open && <div aria-hidden="true" className="fixed inset-0 z-30 bg-ink/55 lg:hidden" onClick={() => setOpen(false)} />}
+
+      <aside
+        id="admin-nav"
+        className={`${open ? "fixed inset-y-0 start-0 z-40 flex w-[17rem] shadow-[0_0_40px_rgba(26,26,26,.35)]" : "hidden"} flex-col bg-ink text-paper lg:sticky lg:top-0 lg:z-auto lg:flex lg:h-screen lg:w-auto lg:shadow-none`}
+      >
+        <div className="flex items-center justify-between gap-3 border-b border-paper/10 px-5 py-5">
+          <Link href="/admin" onClick={() => setOpen(false)} className="flex min-w-0 items-center gap-3">
+            <span className="shrink-0 rounded-lg bg-paper p-1.5">
+              <img src={MARK} alt="" className="size-8 object-contain" />
+            </span>
+            <span className="min-w-0 leading-tight">
+              <span className="block text-[0.95rem] font-black">متحدون</span>
+              <span className="mt-1 block text-xs text-paper/60">لوحة التحكم</span>
+            </span>
           </Link>
-          <nav className="flex-1 space-y-5" aria-label="أقسام اللوحة">
-            {NAV.map((group) => {
-              const items = group.items.filter((i) => i.roles.includes(role));
-              if (items.length === 0) return null;
-              return (
-                <div key={group.title || "home"}>
-                  {group.title && <p className="mb-1.5 px-2 text-xs font-bold text-olive">{group.title}</p>}
-                  <ul className="space-y-0.5">
-                    {items.map((i) => (
-                      <li key={i.href}>
-                        <Link
-                          href={i.href}
-                          onClick={() => setOpen(false)}
-                          className={`block rounded-lg px-2.5 py-2 text-sm ${isActive(i.href) ? "bg-olive text-paper font-semibold" : "hover:bg-rule/50"}`}
-                        >
-                          {i.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
-          </nav>
-          <div className="mt-6 border-t border-rule pt-4 text-sm">
-            <p className="font-semibold">{auth?.name}</p>
-            <p className="text-xs text-ink/60">{auth?.email}</p>
-            <div className="mt-3 flex gap-3">
-              <a href="/" target="_blank" rel="noreferrer" className="text-green underline">عرض الموقع</a>
-              <button type="button" className="text-red" onClick={() => router.post("/admin/logout")}>خروج</button>
+          <button type="button" onClick={() => setOpen(false)} aria-label="إغلاق القائمة" className="grid size-9 place-items-center rounded-lg border border-paper/15 text-paper/80 lg:hidden">
+            <Glyph name="close" className="size-4" />
+          </button>
+        </div>
+
+        <nav aria-label="أقسام اللوحة" className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
+          {groups.map((g) => (
+            <div key={g.title || "home"}>
+              {g.title && (
+                <p className="mb-2 flex items-center gap-2 px-3 text-[0.72rem] font-bold text-paper/55">
+                  <span aria-hidden="true" className="h-px w-3 bg-paper/30" />
+                  {g.title}
+                </p>
+              )}
+              <ul className="space-y-0.5">
+                {g.items.map((i) => {
+                  const on = isActive(i);
+                  return (
+                    <li key={i.href}>
+                      <Link
+                        href={i.href}
+                        onClick={() => setOpen(false)}
+                        aria-current={on ? "page" : undefined}
+                        className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${on ? "bg-paper/[0.08] font-bold text-paper" : "text-paper/75 hover:bg-paper/[0.05] hover:text-paper"}`}
+                      >
+                        {on && <span aria-hidden="true" className="absolute inset-y-2 start-0 w-[3px] rounded-sm bg-green" />}
+                        <Glyph name={i.icon} className={`size-[1.15rem] shrink-0 ${on ? "text-paper" : "text-paper/55"}`} />
+                        {i.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
+          ))}
+        </nav>
+
+        <div className="border-t border-paper/10 p-4">
+          <div className="flex items-center gap-3">
+            <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-lg bg-olive text-sm font-black text-paper">
+              {auth?.name?.trim().charAt(0) ?? "؟"}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold">{auth?.name}</p>
+              <p className="truncate text-xs text-paper/55">
+                {ROLE_LABEL[role]}
+                {auth?.email && <> · <span dir="ltr">{auth.email}</span></>}
+              </p>
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <a href="/" target="_blank" rel="noreferrer" className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-paper/15 text-xs font-bold text-paper/85 transition hover:border-paper/40 hover:text-paper">
+              <Glyph name="site" className="size-4" />
+              عرض الموقع
+            </a>
+            <button type="button" onClick={() => router.post("/admin/logout")} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-paper/15 text-xs font-bold text-paper/85 transition hover:border-red hover:text-paper">
+              <Glyph name="logout" className="size-4" />
+              خروج
+            </button>
           </div>
         </div>
       </aside>
 
       <div className="min-w-0">
-        <div className="flex items-center justify-between border-b border-rule bg-white px-4 py-3 lg:hidden">
-          <span className="font-bold">لوحة التحكم</span>
-          <button type="button" className="rounded-lg border border-rule px-3 py-1.5 text-sm" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 bg-ink px-4 py-3 text-paper lg:hidden">
+          <Link href="/admin" className="flex items-center gap-2.5">
+            <span className="rounded-md bg-paper p-1"><img src={MARK} alt="" className="size-6 object-contain" /></span>
+            <span className="text-sm font-black">لوحة التحكم</span>
+          </Link>
+          <button type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="admin-nav" className="inline-flex h-9 items-center gap-2 rounded-lg border border-paper/20 px-3 text-xs font-bold">
+            <Glyph name="menu" className="size-4" />
             القائمة
           </button>
-        </div>
-        <main className="mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">
-          <Flash message={flash?.success ?? null} />
-          {children}
+        </header>
+
+        <main className="mx-auto w-full max-w-6xl px-4 py-7 sm:px-6 lg:px-10 lg:py-10">
+          <SectionContext.Provider value={section}>
+            <Flash message={flash?.success ?? null} />
+            {children}
+          </SectionContext.Provider>
         </main>
       </div>
     </div>

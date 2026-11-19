@@ -1,5 +1,5 @@
 import type { Translations } from "../types";
-import { TextArea, TextField } from "./ui";
+import { LocaleTag, TextArea, TextField } from "./ui";
 
 /**
  * حقول الترجمة الإنجليزية والتركية لنموذج. العربية في الحقول الأصلية.
@@ -17,8 +17,11 @@ export function TranslationFields({ fields, value, onChange, errors = {} }: {
   return (
     <div className="grid gap-5 md:grid-cols-2">
       {(["en", "tr"] as const).map((locale) => (
-        <div key={locale} dir="ltr" className="space-y-3 rounded-lg border border-rule bg-paper p-4 text-start">
-          <p className="text-sm font-bold text-olive">{locale === "en" ? "English" : "Türkçe"}</p>
+        <div key={locale} dir="ltr" className="space-y-3 rounded-lg border border-rule bg-rule/15 p-4 text-start">
+          <p className="flex items-center gap-2 text-sm font-bold">
+            <LocaleTag locale={locale} />
+            {locale === "en" ? "English" : "Türkçe"}
+          </p>
           {fields.map((f) => {
             const props = {
               label: f.label,

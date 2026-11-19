@@ -49,4 +49,6 @@
 @layer base {
   html { font-family: var(--font-sans); }
   :focus-visible { outline: 2px solid var(--color-olive); outline-offset: 2px; }
+  /* التحديد بصبغة زيتونية — من اللوحة لا أزرق المتصفّح */
+  ::selection { background: rgb(92 91 52 / .22); color: var(--color-ink); }
 }
