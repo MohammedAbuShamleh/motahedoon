@@ -1686,113 +1686,136 @@ html.is-ltr .fcard__go::after { content: "→"; }
    لمحة الأثر — القسم الوحيد المؤرَّخ في الرئيسية
    ===================================================================== */
 
-/* ---------- لمحة أثر في الرئيسية: شريط أرقام رسمي على الحبري ----------
-   أرضية --ink (#1A1A1A) صافية بلا نقش، والعنوان
-   في الوسط وتحته ختم الفترة. الأعمدة متساوية بينها شعرات رأسية: رقم
-   الترتيب صغيراً، ثم القيمة كبيرة ثقيلة بالورقي، ثم وحدتها، ثم التسمية.
-   لا بطاقات ولا ألوان؛ الأحمر في خطّ الختم وحده. --on-ink على الحبري 9:1.
-   الإخفاء الابتدائي مشروط بـ html.js-reveal و:not(.is-in) — فبلا سكربت
-   أو في الطباعة يظهر كلّ شيء. (.figs أدناه باقية لصفحة التقرير.) */
+/* ---------- لمحة أثر في الرئيسية: شريحة الأرقام مصغّرة ----------
+   تستعير rp-kpi من صفحة التقرير كما هي، وتُصغَّر هنا وحدها (بطلب صاحب
+   المشروع 2026-11-19): عنوان أصغر وحشوات أضيق، والمؤشّر المتصدّر في سطر
+   واحد مع بقيّة البطاقات — نصف العرض له والنصف لها — بدل لوح عريض فوقها.
+   الانتقاء كلّه بـ .band--dark.impact فيعلو قواعد rp- اللاحقة في الملف.
+
+   الحركة عند الظهور وحده — لا تغيّر عند المرور في الأقسام الرسمية:
+   الأرقام تصعد من خلف حدّ سطرها واحداً بعد آخر، ثم تلحقها تسمياتها،
+   والشرائط الخضراء تمتدّ (من قواعد rp-kpi)، ولمعة ضوء خافتة تعبر اللوح
+   المتصدّر مرّة واحدة. لا عدّاد: العدّاد يرسم أرقاماً وسيطة مشتقّة —
+   هنا القيمة حرفية من أوّل إطار، والحركة إزاحة وقصّ لا نصّ وسيط.
+   كلّ إخفاء ابتدائي مشروط بـ html.js-reveal و:not(.is-in) — فبلا سكربت،
+   وفي الطباعة، ومع الحركة المخفّضة يظهر كلّ شيء ثابتاً. */
 .band--dark.impact {
-  /* حيّز مضغوط: نصف حشوة الأقسام العامّة تقريباً */
-  padding-block: calc(var(--sec) * .55);
+  padding-block: calc(var(--sec) * .5);
   background-color: var(--ink);
+  /* اتّجاه اللمعة: تبدأ خارج اللوح من جهة البدء وتخرج من جهة النهاية.
+     النِّسَب من عرض اللمعة (45% من اللوح): 240% تتجاوز عرض اللوح كلّه */
+  --sweep-from: 110%; --sweep-to: -240%;
 }
-.impact__in {
-  width: min(100% - var(--edge) * 2, var(--wrap));
-  margin-inline: auto;
-}
+html.is-ltr .band--dark.impact { --sweep-from: -110%; --sweep-to: 240%; }
 
-.impact__head {
-  display: flex; flex-direction: column; align-items: center; gap: .6rem;
-  text-align: center;
+/* الرأس أصغر وأقرب إلى ما تحته */
+.band--dark.impact .rp-sec__head {
+  gap: .55rem;
+  padding-bottom: clamp(.75rem, 1.4vw, 1rem);
+  margin-bottom: clamp(1rem, 2vw, 1.35rem);
 }
-.impact__title { margin: 0; font-size: clamp(1.6rem, 2.6vw, 2.2rem); }
-.band--dark .impact__head .seal { margin: 0; }
+.band--dark.impact .rp-sec__head .h-sec { font-size: clamp(1.55rem, 2.5vw, 2.1rem); }
 
-/* الأعمدة: الشعرة الرأسية على جهة بدء كل عمود، والحاوية تقصّ شعرة أول
-   عمود في كل سطر (هامش سالب + overflow) — فتصحّ الفواصل مهما التفّت */
-.impact__cols {
-  list-style: none; padding: 0;
-  margin: clamp(1.4rem, 2.8vw, 2rem) 0 0;
-  display: grid;
-  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
-  overflow: hidden;
+/* سطر واحد على الشاشات الواسعة: المتصدّر في جهة البدء والبطاقات بجانبه.
+   بلا متصدّر تأخذ البطاقات العرض كلّه — لا عدد مفترض. */
+.band--dark.impact .rp-kpi__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
 }
-.impact__col {
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center;
-  padding: .35rem clamp(.6rem, 1.4vw, 1.1rem);
-  border-inline-start: var(--line) solid var(--rule-ink);
-  margin-inline-start: calc(var(--line) * -1);
-  --delay: calc(.15s + var(--i) * .1s);
-  transition: opacity .7s ease var(--delay), transform .8s cubic-bezier(.22, 1, .36, 1) var(--delay);
-}
-
-/* رقم الترتيب: صغير في رأس العمود، مكان الرمز في الأشرطة الرسمية */
-/* رقم الترتيب في مربّع أخضر على رأس العمود — هيئة «Our Services» في
-   العروض المؤسسية: رمز في مربّع أخضر فوق كل بند على الشريط الداكن */
-.impact__no {
-  display: grid; place-items: center;
-  inline-size: 2.6rem; aspect-ratio: 1;
-  border-radius: var(--r-sm);
-  background: var(--bg); color: var(--green);
-  box-shadow: inset 0 0 0 1.5px var(--green);
-  font-size: .86rem; font-weight: 800; line-height: 1;
-  font-variant-numeric: tabular-nums;
-  unicode-bidi: isolate;
-}
-/* القيمة كما هي حرفياً — كبيرة ثقيلة، لا تُختصر ولا تُقطع */
-.impact__v {
-  margin: .85rem 0 0;
-  font-family: var(--f-display); font-weight: 800;
-  font-size: clamp(1.7rem, 2.55vw, 2.6rem);
-  line-height: 1.1; letter-spacing: -.01em;
-  color: var(--bg);
-  white-space: nowrap;
-}
-.impact__v > bdi { direction: ltr; unicode-bidi: isolate; }
-.impact__u {
-  margin: .2rem 0 0;
-  font-size: .86rem; font-weight: 700;
-  color: var(--bg);
-}
-.impact__l {
-  margin: .35rem 0 0;
-  max-width: 26ch;
-  font-size: .84rem; line-height: 1.6;
-  color: var(--on-ink);
-  text-wrap: balance;
-}
-
-.impact__cta { margin: clamp(1.3rem, 2.6vw, 1.8rem) 0 0; text-align: center; }
-
-html.js-reveal .reveal:not(.is-in) .impact__col { opacity: 0; transform: translateY(14px); }
-
-/* الشاشات المتوسّطة: ثلاثة أعمدة في سطرين، وشعرة أفقية بين السطرين
-   (هامش علوي سالب يُقصّ في السطر الأول) */
-@media (max-width: 1100px) {
-  .impact__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .impact__col {
-    padding-block: clamp(.8rem, 1.6vw, 1.1rem);
-    border-top: var(--line) solid var(--rule-ink);
-    margin-top: calc(var(--line) * -1);
+@media (min-width: 900px) {
+  .band--dark.impact .rp-sec__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(.85rem, 1.6vw, 1.15rem);
+    align-items: stretch;
   }
+  .band--dark.impact .rp-sec__head,
+  .band--dark.impact .impact__cta { grid-column: 1 / -1; }
+  .band--dark.impact .rp-kpi__grid { margin-top: 0; }
+  .band--dark.impact .rp-sec__in:not(:has(.rp-kpi__lead)) .rp-kpi__grid { grid-column: 1 / -1; }
 }
-/* الجوال: عمود واحد، والشعرات الأفقية وحدها تفصل الأرقام */
-@media (max-width: 620px) {
-  .impact__cols { grid-template-columns: minmax(0, 1fr); }
-  .impact__col { border-inline-start: 0; margin-inline-start: 0; }
-  .impact__v { font-size: clamp(1.7rem, 8vw, 2.2rem); }
+
+/* اللوح المتصدّر: حشوة أضيق، والرقم في منتصفه رأسياً */
+.band--dark.impact .rp-kpi__lead {
+  display: flex; align-items: center;
+  margin-top: 0;
+  padding: clamp(1.1rem, 2.2vw, 1.6rem);
+  padding-inline-start: clamp(1.3rem, 2.6vw, 1.9rem);
 }
-@media (prefers-reduced-motion: reduce) {
-  .impact__col { transition: none; transform: none !important; opacity: 1 !important; }
+.band--dark.impact .fig--accent .fig__v {
+  --fit: clamp(16rem, 34vw, 30rem);
+  font-size: min(clamp(2.1rem, 3.6vw, 3.3rem), calc(var(--fit) / var(--len)));
 }
+.band--dark.impact .fig--accent .fig__l { font-size: .9rem; margin-top: .45rem; }
+
+/* البطاقات: أصغر حشوة ورقماً */
+.band--dark.impact .rp-kpi__card { padding: clamp(1rem, 2vw, 1.35rem); }
+.band--dark.impact .rp-kpi__card .fig__v {
+  --fit: 13rem;
+  font-size: min(clamp(1.55rem, 2.3vw, 2.05rem), calc(var(--fit) / var(--len)));
+}
+.band--dark.impact .rp-kpi__no { margin-bottom: .55rem; }
+.band--dark.impact .fig__u { margin-top: .35rem; font-size: .8rem; }
+.band--dark.impact .fig__l { margin-top: .35rem; font-size: .84rem; }
+/* قسم رسمي: لا تغيّر عند المرور */
+.band--dark.impact .rp-kpi__card:hover {
+  translate: none; border-color: var(--rule-ink); background-color: rgba(252,252,250,.035);
+}
+
+.impact__cta { margin: clamp(1rem, 2vw, 1.4rem) 0 0; text-align: center; }
+
+/* ---------- الحركة ---------- */
+
+/* الرقم يصعد من خلف حدّ سطره: القصّ على الصندوق نفسه رأسياً (والحشوة
+   تفسح لعلامة «$» والفاصلة فلا يُقصّ طرف)، وأوسع منه أفقياً. يحلّ محلّ
+   مسح صفحة التقرير الأفقي هنا. */
+.band--dark.impact .fig__v {
+  padding-block: .12em; margin-block: -.12em;
+  clip-path: inset(0 -.3em);
+  transition: none;
+}
+html.js-reveal .band--dark.impact .reveal:not(.is-in) .fig__v { clip-path: inset(0 -.3em); }
+.band--dark.impact .fig__v > bdi {
+  display: inline-block;
+  transition: transform .9s var(--ease-glass) calc(.3s + var(--i, 0) * .09s);
+}
+html.js-reveal .band--dark.impact .reveal:not(.is-in) .fig__v > bdi { transform: translateY(115%); }
+/* المتصدّر أوّلاً، ثم البطاقات واحدة بعد أخرى (--i من تتابع الشبكة) */
+.band--dark.impact .rp-kpi__card .fig__v > bdi { transition-delay: calc(.48s + var(--i, 0) * .1s); }
+
+/* التسميات ورقم الترتيب تلحق الرقم */
+.band--dark.impact .fig__u,
+.band--dark.impact .fig__l,
+.band--dark.impact .rp-kpi__no {
+  transition:
+    opacity .6s ease calc(.65s + var(--i, 0) * .09s),
+    transform .7s var(--ease-glass) calc(.65s + var(--i, 0) * .09s);
+}
+html.js-reveal .band--dark.impact .reveal:not(.is-in) .fig__u,
+html.js-reveal .band--dark.impact .reveal:not(.is-in) .fig__l,
+html.js-reveal .band--dark.impact .reveal:not(.is-in) .rp-kpi__no { opacity: 0; transform: translateY(6px); }
+
+/* لمعة ضوء خافتة تعبر اللوح المتصدّر مرّة واحدة بعد ظهوره — اللوح يقصّ
+   ما يفيض (overflow من rp-kpi__lead). تستقرّ خارج اللوح فلا تُرى ثابتة. */
+.band--dark.impact .rp-kpi__lead::after {
+  content: ""; position: absolute; inset-block: -20%; inset-inline-start: 0;
+  width: 45%;
+  background: linear-gradient(100deg,
+    rgba(252,252,250,0) 0%, rgba(252,252,250,.06) 42%,
+    rgba(252,252,250,.12) 50%, rgba(252,252,250,.06) 58%, rgba(252,252,250,0) 100%);
+  transform: translateX(var(--sweep-to));
+  transition: transform 1.7s cubic-bezier(.4, 0, .2, 1) .7s;
+  pointer-events: none;
+}
+html.js-reveal .band--dark.impact .reveal:not(.is-in) .rp-kpi__lead::after { transform: translateX(var(--sweep-from)); }
+
 @media print {
-  .impact__col { transform: none !important; opacity: 1 !important; }
-  .impact__v, .impact__u, .impact__l, .impact__no, .impact__title { color: #1A1A1A !important; }
-  .impact__col { border-color: rgba(26,26,26,.25) !important; }
+  .band--dark.impact .rp-kpi__lead::after { display: none; }
+  .band--dark.impact .fig__v > bdi,
+  .band--dark.impact .fig__u,
+  .band--dark.impact .fig__l,
+  .band--dark.impact .rp-kpi__no { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
+
 /* ---------- نهاية لمحة أثر في الرئيسية ---------- */
 
 .figs {
