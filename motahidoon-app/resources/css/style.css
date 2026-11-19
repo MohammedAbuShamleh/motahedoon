@@ -273,9 +273,10 @@ html.is-ltr .h-sub { letter-spacing: -.025em; }
   background: var(--paper);
   line-height: 1.4;
 }
+/* رقم الحقيقة بالأخضر — لغة الأرقام في الهوية، لمسة لون في رأس كل قسم */
 .shead__side .fact__v {
   font-size: .92rem; font-weight: 800; line-height: 1.4;
-  color: var(--ink);
+  color: var(--green);
 }
 .shead__side .fact__l {
   margin: 0;
@@ -1224,7 +1225,16 @@ html.is-ltr .hero__bar { transform-origin: left; }
   gap: clamp(.6rem, 1.2vw, .9rem);
 }
 .fgal__item { min-width: 0; }
-.fgal__item.is-lead { grid-column: span 2; grid-row: span 2; }
+.fgal__item.is-lead { grid-column: span 2; grid-row: span 2; position: relative; }
+/* لون القسم الأخضر: إطار مفرَّغ يبرز من خلف الصورة الكبيرة نحو حافّة الصفحة —
+   الإطار نفسه في «من نحن» وفصول صفحة التقرير، خطّاً لا مساحة */
+.fgal__item.is-lead::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  inset-block: 1.4rem -.9rem; inset-inline-start: -.9rem;
+  inline-size: 58%;
+  border: 2px solid var(--green);
+  border-radius: calc(var(--r-sm) + 4px);
+}
 /* أقلّ من خمس صور: أعمدة بعددها، بلا كبيرة */
 .fgal__grid--1, .fgal__grid--2, .fgal__grid--3, .fgal__grid--4 { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-auto-rows: clamp(12rem, 22vw, 18rem); }
 .fgal__grid--1 { --cols: 1; } .fgal__grid--2 { --cols: 2; } .fgal__grid--3 { --cols: 3; } .fgal__grid--4 { --cols: 4; }
@@ -1254,6 +1264,8 @@ html.is-ltr .hero__bar { transform-origin: left; }
 
 @media (max-width: 760px) {
   .fgal__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: clamp(8rem, 36vw, 12rem); }
+  /* هامش الجوال أضيق: الإطار يبتعد عن حافّة الشاشة ولا يلتصق بها */
+  .fgal__item.is-lead::before { inset-block: 1rem -.55rem; inset-inline-start: -.55rem; }
 }
 
 /* ---------- العارض بملء الشاشة ---------- */
@@ -1457,10 +1469,12 @@ html.js-reveal .reveal:not(.is-in) .areas__a { opacity: 0; transform: translateY
   gap: clamp(.7rem, 1.4vw, 1.1rem);
   --logo-h: clamp(3.75rem, 5vw, 4.75rem);
 }
+/* لون القسم الزيتوني: حافّة علوية رفيعة، وصبغة خفيفة خلف الشعار، وشرطة الاسم */
 .pgrid__cell {
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
   border: var(--line) solid var(--rule);
+  border-top: 2px solid var(--olive);
   border-radius: var(--r);
   background: var(--paper);
   overflow: hidden;
@@ -1472,7 +1486,7 @@ html.js-reveal .reveal:not(.is-in) .areas__a { opacity: 0; transform: translateY
 .pgrid__logo {
   display: grid; place-items: center;
   inline-size: 100%; block-size: calc(var(--logo-h) + 2.2rem);
-  background: rgba(26,26,26,.03);
+  background: rgba(92,91,52,.06);
   border-bottom: var(--line) solid var(--rule);
 }
 /* حدّ صريح لا نسبة مئوية: النسبة من حاوية شبكية لا تقيّد الصورة فتفيض */
@@ -1496,7 +1510,7 @@ html.js-reveal .reveal:not(.is-in) .areas__a { opacity: 0; transform: translateY
   content: ""; display: block;
   inline-size: 1.5rem; block-size: 2px;
   margin: .55rem auto 0;
-  background: var(--green);
+  background: var(--olive);
 }
 .pgrid__n a { color: inherit; text-decoration: none; }
 .pgrid__n a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 2px; }
