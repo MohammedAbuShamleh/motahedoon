@@ -1,6 +1,6 @@
 import { Head, Link } from "@inertiajs/react";
 import { AdminLayout } from "../../components/AdminLayout";
-import { Badge, Card, DeleteButton, Empty, LinkButton, PageHeader } from "../../components/ui";
+import { Badge, Card, DeleteButton, Empty, IndexChip, LinkButton, PageHeader } from "../../components/ui";
 import type { MediaBrief } from "../../types";
 
 type Partner = { id: number; slug: string; name: string; position: number; is_published: boolean; logo: MediaBrief; role: string | null };
@@ -10,21 +10,29 @@ export default function Index({ partners }: { partners: Partner[] }) {
     <AdminLayout>
       <Head title="المؤسسات الشريكة" />
       <PageHeader title="المؤسسات الشريكة" subtitle="لا عدد ثابت — الموقع يرسم ما هنا أيّاً كان عدده." actions={<LinkButton href="/admin/partners/create" variant="primary">+ شريك</LinkButton>} />
-      <Card>
-        {partners.length === 0 ? <Empty>لا شركاء بعد.</Empty> : (
+      <Card flush>
+        {partners.length === 0 ? <div className="p-5"><Empty>لا شركاء بعد.</Empty></div> : (
           <ul className="divide-y divide-rule">
             {partners.map((p) => (
-              <li key={p.id} className="flex items-center gap-4 py-3">
-                <span className="w-6 text-xs font-bold text-olive">{p.position}</span>
-                {p.logo ? <img src={p.logo.url} alt="" className="size-12 rounded-md border border-rule object-contain p-1" /> : <span className="size-12 rounded-md bg-rule/50" />}
+              <li key={p.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4">
+                <IndexChip>{p.position}</IndexChip>
+                {p.logo
+                  ? <img src={p.logo.url} alt="" className="size-12 shrink-0 rounded-lg border border-rule bg-paper object-contain p-1" />
+                  : <span aria-hidden="true" className="size-12 shrink-0 rounded-lg border border-dashed border-rule bg-rule/20" />}
                 <div className="min-w-0 flex-1">
-                  <Link href={`/admin/partners/${p.id}/edit`} className="font-semibold hover:text-olive">{p.name}</Link>
-                  <p className="text-xs text-ink/55" dir="ltr">{p.slug}</p>
+                  <Link href={`/admin/partners/${p.id}/edit`} className="font-bold transition hover:text-olive">{p.name}</Link>
+                  <p className="mt-0.5 text-xs text-ink/55"><span dir="ltr">{p.slug}</span></p>
                 </div>
-                {!p.is_published && <Badge tone="red">مخفي</Badge>}
-                {p.role === null && <Badge>الدور بانتظار الاعتماد</Badge>}
-                <LinkButton href={`/admin/partners/${p.id}/edit`}>تحرير</LinkButton>
-                <DeleteButton url={`/admin/partners/${p.id}`} />
+                {(!p.is_published || p.role === null) && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {!p.is_published && <Badge tone="red">مخفي</Badge>}
+                    {p.role === null && <Badge>الدور بانتظار الاعتماد</Badge>}
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <LinkButton href={`/admin/partners/${p.id}/edit`} size="sm">تحرير</LinkButton>
+                  <DeleteButton small url={`/admin/partners/${p.id}`} />
+                </div>
               </li>
             ))}
           </ul>

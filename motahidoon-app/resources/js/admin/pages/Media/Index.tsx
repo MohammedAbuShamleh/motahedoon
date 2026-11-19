@@ -1,7 +1,8 @@
 import { Head, useForm } from "@inertiajs/react";
 import type { FormEvent } from "react";
 import { AdminLayout } from "../../components/AdminLayout";
-import { Badge, Button, Card, DeleteButton, PageHeader, Pagination, Toggle } from "../../components/ui";
+import { Glyph } from "../../components/icons";
+import { Badge, Button, Card, DeleteButton, ErrorText, PageHeader, Pagination, Toggle, fileInputClass } from "../../components/ui";
 import { send } from "../../lib/form";
 import type { Paginated } from "../../types";
 
@@ -15,33 +16,36 @@ export default function Index({ media }: { media: Paginated<Media> }) {
     e.preventDefault();
     send(form, "post", "/admin/media", () => form.reset());
   };
+  const error = Object.values(form.errors)[0];
 
   return (
     <AdminLayout>
       <Head title="مكتبة الملفات" />
       <PageHeader title="مكتبة الملفات" subtitle="الملفات تُحفظ في public/uploads مباشرة. أصول الموقع الأصلية (assets/) لا تُحذف من هنا." />
       <Card title="رفع ملفات" className="mb-6">
-        <form onSubmit={submit} className="flex flex-wrap items-center gap-4">
-          <input type="file" multiple accept="image/jpeg,image/png,image/webp,application/pdf" onChange={(e) => form.setData("files", Array.from(e.target.files ?? []))} className="text-sm" />
+        <form onSubmit={submit} className="flex flex-wrap items-center gap-x-6 gap-y-4">
+          <input type="file" multiple accept="image/jpeg,image/png,image/webp,application/pdf" aria-label="الملفات" onChange={(e) => form.setData("files", Array.from(e.target.files ?? []))} className={fileInputClass} />
           <Toggle label="أبيض وأسود (للصور الميدانية)" checked={form.data.bw} onChange={(v) => form.setData("bw", v)} hint="أطفئه للشعارات." />
           <Button type="submit" disabled={form.processing || form.data.files.length === 0}>رفع</Button>
         </form>
-        {Object.values(form.errors)[0] && <p className="mt-2 text-sm text-red">{Object.values(form.errors)[0]}</p>}
+        {error && <ErrorText className="mt-3">{error}</ErrorText>}
       </Card>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {media.data.map((m) => (
-          <figure key={m.id} className="overflow-hidden rounded-lg border border-rule bg-white text-xs">
+          <figure key={m.id} className="flex flex-col overflow-hidden rounded-xl border border-rule bg-paper text-xs shadow-[0_1px_2px_rgba(26,26,26,.04)]">
             {m.mime?.startsWith("image/") ? (
-              <img src={m.url} alt="" className="aspect-square w-full bg-rule/30 object-contain" loading="lazy" width={m.width ?? undefined} height={m.height ?? undefined} />
+              <img src={m.url} alt="" className="aspect-square w-full bg-rule/25 object-contain p-2" loading="lazy" width={m.width ?? undefined} height={m.height ?? undefined} />
             ) : (
-              <a href={m.url} target="_blank" rel="noreferrer" className="grid aspect-square place-items-center bg-rule/30 font-bold text-olive">PDF</a>
+              <a href={m.url} target="_blank" rel="noreferrer" className="grid aspect-square place-items-center gap-1 bg-rule/25 font-black text-olive transition hover:text-ink">
+                <span className="grid place-items-center gap-1.5"><Glyph name="reports" className="size-8" />PDF</span>
+              </a>
             )}
-            <figcaption className="space-y-1 p-2">
-              <p className="truncate" dir="ltr" title={m.path}>{m.path.split("/").pop()}</p>
-              <p className="text-ink/55">{m.width ? `${m.width}×${m.height} · ` : ""}{kb(m.bytes)}</p>
-              <div className="flex items-center justify-between">
+            <figcaption className="flex flex-1 flex-col gap-1 border-t border-rule p-3">
+              <p className="truncate text-end font-bold" dir="ltr" title={m.path}>{m.path.split("/").pop()}</p>
+              <p className="tabular-nums text-ink/55">{m.width ? `${m.width}×${m.height} · ` : ""}{kb(m.bytes)}</p>
+              <div className="mt-auto flex items-center justify-between gap-2 pt-2">
                 {m.uploaded ? <Badge tone="olive">مرفوع</Badge> : <Badge>أصل</Badge>}
-                {m.uploaded && <DeleteButton small url={`/admin/media/${m.id}`} label="✕" confirm="حذف الملف؟ يُرفض إن كان مستعملاً في المحتوى." />}
+                {m.uploaded && <DeleteButton small url={`/admin/media/${m.id}`} confirm="حذف الملف؟ يُرفض إن كان مستعملاً في المحتوى." />}
               </div>
             </figcaption>
           </figure>

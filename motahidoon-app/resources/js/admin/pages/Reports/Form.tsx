@@ -5,7 +5,7 @@ import { FigureFields, newFigure } from "../../components/FigureFields";
 import { Repeater } from "../../components/Repeater";
 import { TableEditor } from "../../components/TableEditor";
 import { TranslationFields } from "../../components/TranslationFields";
-import { Button, Card, DeleteButton, ErrorSummary, FileField, LinkButton, PageHeader, Select, SubmitBar, TextArea, TextField, Toggle } from "../../components/ui";
+import { Button, Card, DeleteButton, ErrorSummary, ErrorText, FileField, IndexChip, LinkButton, PageHeader, Select, SubmitBar, TextArea, TextField, Toggle } from "../../components/ui";
 import { emptyTranslations, send, str } from "../../lib/form";
 import type { FigureRow, MediaBrief, Option, TableData, Translations } from "../../types";
 
@@ -79,7 +79,7 @@ export default function Form({ report: r, lineGroups, pillars }: Props) {
             <Toggle label="التقرير الحالي" checked={data.is_current} onChange={(v) => setData("is_current", v)} hint="واحد فقط؛ تفعيله هنا يلغي غيره. يجب أن يكون منشوراً." />
             <FileField label="ملف التقرير (PDF)" accept="application/pdf" isImage={false} current={r?.report_file ?? null} file={data.report_file} remove={data.remove_report_file} onFile={(f) => setData("report_file", f)} onRemove={(v) => setData("remove_report_file", v)} error={e.report_file} />
           </div>
-          {e.is_current && <p className="mt-2 text-sm text-red">{e.is_current}</p>}
+          {e.is_current && <ErrorText className="mt-3">{e.is_current}</ErrorText>}
         </Card>
 
         <Card title="المؤشّرات">
@@ -131,23 +131,30 @@ export default function Form({ report: r, lineGroups, pillars }: Props) {
       </form>
 
       {r && (
-        <Card title="أقسام المجالات" className="mt-8">
-          <ul className="mb-4 divide-y divide-rule">
-            {r.sections.map((s) => (
-              <li key={s.id} className="flex items-center justify-between gap-3 py-2.5">
-                <Link href={`/admin/sections/${s.id}/edit`} className="font-semibold hover:text-olive">{s.pillar}</Link>
-                <div className="flex gap-2">
-                  <LinkButton href={`/admin/sections/${s.id}/edit`}>تحرير</LinkButton>
-                  <DeleteButton url={`/admin/sections/${s.id}`} confirm="حذف القسم بمجموعاته وأرقامه؟" />
-                </div>
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-wrap items-end gap-2">
-            <Select label="إضافة قسم لمجال" value={pillar} onChange={setPillar} options={Object.fromEntries(pillars.map((p) => [String(p.id), p.short]))} />
-            <Button onClick={() => router.post(`/admin/reports/${r.id}/sections`, { pillar_id: Number(pillar) })}>+ إضافة</Button>
+        <Card flush title="أقسام المجالات" className="mt-8">
+          {r.sections.length > 0 && (
+            <ul className="divide-y divide-rule border-b border-rule">
+              {r.sections.map((s, i) => (
+                <li key={s.id} className="flex items-center justify-between gap-3 px-5 py-3">
+                  <span className="flex min-w-0 items-center gap-3">
+                    <IndexChip>{i + 1}</IndexChip>
+                    <Link href={`/admin/sections/${s.id}/edit`} className="truncate font-bold transition hover:text-olive">{s.pillar}</Link>
+                  </span>
+                  <div className="flex gap-2">
+                    <LinkButton href={`/admin/sections/${s.id}/edit`} size="sm">تحرير</LinkButton>
+                    <DeleteButton small url={`/admin/sections/${s.id}`} confirm="حذف القسم بمجموعاته وأرقامه؟" />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="p-5">
+            <div className="flex flex-wrap items-end gap-2">
+              <Select className="min-w-56" label="إضافة قسم لمجال" value={pillar} onChange={setPillar} options={Object.fromEntries(pillars.map((p) => [String(p.id), p.short]))} />
+              <Button onClick={() => router.post(`/admin/reports/${r.id}/sections`, { pillar_id: Number(pillar) })}>+ إضافة</Button>
+            </div>
+            {e.pillar_id && <ErrorText className="mt-2">{e.pillar_id}</ErrorText>}
           </div>
-          {e.pillar_id && <p className="mt-2 text-sm text-red">{e.pillar_id}</p>}
         </Card>
       )}
     </AdminLayout>

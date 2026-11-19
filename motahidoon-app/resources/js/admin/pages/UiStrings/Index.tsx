@@ -11,13 +11,13 @@ function Row({ s }: { s: Str }) {
   const set = (l: "en" | "tr", v: string) => form.setData("translations", { ...form.data.translations, [l]: { value: v } });
 
   return (
-    <li className="grid items-end gap-3 py-3 md:grid-cols-[1fr_1fr_1fr_auto]">
-      <p className="pb-2 text-sm font-semibold">{s.key}</p>
+    <li className="grid items-end gap-3 px-5 py-4 md:grid-cols-[1fr_1fr_1fr_auto]">
+      <p className="pb-2.5 text-sm font-bold">{s.key}</p>
       <TextField label="English" dir="ltr" value={form.data.translations.en.value ?? ""} onChange={(v) => set("en", v)} />
       <TextField label="Türkçe" dir="ltr" value={form.data.translations.tr.value ?? ""} onChange={(v) => set("tr", v)} />
-      <div className="flex gap-2 pb-0.5">
+      <div className="flex gap-2 pb-px">
         {form.isDirty && <Button onClick={() => form.put(`/admin/ui-strings/${s.id}`, { preserveScroll: true })} disabled={form.processing}>حفظ</Button>}
-        <DeleteButton small url={`/admin/ui-strings/${s.id}`} label="✕" confirm="حذف النصّ؟ إن كان الكود يطلبه سيظهر بالعربية في الصفحات الأجنبية." />
+        <DeleteButton url={`/admin/ui-strings/${s.id}`} confirm="حذف النصّ؟ إن كان الكود يطلبه سيظهر بالعربية في الصفحات الأجنبية." />
       </div>
     </li>
   );
@@ -44,9 +44,9 @@ export default function Index({ strings }: { strings: Str[] }) {
           <Button type="submit" disabled={add.processing}>إضافة</Button>
         </form>
       </Card>
-      <Card>
-        <TextField label="بحث" value={q} onChange={setQ} />
-        <ul className="mt-3 divide-y divide-rule">{list.map((s) => <Row key={s.id} s={s} />)}</ul>
+      <Card flush title={`النصوص (${list.length})`}>
+        <div className="border-b border-rule p-5"><TextField label="بحث" value={q} onChange={setQ} /></div>
+        <ul className="divide-y divide-rule">{list.map((s) => <Row key={s.id} s={s} />)}</ul>
       </Card>
     </AdminLayout>
   );

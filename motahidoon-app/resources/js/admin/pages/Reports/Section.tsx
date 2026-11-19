@@ -5,7 +5,7 @@ import { FigureFields, newFigure } from "../../components/FigureFields";
 import { Repeater } from "../../components/Repeater";
 import { TableEditor } from "../../components/TableEditor";
 import { TranslationFields } from "../../components/TranslationFields";
-import { Card, ErrorSummary, LinkButton, PageHeader, SubmitBar, TextArea, TextField, Toggle } from "../../components/ui";
+import { Card, ErrorSummary, ErrorText, LinkButton, PageHeader, SubmitBar, TextArea, TextField, Toggle, fileInputClass } from "../../components/ui";
 import { send, str } from "../../lib/form";
 import type { FigureRow, TableData, Translations } from "../../types";
 
@@ -100,12 +100,12 @@ export default function SectionPage({ section: s }: { section: Section }) {
             make={() => ({ media_id: null, file: null, caption: "" })}
             render={(p, update, pi) => (
               <div className="grid items-start gap-3 sm:grid-cols-[8rem_1fr]">
-                {p.file ? <img src={URL.createObjectURL(p.file)} alt="" className="aspect-square w-full rounded-md object-cover" />
-                  : p.url ? <img src={p.url} alt="" className="aspect-square w-full rounded-md object-cover" />
-                  : <div className="grid aspect-square place-items-center rounded-md bg-rule/50 text-xs">بلا صورة</div>}
+                {p.file ? <img src={URL.createObjectURL(p.file)} alt="" className="aspect-square w-full rounded-lg border border-rule object-cover" />
+                  : p.url ? <img src={p.url} alt="" className="aspect-square w-full rounded-lg border border-rule object-cover" />
+                  : <div className="grid aspect-square place-items-center rounded-lg border border-dashed border-rule bg-paper text-xs text-ink/50">بلا صورة</div>}
                 <div className="space-y-2">
-                  <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(ev) => update({ file: ev.target.files?.[0] ?? null })} className="text-xs" />
-                  {e[`gallery.${pi}.file`] && <p className="text-xs text-red">{e[`gallery.${pi}.file`]}</p>}
+                  <input type="file" accept="image/jpeg,image/png,image/webp" aria-label="الصورة" onChange={(ev) => update({ file: ev.target.files?.[0] ?? null })} className={fileInputClass} />
+                  {e[`gallery.${pi}.file`] && <ErrorText>{e[`gallery.${pi}.file`]}</ErrorText>}
                   <TextField label="التعليق" value={p.caption} onChange={(v) => update({ caption: v })} error={e[`gallery.${pi}.caption`]} hint="بلا اسم مكان أو حيّ." />
                 </div>
               </div>

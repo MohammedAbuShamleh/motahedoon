@@ -9,17 +9,21 @@ export default function Index({ users }: { users: User[] }) {
     <AdminLayout>
       <Head title="المستخدمون" />
       <PageHeader title="المستخدمون" subtitle="مدير: كل شيء · محرّر: المحتوى · مترجم: الترجمات وحدها." actions={<LinkButton href="/admin/users/create" variant="primary">+ مستخدم</LinkButton>} />
-      <Card>
+      <Card flush>
         <ul className="divide-y divide-rule">
           {users.map((u) => (
-            <li key={u.id} className="flex flex-wrap items-center gap-3 py-3">
+            <li key={u.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4">
+              {/* الحرف الأوّل في مربّع ليّن — لا صورة شخصية مدوّرة */}
+              <span aria-hidden="true" className="grid size-10 shrink-0 place-items-center rounded-lg bg-olive/10 text-sm font-black text-olive">{u.name.trim().charAt(0)}</span>
               <div className="min-w-0 flex-1">
-                <p className="font-semibold">{u.name}</p>
-                <p className="text-xs text-ink/60" dir="ltr">{u.email}</p>
+                <p className="font-bold">{u.name}</p>
+                <p className="mt-0.5 text-xs text-ink/60"><span dir="ltr">{u.email}</span></p>
               </div>
               <Badge tone={u.role === "admin" ? "olive" : "neutral"}>{u.role_label}</Badge>
-              <LinkButton href={`/admin/users/${u.id}/edit`}>تحرير</LinkButton>
-              <DeleteButton url={`/admin/users/${u.id}`} />
+              <div className="flex gap-2">
+                <LinkButton href={`/admin/users/${u.id}/edit`} size="sm">تحرير</LinkButton>
+                <DeleteButton small url={`/admin/users/${u.id}`} />
+              </div>
             </li>
           ))}
         </ul>
