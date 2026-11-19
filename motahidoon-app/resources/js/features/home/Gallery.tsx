@@ -1,110 +1,92 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { useU } from "@/lib/site";
 import { Fact, SectionHead } from "@/components/primitives";
+import { SpotArrows, SpotCount } from "@/components/spot";
+import { useSpotlight } from "@/hooks/useSpotlight";
 
-/* ---------- من الميدان: معرض صور متجدّد ----------
-   خمس خانات فقط: الأولى كبيرة (عمودان × صفّان) وأربع بجانبها — صفّان
-   متوازنان بلا فراغ. الصور كلّها تمرّ على الخانات: كلّ 3.5 ثوانٍ تتبدّل
-   خانة واحدة بترتيب متغيّر، بتلاشٍ متقاطع هادئ، فلا يتغيّر المعرض دفعة.
-   لا تعليق لكل صورة — لا يُخترع وصف ولا يُذكر موقع (قاعدة المحتوى).
-   النقر يفتح العارض على الصورة المعروضة، ويتصفّح الصور كلّها. */
-
-const TILES = 5;
-const TICK = 3500;
-/* ترتيب تبديل الخانات: متغيّر لا متتابع، والكبيرة أقلّها تبدّلاً */
-const ORDER = [1, 3, 0, 4, 2, 1, 4, 3, 2];
-
-/** يدير أيّ صورة في أيّ خانة، ويبدّل خانة واحدة كلّ دورة. */
-function useRotation(count: number) {
-  const [shown, setShown] = useState<number[]>(() =>
-    Array.from({ length: Math.min(count, TILES) }, (_, i) => i));
-  const next = useRef(TILES);
-  const step = useRef(0);
-  const held = useRef(false);
-
-  useEffect(() => {
-    if (count <= TILES) return;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const timer = window.setInterval(() => {
-      if (held.current || document.hidden) return;
-      setShown((cur) => {
-        // أوّل صورة غير معروضة الآن، بالدور
-        let pick = next.current % count;
-        while (cur.includes(pick)) pick = (pick + 1) % count;
-        next.current = pick + 1;
-        const tile = ORDER[step.current++ % ORDER.length];
-        const out = [...cur];
-        out[tile] = pick;
-        return out;
-      });
-    }, TICK);
-    return () => window.clearInterval(timer);
-  }, [count]);
-
-  return { shown, hold: (v: boolean) => { held.current = v; } };
-}
-
-/** صورة خانة بتلاشٍ متقاطع: السابقة تبقى تحت الجديدة حتى تكتمل. */
-function TileImage({ src, alt, eager }: { src: string; alt: string; eager: boolean }) {
-  const [layers, setLayers] = useState<{ cur: string; prev: string | null }>({ cur: src, prev: null });
-
-  useEffect(() => {
-    if (src === layers.cur) return;
-    // تحميل مسبق: لا تبدأ الحركة إلا والصورة جاهزة، فلا تومض الخانة فارغة
-    const img = new Image();
-    img.onload = () => setLayers((l) => ({ cur: src, prev: l.cur }));
-    img.src = `/${src}`;
-  }, [src, layers.cur]);
-
-  return (
-    <>
-      {layers.prev && <img className="fgal__img is-prev" src={`/${layers.prev}`} alt="" aria-hidden="true" />}
-      <img key={layers.cur} className="fgal__img is-cur" src={`/${layers.cur}`} alt={alt}
-        loading={eager ? "eager" : "lazy"} decoding="async" />
-    </>
-  );
-}
+/* ---------- من الميدان: عارض صورة واحدة مع شبكة مصغّرات ----------
+   بلغة عارض «الشهادات» في المواقع المؤسسية (بطلب صاحب المشروع 2026-11-19):
+   صورة كبيرة في إطار مائل فوق لوح بصبغة خضراء يميل مع كلّ تبديل؛ الجديدة
+   تنكشف فوق السابقة من جهة الحركة وتستقرّ من تقريب طفيف. بجانبها العدّاد
+   والسهمان وشبكة مصغّرات مربّعة — المضاءة بإطار أخضر وشريط يمتلئ بمدّة
+   المكث، وعند امتلائه تتقدّم الصورة (useSpotlight). لا تعليق لكلّ صورة —
+   لا يُخترع وصف ولا يُذكر موقع (قاعدة المحتوى). الصور أبيض وأسود في الملف:
+   لا مرشّح فوقها. النقر على الصورة يفتح العارض بملء الشاشة عليها، والإغلاق
+   يُبقي العارض على آخر صورة تصفّحها الزائر هناك. */
+const GALLERY_DWELL = 5000;
 
 export function FieldGallery({ photos }: { photos: string[] }) {
   const U = useU();
   const [open, setOpen] = useState<number | null>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
-  const { shown, hold } = useRotation(photos.length);
+  const s = useSpotlight(photos.length);
   if (!photos.length) return null;
 
+  const n = photos.length;
   const alt = U("من التوثيق الميداني للتجمع");
+  /* العارض بملء الشاشة فوقه: لا يتقدّم خلفه */
+  const playing = s.playing && open === null;
 
   return (
     <section className="band band--tight fgal" id="field">
       <div className="sec__in">
         <SectionHead
           title={U("من الميدان")}
-          side={<Fact value={String(photos.length)} label={U("صور معتمدة")} />}
+          side={<Fact value={String(n)} label={U("صور معتمدة")} />}
         />
       </div>
 
       <div
-        className="fgal__wrap reveal"
-        onPointerEnter={() => hold(true)}
-        onPointerLeave={() => hold(false)}
-        onFocus={() => hold(true)}
-        onBlur={() => hold(false)}
+        className="spot gspot reveal"
+        {...s.bind}
+        data-dir={s.dir}
+        style={{ "--dwell": `${GALLERY_DWELL}ms`, "--tilt": s.index % 2 ? "2deg" : "-2deg" } as CSSProperties}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={U("من الميدان")}
       >
-        <ul className={`fgal__grid fgal__grid--${shown.length} stagger`}>
-          {shown.map((pi, t) => (
-            <li key={t} className={t === 0 ? "fgal__item is-lead" : "fgal__item"}>
+        <div className="gspot__media">
+          <button
+            type="button"
+            className="spot__frame gspot__frame"
+            aria-label={`${U("عرض الصورة")} ${s.index + 1}`}
+            onClick={(e) => { opener.current = e.currentTarget; setOpen(s.index); }}
+          >
+            {photos.map((src, i) => (
+              <span key={src} className={`spot__img ${s.state(i)}`} aria-hidden={i !== s.index}>
+                <img src={`/${src}`} alt={i === s.index ? alt : ""}
+                  loading={i < 2 ? "eager" : "lazy"} decoding="async" />
+              </span>
+            ))}
+          </button>
+        </div>
+
+        <div className="gspot__side">
+          <SpotCount index={s.index} total={n} />
+          <p className="gspot__cap">{alt}</p>
+          <SpotArrows onBack={s.back} onNext={s.next}
+            backLabel={U("الصورة السابقة")} nextLabel={U("الصورة التالية")} />
+          <div className="spot__thumbs gspot__thumbs stagger">
+            {photos.map((src, i) => (
               <button
+                key={src}
                 type="button"
-                className="fgal__btn"
-                aria-label={`${U("عرض الصورة")} ${pi + 1}`}
-                onClick={(e) => { opener.current = e.currentTarget; setOpen(pi); }}
+                className={i === s.index ? "spot__thumb is-on" : "spot__thumb"}
+                aria-label={`${U("عرض الصورة")} ${i + 1}`}
+                aria-current={i === s.index ? "true" : undefined}
+                onClick={() => s.go(i)}
               >
-                <TileImage src={photos[pi]} alt={alt} eager={t < 3} />
+                <img src={`/${src}`} alt="" loading="lazy" decoding="async" />
+                {/* شريط المكث داخل المصغّرة المضاءة — امتلاؤه يقدّم العارض */}
+                {i === s.index && (
+                  <i className="spot__fill" onAnimationEnd={s.next}
+                     style={{ animationPlayState: playing ? "running" : "paused" } as CSSProperties} />
+                )}
               </button>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        </div>
       </div>
 
       {open !== null && (
@@ -113,7 +95,7 @@ export function FieldGallery({ photos }: { photos: string[] }) {
           index={open}
           alt={alt}
           onIndex={setOpen}
-          onClose={() => { setOpen(null); opener.current?.focus(); }}
+          onClose={() => { s.go(open); setOpen(null); opener.current?.focus(); }}
         />
       )}
     </section>

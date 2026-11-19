@@ -2,9 +2,10 @@
    الترتيب والأصناف ومواضع الخانات المحجوزة كما هي، فـstyle.css يسري
    بلا تعديل حرف. */
 
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "@inertiajs/react";
-import { useCardCycle } from "@/hooks/useCardCycle";
+import { useSpotlight } from "@/hooks/useSpotlight";
+import { SpotCount } from "@/components/spot";
 import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
 import { Icon } from "@/components/Icon";
@@ -191,131 +192,122 @@ export function Partners({ partners }: { partners: Partner[] }) {
   );
 }
 
-/* ---------- مجالات العمل ---------- */
-/* بطاقات منقسمة: الصورة في جهة بدء السطر والنصّ في جهة نهايته. أربع ظاهرة
-   متتالية بترتيب القراءة، وكل خمس ثوانٍ تتقدّم النافذة بطاقتين
-   (useCardCycle): يخرج الصفّ الأول، ويصعد الثاني إلى مكانه بانزلاق هادئ،
-   ويدخل مجالان جديدان تحته — فالمعروض والنقاط مرتّبان دائماً. يتوقّف الدوران
-   تحت المؤشّر والتركيز، ومع «تقليل الحركة» تُعرض المجالات كلّها ثابتة. المجال
-   بلا غلاف لوحٌ برمزه — لا صورة بديلة (الفجوة تُسدّ من اللوحة). وللطباعة
-   شبكة بالمجالات كلّها. */
-const FIELD_SLOTS = 4;
-const FIELD_STEP = 2;
-const FIELD_TICK = 5000;
-
-function FieldCard({ p, href, more }: { p: Pillar; href: string; more: string }) {
-  return (
-    <Link className="fcard" href={href}>
-      <span className="fcard__media" aria-hidden="true">
-        {p.cover?.src
-          ? <img src={`/${p.cover.src}`} alt="" loading="lazy" decoding="async" />
-          : <span className="fcard__panel"><Icon id={p.id} /></span>}
-        <span className="fcard__n">{p.num}</span>
-      </span>
-      <span className="fcard__body">
-        <span className="fcard__ico" aria-hidden="true"><Icon id={p.id} /></span>
-        <span className="fcard__t">{p.title}</span>
-        <span className="fcard__o">{p.orgs}</span>
-        <span className="fcard__go">{more}</span>
-      </span>
-    </Link>
-  );
-}
+/* ---------- مجالات العمل: فهرس تفاعلي مدمج على أرضية فاتحة ----------
+   (بطلب صاحب المشروع 2026-11-19: أفضل من عارض «المشاريع» المعتاد، ثم أصغر
+   وعلى الفاتح ومغذّى بالأخضر والزيتوني والأحمر)
+   فهرس المجالات كلّها في جهة البدء — رقم في مربّع ليّن وعنوان ورمز لكلّ
+   مجال — والحالي ينفتح بنعومة عن مؤسساته وتعريفه الدائم (أو خانته المحجوزة)
+   وزرّ تفاصيله، ويجري على حافّته خطّ أخضر يمتلئ بمدّة المكث فيتقدّم الفهرس
+   عند امتلائه (useSpotlight). وفي جهة النهاية مسرح الصورة: الغلاف الحالي
+   ينكشف من أسفل حين تنزل في الفهرس ومن أعلى حين تصعد، ويستقرّ من تقريب
+   طفيف، وفي ركنه مربّع الرمز والعدّاد. فالزائر يرى المجالات كلّها والتفصيل
+   معاً — فهرسٌ لا عارضٌ يخفي ستّةً من سبعة.
+   على الجوّال: أكورديون بصورة صغيرة داخل المجال المفتوح، بلا تقدّم تلقائي
+   (لا تقفز الصفحة تحت القارئ). الأسهم ↑↓ تتنقّل بين الصفوف. النصوص كلّها
+   في الصفحة لقارئ الشاشة وللطباعة ولبصمة النصوص؛ المغلقة خاملة (inert).
+   المجال بلا غلاف لوحٌ برمزه — لا صورة بديلة. */
+const FIELD_DWELL = 7000;
 
 export function Fields({ pillars }: { pillars: Pillar[] }) {
   const U = useU();
   const path = usePath();
-  const listRef = useRef<HTMLUListElement>(null);
-  /* مواضع البطاقات قُبيل التقدّم — لتحريك الباقية من مكانها القديم (FLIP) */
-  const prevPos = useRef<Map<string, { x: number; y: number }> | null>(null);
-  const { shown, start, pos, cycle, rotates, calm, hold } = useCardCycle(pillars.length, FIELD_SLOTS, {
-    step: FIELD_STEP,
-    tick: FIELD_TICK,
-    onBeforeStep: () => {
-      const ul = listRef.current;
-      if (!ul) return;
-      prevPos.current = new Map(
-        Array.from(ul.children as HTMLCollectionOf<HTMLElement>, (el) => [
-          el.dataset.id ?? "", { x: el.offsetLeft, y: el.offsetTop },
-        ]),
-      );
-    },
-  });
-  const live = calm ? pillars.map((_, i) => i) : shown;
-  const more = U("تفاصيل المجال");
+  const s = useSpotlight(pillars.length, { axis: "y" });
+  const listRef = useRef<HTMLOListElement>(null);
+  const n = pillars.length;
 
-  /* البطاقتان الباقيتان تنزلقان من موضعهما القديم إلى الجديد، والخارجتان
-     تُزالان. الجديدتان تنتظران حتى يخلو مكانهما من المنزلقتين ثم تظهران —
-     وإلا عبرت المنزلقتان فوقهما لحظةَ دخولهما */
-  useLayoutEffect(() => {
-    const prev = prevPos.current;
-    prevPos.current = null;
-    const ul = listRef.current;
-    if (!prev || !ul) return;
-    for (const el of Array.from(ul.children as HTMLCollectionOf<HTMLElement>)) {
-      const p = prev.get(el.dataset.id ?? "");
-      if (!p) {
-        el.animate(
-          [{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1 }],
-          { duration: 800, easing: "ease-out" },
-        );
-        continue;
-      }
-      const dx = p.x - el.offsetLeft;
-      const dy = p.y - el.offsetTop;
-      if (dx || dy) {
-        el.animate(
-          [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
-          { duration: 700, easing: "cubic-bezier(.22,.61,.36,1)" },
-        );
-      }
-    }
-  }, [start]);
+  /* التنقّل بالأسهم يحمل التركيز إلى صفّ المجال الجديد إن كان في الفهرس */
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || !list.contains(document.activeElement)) return;
+    list.querySelectorAll<HTMLButtonElement>(".pidx__tab")[s.index]?.focus();
+  }, [s.index]);
+
+  if (!n) return null;
+  const cur = pillars[s.index];
 
   return (
-    <section className="band sec fields-band" id="fields">
+    <section className="band sec fields-band pidx-band" id="fields">
       <div className="sec__in reveal">
         <SectionHead
           title={U("مجالات العمل")}
-          side={<Fact value={String(pillars.length)} label={U("مجالات دائمة")} />}
+          side={<Fact value={String(n)} label={U("مجالات دائمة")} />}
         />
 
         <div
-          className="fcards-wrap"
-          onPointerEnter={() => hold(true)}
-          onPointerLeave={() => hold(false)}
-          onFocus={() => hold(true)}
-          onBlur={() => hold(false)}
+          className="pidx"
+          {...s.bind}
+          data-dir={s.dir}
+          style={{ "--dwell": `${FIELD_DWELL}ms` } as React.CSSProperties}
         >
-          <ul className="fcards fcards--live" ref={listRef}>
-            {live.map((idx) => {
-              const p = pillars[idx];
+          <ol className="pidx__list stagger" ref={listRef}>
+            {pillars.map((p, i) => {
+              const on = i === s.index;
               return (
-                /* المفتاح هو المجال وحده: البطاقة الباقية تحتفظ بعنصرها فتنزلق،
-                   والجديدة وحدها تُركَّب فتجري حركة دخولها */
-                <li key={p.id} data-id={p.id} className="fcards__slot">
-                  <FieldCard p={p} href={path(`/p/${p.id}`)} more={more} />
+                <li key={p.id} className={on ? "pidx__row is-on" : "pidx__row"}>
+                  <h3 className="pidx__h">
+                    <button
+                      type="button"
+                      className="pidx__tab"
+                      id={`pidx-t-${p.id}`}
+                      aria-expanded={on}
+                      aria-controls={`pidx-b-${p.id}`}
+                      onClick={() => s.go(i)}
+                    >
+                      <span className="pidx__n">{p.num}</span>
+                      <span className="pidx__t">{p.title}</span>
+                      <span className="pidx__ico" aria-hidden="true"><Icon id={p.id} /></span>
+                    </button>
+                  </h3>
+                  <div
+                    className="pidx__body"
+                    id={`pidx-b-${p.id}`}
+                    role="region"
+                    aria-labelledby={`pidx-t-${p.id}`}
+                    aria-hidden={!on}
+                    inert={!on}
+                  >
+                    <div className="pidx__inner">
+                      {/* صورة صغيرة للجوّال وحده — المسرح يغيب هناك */}
+                      {p.cover?.src && (
+                        <img className="pidx__pic" src={`/${p.cover.src}`} alt="" loading="lazy" decoding="async" />
+                      )}
+                      <p className="pidx__orgs">{p.orgs}</p>
+                      {p.definition
+                        ? <p className="pidx__def">{p.definition}</p>
+                        : <Slot label={U("التعريف الدائم بالمجال")} />}
+                      <p className="pidx__cta">
+                        <Link className="pidx__more" href={path(`/p/${p.id}`)}>{U("تفاصيل المجال")}</Link>
+                      </p>
+                    </div>
+                  </div>
+                  {/* خطّ المكث: امتلاؤه يفتح المجال التالي */}
+                  {on && (
+                    <i className="pidx__fill" aria-hidden="true" onAnimationEnd={s.next}
+                       style={{ animationPlayState: s.playing ? "running" : "paused" } as React.CSSProperties} />
+                  )}
                 </li>
               );
             })}
-          </ul>
+          </ol>
 
-          {/* مؤشّر ترقيم: نقطة لكل خطوة من الدورة، والمضاءة تتقدّم واحدةً
-              واحدةً باتجاه القراءة — لا تنقسم على طرفي الصفّ حين تلتفّ النافذة */}
-          {rotates && (
-            <p className="fcards__dots" aria-hidden="true">
-              {Array.from({ length: cycle }, (_, k) => <i key={k} className={k === pos ? "is-on" : undefined} />)}
-            </p>
-          )}
-
-          {/* للطباعة: المجالات كلّها — مخفية على الشاشة فلا تُقرأ ولا تُبلَغ بالتبويب */}
-          <ul className="fcards fcards--print" aria-hidden="true">
-            {pillars.map((p) => (
-              <li key={p.id} className="fcards__slot">
-                <FieldCard p={p} href={path(`/p/${p.id}`)} more={more} />
-              </li>
-            ))}
-          </ul>
+          <div className="pidx__stage" aria-hidden="true">
+            <div className="pidx__frame">
+              {pillars.map((p, i) => (
+                <span key={p.id} className={`pidx__img ${s.state(i)}`}>
+                  {/* الحالية وجارتاها تُحمَّل فوراً — فالتالية جاهزة قبل أن يمتلئ
+                      خطّ المكث، ولا تنكشف صورةٌ لم تصل بعد — والبقية عند الحاجة */}
+                  {p.cover?.src
+                    ? <img src={`/${p.cover.src}`} alt="" decoding="async"
+                        loading={Math.abs(i - s.index) <= 1 || Math.abs(i - s.index) === n - 1 ? "eager" : "lazy"} />
+                    : <span className="spot__geo"><Icon id={p.id} /></span>}
+                </span>
+              ))}
+              <span className="pidx__chip">
+                <span className="pidx__chipico" key={cur.id}><Icon id={cur.id} /></span>
+                <SpotCount index={s.index} total={n} />
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

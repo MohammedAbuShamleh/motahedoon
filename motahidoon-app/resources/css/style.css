@@ -1210,65 +1210,213 @@ html.is-ltr .hero__bar { transform-origin: left; }
 }
 
 /* =====================================================================
-   من الميدان — معرض متجدّد بخمس خانات داخل عمود المحتوى
-   (أصناف fgal لا gallery: .gallery محجوز لمعرض صفحة التقرير)
-   الأولى كبيرة (2×2) وأربع بجانبها: صفّان متوازنان. الخانات تتبدّل صورها
-   بتلاشٍ متقاطع (Gallery.tsx) — طبقتان متراكبتان في كلّ خانة.
-   الصور أبيض وأسود في الملف نفسه: لا مرشّح ولا تلوين فوقها.
+   العارضان — «مجالات العمل» و«من الميدان»: شريحة واحدة في كلّ مرّة
+   (بطلب صاحب المشروع 2026-11-19، من عارضَي «المشاريع» و«الشهادات» في
+   المواقع المؤسسية، وأحسن منهما):
+   · إطار مائل فوق لوح بصبغة خضراء يميل مع كلّ تبديل (--tilt)،
+   · صورة جديدة تنكشف فوق السابقة من جهة الحركة وتستقرّ من تقريب طفيف،
+   · عدّاد يصعد رقمه من خلف سطره، وشرائح تقدّم تمتلئ بمدّة المكث (--dwell)
+     — وعند امتلائها يتقدّم العارض (useSpotlight)،
+   · سهمان ومصغّرات — مربّعات ليّنة كلّها، لا دوائر (قرار الهوية).
+   ترتيب متتابع دائماً، والإيقاف تحت المؤشّر والتركيز بلا زرّ ظاهر. مع
+   «تقليل الحركة» تُلغى الحركات كلّها فلا يتقدّم العارض وحده. الصور أبيض
+   وأسود في الملف: لا مرشّح فوقها. الأخضر لون القسمين: اللوح والشرائح والإطار.
    ===================================================================== */
-.fgal__wrap {
+.spot {
+  --dwell: 6000ms;
+  --fx: -1;            /* العربية: التالي يأتي من اليسار */
+  --d: 1;              /* اتّجاه آخر حركة: 1 تقدّم، ‎-1 رجوع */
+  position: relative;
+  touch-action: pan-y; /* السحب الأفقي للعارض، والرأسي لتمرير الصفحة */
+}
+html.is-ltr .spot { --fx: 1; }
+.spot[data-dir="back"] { --d: -1; }
+
+/* ---------- الإطار والصور ---------- */
+.spot__frame {
+  position: relative; display: block; overflow: hidden;
+  inline-size: 100%; aspect-ratio: 4 / 3;
+  margin: 0; padding: 0; border: 0;
+  border-radius: calc(var(--r) * 1.5);
+  background: var(--ink);
+  box-shadow: 0 32px 64px -42px rgba(26,26,26,.65);
+  transform: rotate(-1.2deg);
+  transition: transform .9s var(--ease-glass), opacity .7s ease;
+}
+html.is-ltr .spot__frame { transform: rotate(1.2deg); }
+html.js-reveal .reveal:not(.is-in) .spot__frame { opacity: 0; transform: translateY(26px) rotate(-5deg); }
+html.is-ltr.js-reveal .reveal:not(.is-in) .spot__frame { transform: translateY(26px) rotate(5deg); }
+
+.spot__img { position: absolute; inset: 0; display: block; opacity: 0; }
+.spot__img img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+/* اللوح شبكةٌ تتوسّطها الأيقونة — لا display: block فيضيع التوسيط */
+.spot__img .spot__geo, .spot__thumb .spot__geo { inline-size: 100%; block-size: 100%; }
+/* السابقة تبقى ظاهرة تحت الجديدة حتى تكتمل حركتها، فلا يومض الإطار */
+.spot__img.was-on { opacity: 1; z-index: 1; }
+.spot__img.is-on {
+  opacity: 1; z-index: 2;
+  animation: spot-wipe-l .95s cubic-bezier(.76, 0, .24, 1) both;
+}
+/* الانكشاف من جهة الحركة: في العربية التقدّم من اليسار والرجوع من اليمين */
+.spot[data-dir="back"] .spot__img.is-on { animation-name: spot-wipe-r; }
+html.is-ltr .spot[data-dir="fwd"] .spot__img.is-on { animation-name: spot-wipe-r; }
+html.is-ltr .spot[data-dir="back"] .spot__img.is-on { animation-name: spot-wipe-l; }
+@keyframes spot-wipe-l { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+@keyframes spot-wipe-r { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0); } }
+/* وتستقرّ الصورة من تقريب طفيف طوال مكثها */
+.spot__img.is-on img { animation: spot-settle calc(var(--dwell) + 1.2s) cubic-bezier(.22, .61, .36, 1) both; }
+@keyframes spot-settle { from { transform: scale(1.08); } to { transform: none; } }
+
+/* مجال بلا غلاف: لوح حبري برمزه الأخضر — لا صورة بديلة */
+.spot__geo { display: grid; place-items: center; background: var(--ink); color: var(--green); }
+.spot__geo .ico { inline-size: 34%; block-size: auto; }
+.spot__geo .ico__f { display: none; }
+
+/* لوح الصبغة الخضراء خلف الإطار يميل مع كلّ تبديل، ومربّع زيتوني مفرَّغ عند
+   الزاوية المقابلة — مفردات «من نحن» وفصول صفحة التقرير */
+.gspot__media { position: relative; isolation: isolate; }
+.gspot__media::before, .gspot__media::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+}
+.gspot__media::before {
+  inset-block: 1.25rem -1.1rem;
+  border-radius: calc(var(--r) * 1.8);
+  background: rgba(12,123,63,.13);
+  transform: rotate(var(--tilt, 2.5deg));
+  transition: transform 1s var(--ease-glass), opacity .8s ease .2s;
+}
+.gspot__media::after {
+  inset-block-start: -1rem;
+  inline-size: 4.25rem; aspect-ratio: 1;
+  border: 2px solid var(--olive); border-radius: var(--r);
+  transition: transform .9s var(--ease-glass) .35s, opacity .6s ease .35s;
+}
+html.js-reveal .reveal:not(.is-in) .gspot__media::before { opacity: 0; transform: scale(.9); }
+html.js-reveal .reveal:not(.is-in) .gspot__media::after { opacity: 0; transform: scale(.5) rotate(-30deg); }
+
+/* ---------- الأدوات ---------- */
+.spot__nav { display: flex; gap: .5rem; flex: none; }
+.spot__btn {
+  display: grid; place-items: center;
+  inline-size: 3rem; aspect-ratio: 1; padding: 0;
+  border: var(--line) solid var(--rule); border-radius: var(--r-sm);
+  background: var(--paper); color: var(--ink);
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .15s ease;
+}
+/* التالي ممتلئ: الأثقل اتّجاه القراءة */
+.spot__btn--fwd { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.spot__btn:hover { border-color: var(--green); color: var(--green); }
+.spot__btn--fwd:hover { background: var(--green); border-color: var(--green); color: var(--bg); }
+.spot__btn:active { transform: scale(.94); }
+.spot__btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.spot__btn svg {
+  inline-size: 1.15rem; block-size: 1.15rem;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* الأسهم مرسومة للعربية؛ تُعكس في اللاتينية */
+html.is-ltr .spot__btn svg { transform: scaleX(-1); }
+
+/* العدّاد: الرقم الحالي يصعد من خلف سطره، والمجموع خافت */
+.spot__count {
+  display: flex; align-items: baseline; gap: .35rem; flex: none;
+  margin: 0; line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.spot__now { display: inline-block; overflow: hidden; padding-block: .08em; }
+.spot__now b {
+  display: inline-block; unicode-bidi: isolate;
+  font-size: 1.35rem; font-weight: 900; color: var(--ink);
+  animation: spot-roll .6s var(--ease-glass) both;
+}
+@keyframes spot-roll { from { transform: translateY(105%); } to { transform: none; } }
+.spot__of { font-size: .95rem; font-weight: 700; color: var(--ink-72); unicode-bidi: isolate; }
+
+/* شريط المكث: يمتلئ من جهة البدء بمدّة المكث، وعند امتلائه يتقدّم العارض */
+.spot__fill {
+  position: absolute;
+  background: var(--green);
+  transform-origin: var(--rp-start);
+  animation: spot-fill var(--dwell) linear both;
+}
+@keyframes spot-fill { from { transform: scaleX(0); } to { transform: none; } }
+
+/* المصغّرات: مربّعات ليّنة؛ المضاءة ترتفع قليلاً بإطار أخضر */
+.spot__thumbs { display: flex; flex-wrap: wrap; gap: .5rem; }
+.spot__thumb {
+  position: relative; flex: none;
+  inline-size: 3.4rem; aspect-ratio: 1; padding: 0;
+  border: var(--line) solid var(--rule); border-radius: var(--r-sm);
+  overflow: hidden; background: var(--rule);
+  cursor: pointer; opacity: .6;
+  transition: opacity .3s ease, transform .4s var(--ease-glass), box-shadow .3s ease;
+}
+.spot__thumb img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.spot__thumb .spot__geo .ico { inline-size: 56%; }
+.spot__thumb.is-on {
+  opacity: 1; transform: translateY(-3px);
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--green);
+}
+.spot__thumb:hover { opacity: 1; }
+.spot__thumb:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+/* شريط المكث داخل المصغّرة المضاءة («من الميدان») */
+.spot__fill { inset-inline: 0; inset-block: auto 0; block-size: 3px; }
+
+/* ---------- من الميدان ----------
+   الصورة في جهة البدء (عكس «مجالات العمل» فوقها — تناوب كفصول التقرير)،
+   وبجانبها العدّاد كبيراً، فالتسمية، فالسهمان، فالمصغّرات شبكةً من خمسة. */
+.gspot {
   width: min(100% - var(--edge) * 2, var(--wrap));
   margin: clamp(1.75rem, 3.5vw, 2.75rem) auto 0;
-}
-.fgal__grid {
-  list-style: none; margin: 0; padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-rows: clamp(10rem, 15vw, 14rem);
-  gap: clamp(.6rem, 1.2vw, .9rem);
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
 }
-.fgal__item { min-width: 0; }
-.fgal__item.is-lead { grid-column: span 2; grid-row: span 2; position: relative; }
-/* لون القسم الأخضر: إطار مفرَّغ يبرز من خلف الصورة الكبيرة نحو حافّة الصفحة —
-   الإطار نفسه في «من نحن» وفصول صفحة التقرير، خطّاً لا مساحة */
-.fgal__item.is-lead::before {
-  content: ""; position: absolute; z-index: -1; pointer-events: none;
-  inset-block: 1.4rem -.9rem; inset-inline-start: -.9rem;
-  inline-size: 58%;
-  border: 2px solid var(--green);
-  border-radius: calc(var(--r-sm) + 4px);
+.gspot__media::before { inset-inline: -1rem 1.5rem; }
+.gspot__media::after { inset-inline-end: -1rem; }
+.gspot__frame { aspect-ratio: 16 / 10; cursor: zoom-in; }
+.gspot__frame:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+.gspot__side { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(1rem, 2vw, 1.35rem); min-width: 0; }
+/* ألوان القسم أدوارٌ (بطلب صاحب المشروع 2026-11-19): الرقم الحالي كبيراً
+   بالأخضر (نصّ كبير، 5.3:1)، والمجموع والتسمية بالزيتوني، ومعيّن أحمر صغير
+   قبل التسمية — نقطة لا مساحة — وسهم التقدّم ممتلئ أخضر والرجوع زيتوني */
+.gspot__side .spot__now b { font-size: clamp(2.6rem, 4.6vw, 3.6rem); color: var(--green); }
+.gspot__side .spot__of { font-size: 1.15rem; color: var(--olive); }
+.gspot__cap {
+  display: flex; align-items: center; gap: .6rem;
+  margin: 0; align-self: stretch;
+  padding-top: .9rem; border-top: var(--line) solid rgba(92,91,52,.24);
+  font-size: .95rem; font-weight: 700; color: var(--olive);
 }
-/* أقلّ من خمس صور: أعمدة بعددها، بلا كبيرة */
-.fgal__grid--1, .fgal__grid--2, .fgal__grid--3, .fgal__grid--4 { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); grid-auto-rows: clamp(12rem, 22vw, 18rem); }
-.fgal__grid--1 { --cols: 1; } .fgal__grid--2 { --cols: 2; } .fgal__grid--3 { --cols: 3; } .fgal__grid--4 { --cols: 4; }
-.fgal__grid--1 .is-lead, .fgal__grid--2 .is-lead, .fgal__grid--3 .is-lead, .fgal__grid--4 .is-lead { grid-column: auto; grid-row: auto; }
+.gspot__cap::before {
+  content: ""; flex: none;
+  inline-size: 7px; block-size: 7px;
+  background: var(--red); transform: rotate(45deg);
+}
+/* شعرة خضراء قصيرة فوق التسمية تبدأ من جهة البدء — امتداد للعدّاد */
+.gspot__cap { position: relative; }
+.gspot__cap::after {
+  content: ""; position: absolute; inset-block-start: -1px; inset-inline-start: 0;
+  inline-size: 2.75rem; block-size: 3px; border-radius: 2px; background: var(--green);
+}
+.gspot .spot__btn { border-color: rgba(92,91,52,.4); color: var(--olive); }
+.gspot .spot__btn--fwd { background: var(--green); border-color: var(--green); color: var(--bg); }
+.gspot .spot__btn:hover { border-color: var(--olive); background: rgba(92,91,52,.08); color: var(--olive); }
+.gspot .spot__btn--fwd:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.gspot__thumbs {
+  align-self: stretch;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.gspot__thumbs .spot__thumb { inline-size: auto; }
 
-.fgal__btn {
-  position: relative; display: block;
-  width: 100%; height: 100%; padding: 0;
-  border: var(--line) solid var(--rule); border-radius: var(--r-sm);
-  overflow: hidden; cursor: zoom-in;
-  background: var(--rule);
+@media (max-width: 900px) {
+  .gspot { grid-template-columns: minmax(0, 1fr); }
+  .gspot__media::before { inset-inline: -.6rem 1rem; }
 }
-.fgal__img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%; object-fit: cover; display: block;
-}
-.fgal__img.is-prev { z-index: 0; }
-/* الصورة الجديدة تتلاشى فوق السابقة وتستقرّ من تقريب طفيف */
-.fgal__img.is-cur { z-index: 1; animation: fgal-in 1.4s cubic-bezier(.22, 1, .36, 1) both; }
-@keyframes fgal-in {
-  from { opacity: 0; transform: scale(1.05); }
-  to   { opacity: 1; transform: none; }
-}
-/* إشارة هادئة إلى أن الصورة تُكبَّر: حدّ زيتوني */
-.fgal__btn:hover, .fgal__btn:focus-visible { border-color: var(--olive); }
-.fgal__btn:focus-visible { outline: 2px solid var(--olive); outline-offset: 2px; }
-
-@media (max-width: 760px) {
-  .fgal__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: clamp(8rem, 36vw, 12rem); }
-  /* هامش الجوال أضيق: الإطار يبتعد عن حافّة الشاشة ولا يلتصق بها */
-  .fgal__item.is-lead::before { inset-block: 1rem -.55rem; inset-inline-start: -.55rem; }
+@media (max-width: 600px) {
+  .gspot__media::after { display: none; }
 }
 
 /* ---------- العارض بملء الشاشة ---------- */
@@ -1314,7 +1462,7 @@ html.is-ltr .lightbox__nav svg { transform: scaleX(-1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fgal__img.is-cur, .lightbox, .lightbox__fig img { animation: none; }
+  .lightbox, .lightbox__fig img { animation: none; }
 }
 @media print { .lightbox { display: none; } }
 
@@ -1534,116 +1682,215 @@ html.js-reveal .reveal:not(.is-in) .areas__a { opacity: 0; transform: translateY
 }
 
 /* =====================================================================
-   مجالات العمل — بطاقات منقسمة تتجدّد: الصورة في جهة بدء السطر والنصّ في
-   جهة نهايته، أربع ظاهرة في شبكة 2×2، وكل بضع ثوانٍ تتبدّل بطاقة واحدة
-   بتلاشٍ هادئ (useCardCycle). ألوان اللوحة وحدها: ورق وحبر وزيتوني؛
-   الأحمر لا يدخل البطاقات. لا تغيير عند المرور — التركيز وحده يُعلَّم.
+   مجالات العمل — فهرس تفاعلي مدمج على أرضية فاتحة
+   (بطلب صاحب المشروع 2026-11-19: أفضل من عارض «المشاريع»، ثم أصغر وعلى
+   الفاتح ومغذّى بالألوان الثلاثة)
+   الفهرس في جهة البدء: صفّ لكلّ مجال بين شعرات — رقم في مربّع ليّن زيتوني،
+   فالعنوان، فرمز المجال — والحالي بطاقة ورقية ترتفع عن الأرضية وتنفتح
+   (grid-template-rows ‎0fr ← 1fr) عن مؤسساته وتعريفه ورابط تفاصيله، وعلى
+   حافّتها خطّ أخضر يمتلئ بمدّة المكث فيتقدّم الفهرس عند امتلائه
+   (useSpotlight). المسرح في جهة النهاية مربّع: الغلاف ينكشف من أسفل حين
+   تنزل في الفهرس ومن أعلى حين تصعد، ويستقرّ من تقريب طفيف، وفي ركنه مربّع
+   الرمز والعدّاد على حبر بشفافية ‎.78. خلفه إطار أخضر مفرَّغ ومربّع زيتوني —
+   مفردات فصول صفحة التقرير.
+   الألوان أدوارٌ: الأخضر للحالي (رقمه وخطّه ومؤسساته ورابطه وإطار المسرح)،
+   والزيتوني للبنية (أرضية القسم الخافتة وأرقام الصفوف ورموزها والمربّع)،
+   والأحمر معيّنٌ صغير قبل المؤسسات — نقطة لا مساحة. بلا دوائر. الحركة كلّها
+   تُلغى مع «تقليل الحركة».
    ===================================================================== */
+.band.pidx-band {
+  padding-block: calc(var(--sec) * .78);
+  background: rgba(92,91,52,.05);
+}
+.pidx {
+  --dwell: 7000ms;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: clamp(1.75rem, 4.5vw, 3.75rem);
+  align-items: center;
+}
 
-.fcards {
+/* ---------- الفهرس ---------- */
+.pidx__list {
   list-style: none; margin: 0; padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(.9rem, 1.8vw, 1.4rem);
+  border-bottom: var(--line) solid rgba(92,91,52,.22);
 }
-.fcards__slot { display: flex; min-width: 0; }
-/* شبكة الطباعة: المجالات كلّها، لا تظهر على الشاشة */
-.fcards--print { display: none; }
-
-.fcard {
-  flex: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 42%) minmax(0, 1fr);
-  min-block-size: clamp(13rem, 17vw, 15.5rem);
-  border: var(--line) solid var(--rule);
-  border-radius: var(--r);
+.pidx__row {
+  position: relative;
+  border-top: var(--line) solid rgba(92,91,52,.22);
+  border-radius: var(--r-sm);
+  transition: background-color .45s ease, box-shadow .45s ease;
+}
+/* الحالي بطاقة ورقية ترتفع عن الأرضية الزيتونية الخافتة — شعرتاها تُخفيان */
+.pidx__row.is-on {
   background: var(--paper);
+  box-shadow: 0 18px 38px -30px rgba(26,26,26,.5);
+}
+.pidx__row.is-on, .pidx__row.is-on + .pidx__row { border-top-color: transparent; }
+.pidx__h { margin: 0; }
+.pidx__tab {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center; gap: .85rem;
+  inline-size: 100%;
+  padding: clamp(.55rem, 1.1vw, .7rem) .7rem;
+  padding-inline-start: 1.1rem;
+  border: 0; background: none;
+  font: inherit; text-align: start; color: var(--ink-72);
+  cursor: pointer;
+}
+.pidx__tab:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: var(--r-sm); }
+.pidx__n {
+  display: grid; place-items: center;
+  inline-size: 2.1rem; aspect-ratio: 1;
+  border: var(--line) solid rgba(92,91,52,.4); border-radius: var(--r-sm);
+  font-size: .78rem; font-weight: 800; line-height: 1; color: var(--olive);
+  font-variant-numeric: tabular-nums; unicode-bidi: isolate;
+  transition: background-color .45s ease, border-color .45s ease, color .45s ease;
+}
+.pidx__t {
+  font-size: clamp(.94rem, 1.15vw, 1.02rem); font-weight: 700; line-height: 1.5;
+  color: var(--ink-72); text-wrap: balance;
+  transition: color .35s ease;
+}
+.pidx__ico { display: grid; place-items: center; color: var(--olive); opacity: .7; transition: color .35s ease, opacity .35s ease; }
+.pidx__ico .ico { font-size: 1.45rem; }
+.pidx__ico .ico__f, .pidx__chipico .ico__f { display: none; }
+/* الحالي: الرقم في مربّع أخضر (الورقي عليه 5.3:1)، والعنوان حبري أثقل، والرمز أخضر */
+.pidx__row.is-on .pidx__n { background: var(--green); border-color: var(--green); color: var(--bg); }
+.pidx__row.is-on .pidx__t { color: var(--ink); font-weight: 800; }
+.pidx__row.is-on .pidx__ico { color: var(--green); opacity: 1; }
+
+/* الانفتاح: البطاقة تفسح لتفصيلها بنعومة، ثم يظهر سطراً بعد سطر */
+.pidx__body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--ease-glass); }
+.pidx__row.is-on .pidx__body { grid-template-rows: 1fr; }
+.pidx__inner {
+  min-block-size: 0; overflow: hidden;
+  padding-inline: calc(1.1rem + 2.1rem + .85rem) .7rem;
+}
+.pidx__inner > * { opacity: 0; transform: translateY(6px); transition: opacity .35s ease, transform .5s var(--ease-glass); }
+.pidx__row.is-on .pidx__inner > * { opacity: 1; transform: none; transition-delay: .22s; }
+.pidx__row.is-on .pidx__inner > :nth-child(2) { transition-delay: .29s; }
+.pidx__row.is-on .pidx__inner > :nth-child(3) { transition-delay: .36s; }
+.pidx__row.is-on .pidx__inner > :nth-child(4) { transition-delay: .43s; }
+.pidx__pic { display: none; }
+/* المؤسسات بالأخضر يسبقها معيّن أحمر صغير — الأحمر نقطة لا مساحة */
+.pidx__orgs { margin: 0; font-size: .86rem; font-weight: 700; line-height: 1.6; color: var(--green); }
+.pidx__orgs::before {
+  content: ""; display: inline-block; vertical-align: middle;
+  inline-size: 6px; block-size: 6px; margin-inline-end: .5rem;
+  background: var(--red); transform: rotate(45deg);
+}
+.pidx__def {
+  margin: .4rem 0 0;
+  font-size: .88rem; line-height: 1.8; color: var(--ink-72);
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
   overflow: hidden;
-  text-decoration: none; color: var(--ink);
-  box-shadow: 0 22px 44px -36px rgba(26,26,26,.5);
-  animation: fcard-in .65s cubic-bezier(.22,.61,.36,1) both;
 }
-@keyframes fcard-in { from { opacity: 0; transform: translateY(10px); } }
-.fcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
-
-/* جهة البدء: الصورة تملأ نصف البطاقة، وتهدأ من تكبير خفيف حين تظهر */
-.fcard__media {
-  position: relative; display: block; min-block-size: 100%;
-  background: var(--olive);
-}
-.fcard__media img {
-  position: absolute; inset: 0;
-  inline-size: 100%; block-size: 100%; object-fit: cover;
-  animation: fcard-settle 1.4s cubic-bezier(.22,.61,.36,1) both;
-}
-@keyframes fcard-settle { from { transform: scale(1.06); } }
-/* مجال بلا غلاف: لوح محايد برمزه الأخضر كبيراً — لا صورة بديلة */
-.fcard__panel {
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
-  color: var(--green);
-}
-.fcard__panel .ico { font-size: clamp(3.5rem, 5vw, 4.5rem); }
-/* الرقم: مربّع ورقي بحدّ ونصّ أخضرين في ركن الصورة من جهة البدء (5.2:1) */
-.fcard__n {
-  position: absolute; inset-block-start: .75rem; inset-inline-start: .75rem;
-  display: grid; place-items: center;
-  inline-size: 2.35rem; aspect-ratio: 1;
-  border-radius: var(--r-sm);
-  background: var(--bg); color: var(--green);
-  box-shadow: inset 0 0 0 1.5px var(--green);
-  font-size: .82rem; font-weight: 800; line-height: 1;
-  box-shadow: 0 6px 16px -10px rgba(26,26,26,.6);
-}
-
-/* جهة النهاية: الرمز، فالعنوان، فالمؤسسات تحت شعرة، فالرابط في القاع */
-.fcard__body {
-  display: flex; flex-direction: column; gap: .6rem;
-  padding: clamp(1.1rem, 2vw, 1.5rem);
-  min-width: 0;
-}
-.fcard__ico {
-  display: grid; place-items: center;
-  inline-size: 2.6rem; aspect-ratio: 1;
-  border-radius: var(--r-sm);
-  background: rgba(92,91,52,.1); color: var(--olive);
-}
-.fcard__ico .ico { font-size: 2rem; }
-.fcard .ico__f { display: none; }
-.fcard__t {
-  font-size: clamp(1rem, 1.25vw, 1.14rem); font-weight: 800; line-height: 1.5;
-  text-wrap: balance;
-}
-.fcard__o {
-  padding-top: .6rem;
-  border-top: var(--line) solid var(--rule);
-  font-size: .84rem; line-height: 1.65; color: var(--ink-72);
-}
-.fcard__go {
-  margin-top: auto;
+.pidx__inner .slot { margin-top: .5rem; padding: .55rem .8rem; }
+.pidx__inner .slot__label { font-size: .7rem; }
+.pidx__inner .slot__state { margin-top: .1rem; font-size: .82rem; }
+.pidx__cta { margin: .6rem 0 .85rem; }
+/* رابط التفاصيل: نصّ أخضر بسهم نحو نهاية السطر — أخفّ من زرّ ممتلئ */
+.pidx__more {
   display: inline-flex; align-items: center; gap: .4rem;
-  font-size: .86rem; font-weight: 800; color: var(--green);
+  font-size: .86rem; font-weight: 800; color: var(--green); text-decoration: none;
 }
-.fcard__go::after { content: "←"; font-weight: 400; }
-html.is-ltr .fcard__go::after { content: "→"; }
+.pidx__more::after { content: "←"; font-weight: 400; transition: transform .3s var(--ease-glass); }
+html.is-ltr .pidx__more::after { content: "→"; }
+.pidx__more:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 2px; }
 
-/* مؤشّر الدوران: مربّع صغير لكل مجال، الظاهر منها أخضر */
-.fcards__dots {
-  display: flex; justify-content: center; gap: .4rem;
-  margin: clamp(1.1rem, 2vw, 1.5rem) 0 0;
+/* خطّ المكث على حافّة البدء للبطاقة الحالية: مسار زيتوني خافت وفوقه الأخضر
+   يمتلئ من أعلى إلى أسفل — عند امتلائه ينفتح المجال التالي */
+.pidx__row.is-on::before {
+  content: ""; position: absolute; inset-block: .55rem; inset-inline-start: 0;
+  inline-size: 3px; border-radius: 2px; background: rgba(92,91,52,.16);
 }
-.fcards__dots i {
-  inline-size: .55rem; block-size: .55rem;
-  border-radius: 2px;
-  background: var(--rule);
-  transition: background-color .4s ease;
+.pidx__fill {
+  position: absolute; inset-block: .55rem; inset-inline-start: 0;
+  inline-size: 3px; border-radius: 2px; background: var(--green);
+  transform-origin: 50% 0;
+  animation: pidx-fill var(--dwell) linear both;
 }
-.fcards__dots i.is-on { background: var(--green); }
+@keyframes pidx-fill { from { transform: scaleY(0); } to { transform: none; } }
 
-@media (max-width: 760px) {
-  .fcards { grid-template-columns: minmax(0, 1fr); }
-  .fcard { grid-template-columns: minmax(0, 38%) minmax(0, 1fr); min-block-size: 11rem; }
-  .fcard__ico { display: none; }
+/* ---------- المسرح ---------- */
+.pidx__stage { position: relative; isolation: isolate; }
+.pidx__stage::before, .pidx__stage::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  transition: transform 1s var(--ease-glass) .3s, opacity .7s ease .3s;
+}
+/* إطار أخضر مفرَّغ يبرز نحو حافّة الصفحة، ومربّع زيتوني عند الزاوية المقابلة */
+.pidx__stage::before {
+  inset-block: 1.3rem -1rem; inset-inline: 1.6rem -1rem;
+  border: 2px solid var(--green); border-radius: calc(var(--r) * 1.6);
+}
+.pidx__stage::after {
+  inset-block-start: -.9rem; inset-inline-start: -.9rem;
+  inline-size: 3.75rem; aspect-ratio: 1;
+  border: 2px solid var(--olive); border-radius: var(--r);
+}
+html.js-reveal .reveal:not(.is-in) .pidx__stage::before { opacity: 0; transform: translate(0, -1rem); }
+html.js-reveal .reveal:not(.is-in) .pidx__stage::after { opacity: 0; transform: scale(.5) rotate(-30deg); }
+
+.pidx__frame {
+  position: relative; overflow: hidden;
+  aspect-ratio: 1 / 1;
+  border-radius: calc(var(--r) * 1.4);
+  background: var(--ink);
+  box-shadow: 0 30px 60px -44px rgba(26,26,26,.6);
+  transition: transform .9s var(--ease-glass), opacity .7s ease;
+}
+html.js-reveal .reveal:not(.is-in) .pidx__frame { opacity: 0; transform: translateY(24px) scale(.97); }
+.pidx__img { position: absolute; inset: 0; opacity: 0; }
+.pidx__img img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.pidx__img .spot__geo { inline-size: 100%; block-size: 100%; }
+/* السابقة تبقى تحت الجديدة حتى تكتمل؛ الجديدة تنكشف من أسفل حين تنزل في
+   الفهرس ومن أعلى حين تصعد — الحركة تتبع اتّجاه العين في القائمة */
+.pidx__img.was-on { opacity: 1; z-index: 1; }
+.pidx__img.is-on { opacity: 1; z-index: 2; animation: pidx-up 1s cubic-bezier(.76, 0, .24, 1) both; }
+.pidx[data-dir="back"] .pidx__img.is-on { animation-name: pidx-down; }
+@keyframes pidx-up { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes pidx-down { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+.pidx__img.is-on img { animation: spot-settle calc(var(--dwell) + 1.2s) cubic-bezier(.22, .61, .36, 1) both; }
+
+/* ركن المسرح: مربّع الرمز الأخضر والعدّاد على حبر بشفافية ‎.78 (فوق ‎.72)،
+   تحته شعرة حمراء قصيرة */
+.pidx__chip {
+  position: absolute; z-index: 3;
+  inset-block-start: .85rem; inset-inline-start: .85rem;
+  display: flex; align-items: center; gap: .6rem;
+  padding: .35rem .45rem; padding-inline-end: .75rem;
+  border-radius: var(--r-sm);
+  background: rgba(26,26,26,.78); color: var(--bg);
+}
+.pidx__chip::after {
+  content: ""; position: absolute; inset-block-end: -1px; inset-inline: .6rem auto;
+  inline-size: 1.4rem; block-size: 2px; border-radius: 2px; background: var(--red);
+}
+.pidx__chipico {
+  display: grid; place-items: center;
+  inline-size: 2rem; aspect-ratio: 1;
+  border-radius: 6px; background: var(--green); color: var(--bg);
+  animation: pidx-pop .55s var(--ease-glass) .3s both;
+}
+.pidx__chipico .ico { font-size: 1.35rem; }
+@keyframes pidx-pop { from { opacity: 0; transform: scale(.55) rotate(-14deg); } to { opacity: 1; transform: none; } }
+.pidx__chip .spot__now b { font-size: 1.05rem; color: var(--bg); }
+.pidx__chip .spot__of { font-size: .85rem; color: var(--on-ink); }
+
+/* ---------- الجوّال: أكورديون بلا مسرح ولا تقدّم تلقائي ----------
+   خطّ المكث مخفيّ فلا تنتهي حركته فلا يتقدّم شيء وحده؛ والصورة الصغيرة داخل
+   البطاقة المفتوحة بدل المسرح البعيد عن الصفّ المنقور */
+@media (max-width: 900px) {
+  .pidx { grid-template-columns: minmax(0, 1fr); }
+  .pidx__stage { display: none; }
+  .pidx__fill, .pidx__row.is-on::before { display: none; }
+  .pidx__tab { padding-inline-start: .7rem; }
+  .pidx__inner { padding-inline: .7rem; }
+  .pidx__pic {
+    display: block; inline-size: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+    margin-block-end: .8rem; border-radius: var(--r-sm);
+  }
 }
 
 /* =====================================================================
@@ -2595,8 +2842,10 @@ html.js-reveal .reveal:not(.is-in) .stagger > * { opacity: 0; transform: transla
   }
   .ico__f { transform: none !important; }
   .areas__a { transition: none; transform: none !important; opacity: 1 !important; }
-  /* بطاقات المجالات: لا تلاشٍ ولا تكبير — والمكوّن يعرضها كلّها ثابتة */
-  .fcard, .fcard__media img { animation: none !important; }
+  /* العارضان: لا انكشاف ولا تقريب ولا امتلاء — فلا حركة تنتهي ولا يتقدّم
+     العارض وحده؛ الشريحة الحالية ظاهرة ثابتة والتنقّل باليد */
+  .spot__img.is-on, .spot__img.is-on img, .pidx__img.is-on, .pidx__img.is-on img,
+  .pidx__chipico, .spot__now b, .pidx__fill, .spot__fill { animation: none !important; }
 }
 
 /* =====================================================================
@@ -3324,7 +3573,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
 
 /* ٣) الأرقام بعرض ثابت: تصطفّ في الخانات والأعمدة ولا تتراقص */
 .fig__v, .stat__v, .fact__v, .metric__n, .impact__v, .impact__no,
-.mark__n, .group__num, .rp-toc__n, .rp-ch__badge, .fcard__n, .areas__n,
+.mark__n, .group__num, .rp-toc__n, .rp-ch__badge, .pidx__n, .areas__n,
 .ptl__no, .fgrid__n, td, .num {
   font-variant-numeric: tabular-nums lining-nums;
 }
@@ -3374,10 +3623,24 @@ p, li, dd, figcaption { text-wrap: pretty; }
   .areas__a, .areas__a .ico, .areas__n, .areas__name { color: #1A1A1A !important; }
   .areas__badge { background: none !important; border: 1px solid rgba(26,26,26,.45); }
 
-  /* بطاقات المجالات: على الورق تُطبع المجالات كلّها، لا الأربع الدوّارة */
-  .fcards--live, .fcards__dots { display: none !important; }
-  .fcards--print { display: grid !important; }
-  .fcard { animation: none !important; box-shadow: none !important; break-inside: avoid; }
+  /* فهرس المجالات على الورق: الصفوف كلّها مفتوحة بنصّها كاملاً، بلا مسرح ولا
+     خطّ مكث، والنصّ حبريّ (الشريط الداكن ورقيّ في الطباعة)؛ وفي «من الميدان»
+     الصورة الحالية وحدها في إطار مستقيم بلا أدوات */
+  .pidx { display: block; }
+  .pidx__stage, .pidx__fill, .pidx__row::before, .pidx__pic, .pidx__cta { display: none !important; }
+  .pidx__body { grid-template-rows: 1fr !important; transition: none !important; }
+  .pidx__frame { opacity: 1 !important; transform: none !important; }
+  .pidx__inner > * { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .pidx__row { break-inside: avoid; border-color: rgba(26,26,26,.25) !important; }
+  .pidx__list { border-color: rgba(26,26,26,.25) !important; }
+  .pidx__n, .pidx__t, .pidx__ico, .pidx__orgs, .pidx__def { color: #1A1A1A !important; }
+  .pidx__n { background: none !important; border-color: #1A1A1A !important; }
+  .pidx__def { display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .gspot__side { display: none !important; }
+  .gspot { display: block; }
+  .spot__frame { transform: none !important; opacity: 1 !important; box-shadow: none !important; }
+  .spot__img.is-on, .spot__img.is-on img { animation: none !important; clip-path: none !important; transform: none !important; }
+  .gspot__media::before, .gspot__media::after { display: none; }
 
   /* الخطّ الزمني: مرسوم كاملاً على الورق، بلا ضوء */
 
@@ -3409,5 +3672,5 @@ p, li, dd, figcaption { text-wrap: pretty; }
   .shub__give .slot__state::before { background: #1A1A1A !important; }
   .shub__frame { --c: rgba(26,26,26,.45); }
   .shub__frame svg { stroke: #1A1A1A; }
-  .plate__img, .fgal__item { break-inside: avoid; }
+  .plate__img, .gspot { break-inside: avoid; }
 }
