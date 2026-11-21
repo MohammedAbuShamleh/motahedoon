@@ -79,7 +79,14 @@
     "من الميدان": "Sahadan",
     "العودة إلى الرئيسية": "Ana sayfaya dön",
     "هذه الصفحة غير موجودة": "Bu sayfa bulunamadı",
-    "الرابط لا يطابق أي مجال عمل ولا أي تقرير في الموقع.": "Bağlantı, sitedeki hiçbir çalışma alanı veya raporla eşleşmiyor."
+    "الرابط لا يطابق أي مجال عمل ولا أي تقرير في الموقع.": "Bağlantı, sitedeki hiçbir çalışma alanı veya raporla eşleşmiyor.",
+    "إغلاق": "Kapat",
+    "الصورة السابقة": "Önceki fotoğraf",
+    "الصورة التالية": "Sonraki fotoğraf",
+    "عرض الصورة": "Fotoğrafı görüntüle",
+    "محتويات التقرير": "Rapor içeriği",
+    "الافتتاحية": "Giriş",
+    "شرائح الافتتاحية": "Giriş slaytları"
   },
   "org": {
     "name": "Gazze İçin Mutahidoon Koalisyonu",

@@ -41,6 +41,8 @@ final class PillarController extends Controller
             'report'  => $latest === null ? null
                 : ['id' => $latest['id'], 'label' => $latest['label']],
             'alsoIn'  => $alsoIn,
+            // فهرس المجالات في بطاقة الغلاف: الرقم والاسم المختصر وحدهما
+            'pillars' => collect($pillars)->map(fn (array $x) => collect($x)->only(['id', 'num', 'short']))->all(),
         ])->withViewData(['meta' => $meta($p['title'])]);
     }
 }

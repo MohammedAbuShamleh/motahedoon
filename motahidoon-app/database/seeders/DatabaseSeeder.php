@@ -2,24 +2,25 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRole;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        /* حساب المدير الأوّل من الإعدادات (config/admin.php ← .env).
+           كلمة المرور الافتراضية للتطوير المحلي وحده؛ تُغيَّر فوراً. */
+        User::query()->updateOrCreate(
+            ['email' => config('admin.email')],
+            [
+                'name' => config('admin.name'),
+                'password' => config('admin.password'),
+                'role' => UserRole::Admin,
+            ],
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $this->call(ContentSeeder::class);
     }
 }

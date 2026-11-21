@@ -1,5 +1,6 @@
 <?php
 
+use App\Contracts\ContentSource;
 use App\Http\Controllers\Site\AboutController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PillarController;
@@ -19,10 +20,12 @@ Route::get('/reports', ReportController::class)->name('reports');
 Route::get('/reports/{slug}', ReportController::class)->name('report');
 
 /* مسار تطوير فقط: يخدم شجرة المحتوى العربية لمدقّق سلامة النصوص
-   (tools/verify-strings.js). لا يُسجَّل خارج البيئة المحلية. */
+   (tools/verify-strings.js). لا يُسجَّل خارج البيئة المحلية.
+   المصدر الآن القاعدة لا الملف — فالمدقّق يفحص ما يُرسَم فعلاً. */
 if (app()->environment('local')) {
-    Route::get('/__content.json', fn () => response()->file(
-        resource_path('content/site.ar.json'),
-        ['Content-Type' => 'application/json; charset=utf-8']
+    Route::get('/__content.json', fn (ContentSource $content) => response()->json(
+        $content->base(), 200, [], JSON_UNESCAPED_UNICODE
     ))->name('dev.content');
 }
+
+require __DIR__.'/admin.php';

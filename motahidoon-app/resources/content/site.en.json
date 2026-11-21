@@ -79,7 +79,14 @@
     "من الميدان": "From the field",
     "العودة إلى الرئيسية": "Back to home",
     "هذه الصفحة غير موجودة": "This page does not exist",
-    "الرابط لا يطابق أي مجال عمل ولا أي تقرير في الموقع.": "The link does not match any area of work or any report on this site."
+    "الرابط لا يطابق أي مجال عمل ولا أي تقرير في الموقع.": "The link does not match any area of work or any report on this site.",
+    "إغلاق": "Close",
+    "الصورة السابقة": "Previous photo",
+    "الصورة التالية": "Next photo",
+    "عرض الصورة": "View photo",
+    "محتويات التقرير": "Report contents",
+    "الافتتاحية": "Introduction",
+    "شرائح الافتتاحية": "Introduction slides"
   },
   "org": {
     "name": "Mutahidoon for Gaza Coalition",

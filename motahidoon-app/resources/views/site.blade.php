@@ -30,10 +30,11 @@
   @endforeach
   <link rel="canonical" href="{{ $meta['canonical'] }}">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zain:wght@300;400;700;800;900&family=IBM+Plex+Sans+Arabic:wght@200;300;400;500;600;700&display=swap">
 
+  {{-- يحقن مقدّمة React Fast Refresh في وضع التطوير (npm run dev)؛
+       بدونها يرمي @vitejs/plugin-react خطأ «can't detect preamble».
+       في الإنتاج (بعد npm run build) لا يُخرج شيئاً. --}}
+  @viteReactRefresh
   @vite(['resources/css/style.css', 'resources/js/site.tsx'])
   @inertiaHead
 </head>

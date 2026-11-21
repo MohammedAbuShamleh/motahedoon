@@ -177,8 +177,9 @@ export function Gallery({ items }: { items: GalleryItem[] | null | undefined }) 
   );
 }
 
-/** عرض مختصر: الافتتاحية وأرقامها فقط. المتن الكامل في صفحة المجال. */
-export function SectionBrief({ sec }: { sec: ReportSection }) {
+/** عرض مختصر: الافتتاحية وأرقامها فقط. المتن الكامل في صفحة المجال.
+    stagger: خانات الأرقام تتتابع عند ظهور القسم (صفحة التقرير). */
+export function SectionBrief({ sec, stagger }: { sec: ReportSection; stagger?: boolean }) {
   const stats = sec.stats?.length ? sec.stats : sectionStats(sec).slice(0, 8);
   return (
     <>
@@ -187,7 +188,7 @@ export function SectionBrief({ sec }: { sec: ReportSection }) {
           {sec.lead}
         </p>
       )}
-      <StatStrip stats={stats} />
+      <StatStrip stats={stats} cls={stagger ? "stagger" : undefined} />
     </>
   );
 }

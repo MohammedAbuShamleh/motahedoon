@@ -23,7 +23,41 @@ export function Band({
     <section className={`band ${cls ?? ""}`} id={id}>
       <div className={noReveal ? "sheet" : "sheet reveal"}>
         <div className="sheet__main">{main}</div>
-        <aside className="sheet__aside">{aside}</aside>
+        {/* بلا محتوى جانبي لا يُرسم الهامش — وإلا بقيت شعرته الفاصلة وحدها */}
+        {aside && <aside className="sheet__aside">{aside}</aside>}
+      </div>
+    </section>
+  );
+}
+
+/** رأس قسم موحّد في الرئيسية، بهيئة رأس صفحة التقرير: العنوان في الوسط،
+    وتحته سطر وسوم (الحقائق والخانات المحجوزة والإجراءات)، ثم شعرة تفصل
+    الرأس عن المحتوى. لا نصّ تعريفي تحت العنوان — لا يُخترع نصّ. */
+export function SectionHead({ title, side }: { title: ReactNode; side?: ReactNode }) {
+  return (
+    <header className="shead">
+      <div className="shead__main">
+        <h2 className="h-sec shead__title">{title}</h2>
+      </div>
+      {side && <div className="shead__side">{side}</div>}
+    </header>
+  );
+}
+
+/** قسم الرئيسية: حاوية بعرض العمود، رأس موحّد ثم المحتوى بعرض كامل تحته. */
+export function Section({
+  id, cls, head, children,
+}: {
+  id?: string;
+  cls?: string;
+  head: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <section className={`band sec ${cls ?? ""}`} id={id}>
+      <div className="sec__in reveal">
+        {head}
+        {children}
       </div>
     </section>
   );
@@ -111,10 +145,11 @@ export function FigureCell({ m }: { m: Metric }) {
   );
 }
 
-export function StatStrip({ stats }: { stats: Stat[] }) {
+/* cls اختياري: صفحة التقرير تمرّر stagger فتتتابع الخانات عند الظهور */
+export function StatStrip({ stats, cls }: { stats: Stat[]; cls?: string }) {
   if (!stats.length) return null;
   return (
-    <div className="stats">
+    <div className={cls ? `stats ${cls}` : "stats"}>
       {stats.map((s, i) => (
         <div className="stat" key={`${s.value}-${s.unit}-${i}`}>
           <span className="stat__v" style={{ "--len": s.value.length } as React.CSSProperties}>
