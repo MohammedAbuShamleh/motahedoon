@@ -1,0 +1,84 @@
+/* =====================================================================
+   طبقة خطوط «ثمانية»
+   ---------------------------------------------------------------------
+   مرخَّصة. حصل التجمّع على ترخيص من ثمانية يغطّي التضمين في الويب ونشر
+   ملفات الخطّ، فلا قيد على استضافتها أو إدراجها في المستودع.
+
+   هذا الملف طبقة للموقع الثابت وحده: لا يفعل شيئاً سوى تبديل متغيّري
+   الخطّ. حذف سطر <link> الخاص به من index.html و pillar.html يُرجع
+   الموقع إلى Zain + IBM Plex Sans Arabic بلا أي كسر.
+
+   المشروع الحيّ (motahidoon-app) له نسخته الخاصة في resources/fonts،
+   يبصمها Vite. فالملفات هنا نسخة مكرّرة للموقع المرجعي.
+   ===================================================================== */
+
+/* ---------- السانس: للقراءة ---------- */
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("../../_fonts-thmanyah/thmanyahsans-Light.woff2") format("woff2");
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("../../_fonts-thmanyah/thmanyahsans-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("../../_fonts-thmanyah/thmanyahsans-Medium.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("../../_fonts-thmanyah/thmanyahsans-Bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Sans";
+  src: url("../../_fonts-thmanyah/thmanyahsans-Black.woff2") format("woff2");
+  font-weight: 900; font-style: normal; font-display: swap;
+}
+
+/* ---------- السيرف العرضي: للعناوين ---------- */
+@font-face {
+  font-family: "Thmanyah Display";
+  src: url("../../_fonts-thmanyah/thmanyahserifdisplay-Light.woff2") format("woff2");
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Display";
+  src: url("../../_fonts-thmanyah/thmanyahserifdisplay-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Display";
+  src: url("../../_fonts-thmanyah/thmanyahserifdisplay-Medium.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Display";
+  src: url("../../_fonts-thmanyah/thmanyahserifdisplay-Bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Thmanyah Display";
+  src: url("../../_fonts-thmanyah/thmanyahserifdisplay-Black.woff2") format("woff2");
+  font-weight: 900; font-style: normal; font-display: swap;
+}
+
+/* ---------- التبديل ----------
+   العائلة الاحتياطية باقية خلفها، فإن غاب ملف لم ينكسر شيء. */
+:root {
+  --f:         "Thmanyah Sans", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  --f-display: "Thmanyah Display", "Thmanyah Sans", "Zain", system-ui, sans-serif;
+}
+
+/* السيرف العرضي أعلى من السانس بصرياً، فيُضبط التتبّع والوزن قليلاً */
+h1, h2, h3, h4 { letter-spacing: -.02em; }
+.hero__h { letter-spacing: -.022em; }
+
+/* ثمانية لا تملك الوزنين 200 و800، فتُرفع إلى أقرب وزن حقيقي
+   بدل أن يصطنعها المتصفح اصطناعاً رديئاً. */
+.fact__v, .mark__n, .field__n, .ph__n, .hero__facts b, .plate__num,
+.statement__v, .lead, .hero__tag { font-weight: 300; }
+.h-sec, .h-page, .hero__h, .fig__v, .stat__v { font-weight: 700; }
