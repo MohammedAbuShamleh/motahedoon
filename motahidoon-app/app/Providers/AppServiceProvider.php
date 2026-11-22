@@ -56,6 +56,8 @@ class AppServiceProvider extends ServiceProvider
             'report_metric' => ReportMetric::class,
             'report_section' => ReportSection::class,
             'ui_string' => UiString::class,
+            'video_album' => \App\Models\VideoAlbum::class,
+            'video' => \App\Models\Video::class,
             'user' => \App\Models\User::class,
         ]);
 

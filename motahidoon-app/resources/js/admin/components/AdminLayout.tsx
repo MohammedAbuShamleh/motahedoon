@@ -23,6 +23,7 @@ const NAV: { title: string; items: NavItem[] }[] = [
       { href: "/admin/partners", label: "المؤسسات الشريكة", icon: "partners", roles: ["admin", "editor"] },
       { href: "/admin/pillars", label: "مجالات العمل", icon: "pillars", roles: ["admin", "editor"] },
       { href: "/admin/field-photos", label: "الصور الميدانية", icon: "photos", roles: ["admin", "editor"] },
+      { href: "/admin/video-albums", label: "مكتبة الفيديو", icon: "video", roles: ["admin", "editor"], also: ["/admin/videos"] },
     ],
   },
   {

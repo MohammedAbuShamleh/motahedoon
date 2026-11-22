@@ -4,8 +4,9 @@ import {
   About, AreasStrip, Fields, Impact, Partners, Reports, Support,
 } from "@/features/home/sections";
 import { FieldGallery } from "@/features/home/Gallery";
+import { Videos } from "@/features/home/Videos";
 import type { ReportCard } from "@/features/home/sections";
-import type { Founding, Identity, Partner, Pillar, Report } from "@/types";
+import type { Founding, Identity, Partner, Pillar, Report, VideoItem } from "@/types";
 
 interface Props {
   identity: Identity;
@@ -14,6 +15,7 @@ interface Props {
   partners: Partner[];
   pillars: Pillar[];
   fieldPhotos: string[];
+  videos: VideoItem[];
   metricsCount: number;
   currentReport: Report | null;
   reports: ReportCard[];
@@ -21,13 +23,14 @@ interface Props {
 
 export default function Home({
   identity, founding, governance, partners, pillars,
-  fieldPhotos, metricsCount, currentReport, reports,
+  fieldPhotos, videos, metricsCount, currentReport, reports,
 }: Props) {
   return (
     <Layout active="home">
       <Hero pillars={pillars} partnerCount={partners.length} />
       <AreasStrip pillars={pillars} />
       <About identity={identity} founding={founding} governance={governance} photo={fieldPhotos[1] ?? fieldPhotos[0] ?? null} />
+      <Videos videos={videos} />
       <Partners partners={partners} />
       <Fields pillars={pillars} />
       <FieldGallery photos={fieldPhotos} />

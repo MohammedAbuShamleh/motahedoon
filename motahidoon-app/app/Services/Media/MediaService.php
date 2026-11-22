@@ -11,6 +11,8 @@ use App\Models\Pillar;
 use App\Models\Report;
 use App\Models\ReportGalleryItem;
 use App\Models\SiteSetting;
+use App\Models\Video;
+use App\Models\VideoAlbum;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -111,6 +113,8 @@ final class MediaService
             || FieldPhoto::query()->where('media_id', $id)->exists()
             || ReportGalleryItem::query()->where('media_id', $id)->exists()
             || Report::query()->where(fn ($q) => $q->where('report_file_media_id', $id)
-                ->orWhere('appeal_photo_media_id', $id))->exists();
+                ->orWhere('appeal_photo_media_id', $id))->exists()
+            || VideoAlbum::query()->where('cover_media_id', $id)->exists()
+            || Video::query()->where(fn ($q) => $q->where('media_id', $id)->orWhere('poster_media_id', $id))->exists();
     }
 }

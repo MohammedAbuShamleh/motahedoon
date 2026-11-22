@@ -42,6 +42,15 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::put('field-photos/order', [Admin\FieldPhotoController::class, 'reorder'])->name('field-photos.reorder');
         Route::delete('field-photos/{photo}', [Admin\FieldPhotoController::class, 'destroy'])->name('field-photos.destroy');
 
+        Route::get('video-albums/guide', [Admin\VideoAlbumController::class, 'guide'])->name('video-albums.guide');
+        Route::resource('video-albums', Admin\VideoAlbumController::class)->except('show')
+            ->parameters(['video-albums' => 'album']);
+        Route::get('video-albums/{album}/videos/create', [Admin\VideoController::class, 'create'])->name('videos.create');
+        Route::post('video-albums/{album}/videos', [Admin\VideoController::class, 'store'])->name('videos.store');
+        Route::get('videos/{video}/edit', [Admin\VideoController::class, 'edit'])->name('videos.edit');
+        Route::put('videos/{video}', [Admin\VideoController::class, 'update'])->name('videos.update');
+        Route::delete('videos/{video}', [Admin\VideoController::class, 'destroy'])->name('videos.destroy');
+
         Route::resource('media', Admin\MediaController::class)->only(['index', 'store', 'destroy'])
             ->parameters(['media' => 'media']);
 

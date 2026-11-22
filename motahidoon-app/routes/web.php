@@ -5,6 +5,7 @@ use App\Http\Controllers\Site\AboutController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PillarController;
 use App\Http\Controllers\Site\ReportController;
+use App\Http\Controllers\Site\VideoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,8 @@ Route::get('/about', AboutController::class)->name('about');
 Route::get('/p/{slug}', PillarController::class)->name('pillar');
 Route::get('/reports', ReportController::class)->name('reports');
 Route::get('/reports/{slug}', ReportController::class)->name('report');
+Route::get('/videos', [VideoController::class, 'index'])->name('videos');
+Route::get('/videos/{slug}', [VideoController::class, 'album'])->name('videos.album');
 
 /* مسار تطوير فقط: يخدم شجرة المحتوى العربية لمدقّق سلامة النصوص
    (tools/verify-strings.js). لا يُسجَّل خارج البيئة المحلية.

@@ -156,3 +156,33 @@ export interface SharedProps {
   };
   [key: string]: unknown;
 }
+
+/* ---------- مكتبة الفيديو (VideoLibrary في الخادم) ---------- */
+
+/** مقطع جاهز للعرض: رابط مضمَّن (youtube/facebook) أو ملف مرفوع (file). */
+export interface VideoItem {
+  id: number;
+  title: string;
+  description: string | null;
+  kind: "youtube" | "facebook" | "file";
+  embed: string | null;   // للروابط: عنوان iframe، يُحمَّل بعد النقر وحده
+  src: string | null;     // للملفات: مسار الملف
+  poster: string | null;
+  duration: string | null;
+  date: string | null;
+  featured: boolean;
+  album: { slug: string; title: string };
+}
+
+export interface VideoAlbumCard {
+  slug: string;
+  title: string;
+  description?: string | null;
+  cover: string | null;
+  count: number;
+  pillar?: string | null;
+}
+
+export interface VideoAlbumFull extends VideoAlbumCard {
+  videos: VideoItem[];
+}

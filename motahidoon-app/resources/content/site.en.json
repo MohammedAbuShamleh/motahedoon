@@ -88,7 +88,19 @@
     "عرض أقل": "Show fewer",
     "محتويات التقرير": "Report contents",
     "الافتتاحية": "Introduction",
-    "شرائح الافتتاحية": "Introduction slides"
+    "شرائح الافتتاحية": "Introduction slides",
+    "مكتبة الفيديو": "Video library",
+    "مقاطع مختارة": "selected videos",
+    "المكتبة كاملة": "Full library",
+    "تشغيل": "Play",
+    "قائمة المقاطع": "Video list",
+    "مقطع": "video",
+    "مقاطع": "videos",
+    "ألبومات": "albums",
+    "الألبومات": "Albums",
+    "لا مقاطع منشورة بعد": "No videos published yet",
+    "أحدث المقاطع": "Latest videos",
+    "ألبومات أخرى": "Other albums"
   },
   "org": {
     "name": "Mutahidoon for Gaza Coalition",

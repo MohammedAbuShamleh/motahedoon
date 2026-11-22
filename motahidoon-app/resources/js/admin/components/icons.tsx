@@ -34,6 +34,7 @@ const PATHS = {
       <rect x="15" y="8" width="2.5" height="2.5" rx=".5" />
     </>
   ),
+  video: <path d="M4.5 5.5h15A1.5 1.5 0 0 1 21 7v10a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17V7a1.5 1.5 0 0 1 1.5-1.5zM10 9.2v5.6l4.6-2.8z" />,
   reports: <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4" />,
   translations: <path d="M4 5h9M8.5 3v2M6 5c.9 3.2 3.2 5.7 6 7M11 5c-.9 3.2-3.2 5.7-6 7M13 21l4-9 4 9M14.4 18h5.2" />,
   strings: <path d="M5 7V4.5h14V7M12 4.5v15M9 19.5h6" />,

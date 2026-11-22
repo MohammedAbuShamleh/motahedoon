@@ -1446,6 +1446,193 @@ html.js-reveal .reveal:not(.is-in) .about__media { opacity: 0; transform: transl
   .fstage { grid-template-columns: 1fr; }
 }
 
+/* =====================================================================
+   مكتبة الفيديو (2026-11-22) — قسم الرئيسية وصفحتا /videos و/videos/{slug}
+   رسمية على الورق بالأبيض والأسود: مشغّل كبير وقائمة مرقّمة بجانبه، والألبومات
+   شبكةً متساوية. الأغلفة كاملةً بنسبتها (contain) على الحبري — لا قصّ —
+   وزوايا حادّة كبقية الصور. المشغّل غلافٌ حتى النقر (components/video.tsx).
+   ===================================================================== */
+
+/* ---------- المشغّل وقائمته ---------- */
+.vfp {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: start;
+}
+.vfp__main { min-width: 0; }
+
+.vplayer {
+  position: relative; overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--ink);
+  border-radius: 2px;
+  box-shadow: 0 30px 60px -44px rgba(26,26,26,.6);
+}
+.vplayer__media { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; border: 0; background: #000; }
+.vplayer__facade {
+  position: absolute; inset: 0; display: block;
+  padding: 0; margin: 0; border: 0;
+  background: var(--ink); cursor: pointer;
+}
+.vplayer__facade img {
+  position: absolute; inset: 0; inline-size: 100%; block-size: 100%;
+  object-fit: contain;
+  animation: fade .5s ease both;
+}
+.vplayer__blank { position: absolute; inset: 0; background: #111; }
+/* زرّ التشغيل: مربّع ورقيّ في الوسط (لا دوائر في الهوية) */
+.vplayer__play {
+  position: absolute; inset: 0; margin: auto;
+  display: grid; place-items: center;
+  inline-size: clamp(3.5rem, 7vw, 4.75rem); block-size: clamp(3.5rem, 7vw, 4.75rem);
+  border-radius: var(--r-sm);
+  background: var(--bg); color: var(--ink);
+  box-shadow: 0 14px 34px -14px rgba(0,0,0,.7);
+  transition: transform .35s var(--ease-glass), background-color .25s ease, color .25s ease;
+}
+.vplayer__play svg { inline-size: 42%; block-size: 42%; fill: currentColor; }
+.vplayer__facade:hover .vplayer__play, .vplayer__facade:focus-visible .vplayer__play {
+  transform: scale(1.08); background: var(--ink); color: var(--bg);
+  box-shadow: 0 0 0 2px var(--bg), 0 14px 34px -14px rgba(0,0,0,.7);
+}
+.vplayer__facade:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.vplayer__dur {
+  position: absolute; inset-block-end: .75rem; inset-inline-start: .75rem;
+  padding: .2rem .5rem;
+  background: rgba(26,26,26,.82); color: var(--bg);
+  font-family: var(--f-ui); font-size: .78rem; font-weight: 700;
+  font-variant-numeric: tabular-nums; direction: ltr;
+}
+
+.vfp__info { padding-top: clamp(.9rem, 1.8vw, 1.25rem); }
+.vfp__meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .9rem;
+  margin: 0 0 .5rem;
+  font-family: var(--f-ui); font-size: .82rem; font-weight: 700; color: var(--ink-72);
+}
+.vfp__no { letter-spacing: .12em; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; color: var(--ink); }
+.vfp__album {
+  padding: .2rem .6rem;
+  border: var(--line) solid var(--rule); border-radius: 6px;
+  color: var(--ink); text-decoration: none;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.vfp__album:hover { border-color: var(--ink); background: rgba(26,26,26,.04); }
+.vfp__album:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.vfp__date { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+.vfp__title { margin: 0; font-size: clamp(1.25rem, 2.2vw, 1.75rem); font-weight: 800; line-height: 1.35; }
+.vfp__desc { margin: .6rem 0 0; max-width: 60ch; font-size: .98rem; line-height: 1.85; color: var(--ink-72); }
+
+/* القائمة: صفوف مرقّمة تحت خطّ حبريّ؛ الحالية ممتلئة بالحبري */
+.vfp__list {
+  list-style: none; margin: 0; padding: 0;
+  border-top: 2px solid var(--ink);
+  max-block-size: clamp(22rem, 46vw, 36rem);
+  overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: rgba(26,26,26,.3) transparent;
+}
+.vfp__row {
+  display: grid; grid-template-columns: auto clamp(5.5rem, 9vw, 7rem) minmax(0, 1fr);
+  align-items: center; gap: .85rem;
+  inline-size: 100%; margin: 0;
+  padding: .7rem .6rem;
+  border: 0; border-bottom: var(--line) solid var(--rule);
+  background: none; color: var(--ink);
+  text-align: start; cursor: pointer;
+  transition: background-color .25s ease, color .25s ease;
+}
+.vfp__row:hover { background: rgba(26,26,26,.04); }
+.vfp__row:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
+.vfp__n {
+  font-family: var(--f-ui); font-size: .78rem; font-weight: 800; letter-spacing: .1em;
+  font-variant-numeric: tabular-nums; color: var(--ink-65);
+}
+.vfp__thumb { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--ink); }
+.vfp__thumb img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: contain; }
+.vfp__tplay {
+  position: absolute; inset-block-end: .3rem; inset-inline-start: .3rem;
+  display: grid; place-items: center;
+  inline-size: 1.35rem; block-size: 1.35rem; border-radius: 4px;
+  background: var(--bg); color: var(--ink);
+}
+.vfp__tplay svg { inline-size: 60%; block-size: 60%; fill: currentColor; }
+.vfp__rt { display: grid; gap: .25rem; min-width: 0; }
+.vfp__rtitle {
+  font-size: .94rem; font-weight: 700; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.vfp__rsub {
+  display: flex; flex-wrap: wrap; gap: .6rem;
+  font-family: var(--f-ui); font-size: .76rem; font-weight: 600; color: var(--ink-65);
+}
+.vfp__rdur { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+.vfp__row.is-on { background: var(--ink); color: var(--bg); }
+.vfp__row.is-on .vfp__n, .vfp__row.is-on .vfp__rsub { color: var(--on-ink); }
+
+/* ---------- شبكة الألبومات ---------- */
+.valbums {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
+  gap: clamp(.9rem, 1.8vw, 1.4rem);
+}
+.valbums > li {
+  transition: opacity .6s ease, transform .7s var(--ease-glass);
+  transition-delay: calc(.08s + var(--i, 0) * .05s);
+}
+html.js-reveal .reveal:not(.is-in) .valbums > li { opacity: 0; transform: translateY(14px); }
+.valbum {
+  display: flex; flex-direction: column; block-size: 100%;
+  border: var(--line) solid var(--rule); border-radius: 2px;
+  background: var(--paper); color: var(--ink); text-decoration: none;
+  box-shadow: 0 18px 36px -32px rgba(26,26,26,.5);
+  transition: transform .45s var(--ease-glass), border-color .3s ease, box-shadow .45s var(--ease-glass);
+}
+.valbum:hover, .valbum:focus-visible { transform: translateY(-4px); border-color: var(--ink); box-shadow: 0 28px 48px -30px rgba(26,26,26,.55); }
+.valbum:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.valbum__cover { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--ink); }
+.valbum__cover img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: contain; }
+.valbum__count {
+  position: absolute; inset-block-end: .6rem; inset-inline-start: .6rem;
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .25rem .55rem; border-radius: 4px;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-ui); font-size: .8rem; font-weight: 800; font-variant-numeric: tabular-nums;
+}
+.valbum__count svg { inline-size: .8rem; block-size: .8rem; fill: currentColor; }
+.valbum__body { display: grid; gap: .3rem; padding: .9rem 1rem 1.05rem; }
+.valbum__t { font-size: 1.02rem; font-weight: 800; line-height: 1.45; }
+.valbum__s { font-family: var(--f-ui); font-size: .82rem; font-weight: 600; color: var(--ink-65); }
+
+/* ---------- صفحتا المكتبة والألبوم ---------- */
+.vpage__in { width: min(100% - var(--edge) * 2, var(--wrap)); margin-inline: auto; }
+.vpage__head {
+  display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between;
+  gap: 1rem 2rem;
+  padding-bottom: clamp(1rem, 2vw, 1.4rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  border-bottom: 2px solid var(--ink);
+}
+.vpage__title { margin: 0; font-size: clamp(2rem, 4.2vw, 3.2rem); font-weight: 900; line-height: 1.15; }
+.vpage__facts { display: flex; gap: 1.25rem; margin: 0; font-family: var(--f-ui); font-size: .9rem; font-weight: 700; color: var(--ink-72); }
+.vpage__facts b { font-size: 1.35rem; font-weight: 900; color: var(--ink); margin-inline-end: .3rem; }
+.vpage__lead { margin: -.75rem 0 clamp(1.5rem, 3vw, 2rem); max-width: 62ch; font-size: 1.05rem; line-height: 1.9; color: var(--ink-72); }
+.vpage__h { margin: 0 0 clamp(1rem, 2vw, 1.4rem); font-size: clamp(1.3rem, 2.2vw, 1.7rem); font-weight: 800; }
+.vpage__empty { color: var(--ink-65); }
+.vpage--latest { border-top: var(--line) solid var(--rule); }
+
+@media (max-width: 900px) {
+  .vfp { grid-template-columns: minmax(0, 1fr); }
+  .vfp__list { max-block-size: none; overflow: visible; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vplayer__facade:hover .vplayer__play { transform: none; }
+  .valbum:hover, .valbum:focus-visible { transform: none; }
+}
+@media print {
+  .vfp__list, .vplayer__play { display: none !important; }
+}
+
 /* ---------- العارض بملء الشاشة ---------- */
 .lightbox {
   position: fixed; inset: 0; z-index: 200;
