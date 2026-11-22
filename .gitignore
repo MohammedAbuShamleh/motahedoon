@@ -13,3 +13,7 @@ _photos-staging/
 *.jpeg
 .DS_Store
 Thumbs.db
+
+# خطوط ثمانية: لا تُنشر في المستودع حتى تُحسم رخصتها (2026-11-22)
+motahidoon-app/resources/fonts/
+thmanyah typeface/

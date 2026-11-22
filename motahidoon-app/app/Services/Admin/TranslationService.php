@@ -109,6 +109,7 @@ final class TranslationService
             $model === null => null,
             $t->field === 'value' && $model->getMorphClass() === 'ui_string' => $model->key,
             $t->field === 'stats' => '— أرقام القسم بوحداتها (JSON) —',
+            $t->field === 'detail' => '— التفاصيل الكاملة للقسم بترتيب العربية (JSON) —',
             $t->field === 'unapproved_notice' => '— تنويه الترجمة غير المعتمدة —',
             default => (string) $model->getAttribute($t->field),
         };

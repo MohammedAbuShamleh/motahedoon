@@ -182,6 +182,8 @@ export function Plate({
         className="plate__img"
         src={`/${src}`}
         alt={caption}
+        loading="lazy"
+        decoding="async"
         style={pos ? ({ "--plate-pos": pos } as React.CSSProperties) : undefined}
       />
       <figcaption>{caption}</figcaption>

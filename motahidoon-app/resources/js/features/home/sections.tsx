@@ -42,7 +42,6 @@ export function AreasStrip({ pillars }: { pillars: Pillar[] }) {
         <ul className="areas__grid">
           {pillars.map((p, i) => (
             <li key={p.id} style={{ "--i": i } as React.CSSProperties}>
-              <span className="areas__axis" aria-hidden="true"><i /></span>
               <Link className="areas__a" href={path(`/p/${p.id}`)}>
                 <span className="areas__top">
                   <span className="areas__badge"><Icon id={p.id} /></span>
@@ -59,12 +58,15 @@ export function AreasStrip({ pillars }: { pillars: Pillar[] }) {
 }
 
 /* ---------- من نحن ----------
-   عمودان: النصّ من جهة بدء السطر، وصورة ميدانية في دائرة من جهة نهايته.
+   هيئة رسمية من طبقتين (بطلب صاحب المشروع 2026-11-21):
+     أعلى — المتن (العنوان وفقرة التأسيس وسطر الختام) بجانب الصورة.
+     أسفل — لوح حبريّ بعرض القسم، فيه الرؤية والرسالة متجاورتين.
+   الصورة كاملة بنسبتها الأصلية: لا قصّ ولا تشذيب.
    المحتوى كما كان حرفاً بحرف (العنوان، فقرة التأسيس، الرؤية والرسالة،
    سنة التأسيس، خانة الحوكمة، رابط التعريف الكامل) — التغيير في التخطيط وحده.
    بلا صورة لا عمود للصورة: التخطيط مشتقّ من البيانات لا مفترَض. */
-/* بند الرؤية أو الرسالة: مربّع أخضر برمزه، ثم الوسم والنصّ. الفارغ خانة
-   محجوزة موسومة — لا يُخفى ولا يُبدَّل. */
+/* بند الرؤية أو الرسالة: رمزه، ثم الوسم والنصّ. الفارغ خانة محجوزة
+   موسومة — لا يُخفى ولا يُبدَّل. */
 function VmItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | null }) {
   return (
     <div className="vm">
@@ -94,54 +96,57 @@ export function About({
   return (
     <section className={photo ? "band about" : "band about about--solo"} id="about">
       <div className="about__in reveal">
-        <div className="about__text">
-          <h2 className="h-sec about__title">{U("من نحن")}</h2>
+        <div className="about__top">
+          <div className="about__text">
+            <h2 className="h-sec about__title">{U("من نحن")}</h2>
 
-          <div className="prose body-lg about__lead">
-            {founding.story.slice(0, 1).map((p) => (
-              <p key={p}><Nums text={p} /></p>
-            ))}
+            <div className="prose about__lead">
+              {founding.story.slice(0, 1).map((p) => (
+                <p key={p}><Nums text={p} /></p>
+              ))}
+            </div>
+
+            {/* سطر الختام: سنة التأسيس (والحوكمة إن اعتُمدت) في جهة،
+                وزرّ التعريف الكامل في الأخرى */}
+            <div className="about__foot">
+              <div className="about__meta">
+                {founding.year
+                  ? <div className="facts"><Fact value={founding.year} label={U("سنة التأسيس")} /></div>
+                  : <Slot label={U("سنة التأسيس")} />}
+                {/* الحوكمة: في الرئيسية تظهر حين تُعتمد وحدها — خانتها المحجوزة
+                    تبقى في صفحة «التعريف الكامل» (قرار صاحب المشروع، استثناءً من
+                    قاعدة «الحقل الفارغ يظهر ولا يُخفى» في هذا الموضع فقط). */}
+                {governance && <Filled label={U("الحوكمة واتخاذ القرار")} value={governance} />}
+              </div>
+
+              <p className="about__cta">
+                <Link className="btn btn--ghost" href={path("/about")}>
+                  {U("التعريف الكامل")}
+                </Link>
+              </p>
+            </div>
           </div>
 
-          <div className="about__vm">
-            <VmItem
-              label={U("الرؤية")}
-              value={identity.vision}
-              icon={<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><path d="M12 9l3 3-3 3-3-3z" /></svg>}
-            />
-            <VmItem
-              label={U("الرسالة")}
-              value={identity.mission}
-              icon={<svg viewBox="0 0 24 24"><path d="M12 2.5l9.5 9.5-9.5 9.5L2.5 12zM12 6.5l5.5 5.5-5.5 5.5L6.5 12zM12 10.4l1.6 1.6-1.6 1.6-1.6-1.6z" /></svg>}
-            />
-          </div>
-
-          <div className="about__meta">
-            {founding.year
-              ? <div className="facts"><Fact value={founding.year} label={U("سنة التأسيس")} /></div>
-              : <Slot label={U("سنة التأسيس")} />}
-            {/* الحوكمة: في الرئيسية تظهر حين تُعتمد وحدها — خانتها المحجوزة
-                تبقى في صفحة «التعريف الكامل» (قرار صاحب المشروع، استثناءً من
-                قاعدة «الحقل الفارغ يظهر ولا يُخفى» في هذا الموضع فقط). */}
-            {governance && <Filled label={U("الحوكمة واتخاذ القرار")} value={governance} />}
-          </div>
-
-          <p className="about__cta">
-            <Link className="btn btn--ghost" href={path("/about")}>
-              {U("التعريف الكامل")}
-            </Link>
-          </p>
+          {/* الصورة كاملة بنسبتها — لا قصّ ولا تشذيب */}
+          {photo && (
+            <figure className="about__media" aria-hidden="true">
+              <img src={`/${photo}`} alt="" loading="lazy" decoding="async" />
+            </figure>
+          )}
         </div>
 
-        {/* الصورة بهيئة فصول صفحة التقرير (rp-ch__media): إطار أخضر مفرَّغ
-            يبرز نحو حافّة الصفحة ومربّع زيتوني مفرَّغ نحو المتن */}
-        {photo && (
-          <div className="rp-ch__media about__media" aria-hidden="true">
-            <figure className="rp-ch__fig">
-              <img src={`/${photo}`} alt="" loading="lazy" decoding="async" width={640} height={480} />
-            </figure>
-          </div>
-        )}
+        <div className="about__vm">
+          <VmItem
+            label={U("الرؤية")}
+            value={identity.vision}
+            icon={<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><path d="M12 9l3 3-3 3-3-3z" /></svg>}
+          />
+          <VmItem
+            label={U("الرسالة")}
+            value={identity.mission}
+            icon={<svg viewBox="0 0 24 24"><path d="M12 2.5l9.5 9.5-9.5 9.5L2.5 12zM12 6.5l5.5 5.5-5.5 5.5L6.5 12zM12 10.4l1.6 1.6-1.6 1.6-1.6-1.6z" /></svg>}
+          />
+        </div>
       </div>
     </section>
   );
@@ -294,11 +299,10 @@ export function Fields({ pillars }: { pillars: Pillar[] }) {
             <div className="pidx__frame">
               {pillars.map((p, i) => (
                 <span key={p.id} className={`pidx__img ${s.state(i)}`}>
-                  {/* الحالية وجارتاها تُحمَّل فوراً — فالتالية جاهزة قبل أن يمتلئ
-                      خطّ المكث، ولا تنكشف صورةٌ لم تصل بعد — والبقية عند الحاجة */}
+                  {/* القسم تحت الطيّة: الصور كلّها كسولة، تُجلب حين يقترب القسم
+                      من الشاشة لا مع أول تحميل للصفحة (2026-11-22) */}
                   {p.cover?.src
-                    ? <img src={`/${p.cover.src}`} alt="" decoding="async"
-                        loading={Math.abs(i - s.index) <= 1 || Math.abs(i - s.index) === n - 1 ? "eager" : "lazy"} />
+                    ? <img src={`/${p.cover.src}`} alt="" decoding="async" loading="lazy" />
                     : <span className="spot__geo"><Icon id={p.id} /></span>}
                 </span>
               ))}
@@ -373,7 +377,8 @@ export function Impact({ report, count }: { report: Report; count: number }) {
      والعنوان والمدى وملفّ PDF والإجراء.
    · الفهرس على الحبري — كلّ الإصدارات مرقّمة (01، 02…) كصفحة «الفهرس»،
      وعددها كبيراً في رأسه، والأحدث موسوم بشريط أخضر.
-   لا عدد مفترض: الفهرس يطول بطول الأرشيف. الأسطر الرمادية زخرفة لا نصّ. */
+   لا عدد مفترض: الفهرس يطول بطول الأرشيف. لا رسم لوثيقة: ملفّ التقرير
+   رابطٌ إن وُجد، وخانة محجوزة إن لم يوجد — لا صورة للملفّ الغائب. */
 export interface ReportCard {
   id: string; label: string; range: string; reportTitle: string;
 }
@@ -386,25 +391,12 @@ export function Reports({
 }) {
   const U = useU();
   const path = usePath();
-  const { org } = useSite();
   const cur = reports[0];
   return (
     <Section id="reports" head={<SectionHead title={U("التقارير")} />}>
       <div className="rhub">
         {cur && (
           <article className="rhub__feat">
-            <div className="rhub__cover" aria-hidden="true">
-              <span className="rhub__stack">
-                <span className="rhub__sheet">
-                  <span className="rhub__band">
-                    <img src={`/${org.logoMark}`} alt="" />
-                    <span>{org.shortName}</span>
-                  </span>
-                  <span className="rhub__period">{cur.label}</span>
-                  <span className="rhub__lines"><i /><i /><i /><i /><i /></span>
-                </span>
-              </span>
-            </div>
             <div className="rhub__body stagger">
               <p className="rhub__k">
                 <span className="rhub__badge">{U("أحدث تقرير")}</span>
@@ -495,7 +487,7 @@ export function Support() {
           <figure className="shub__qr">
             <span className="shub__frame">
               {d.donateQr
-                ? <img src={`/${d.donateQr}`} alt={U("كود QR للدعم")} />
+                ? <img src={`/${d.donateQr}`} alt={U("كود QR للدعم")} loading="lazy" decoding="async" />
                 : (
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />

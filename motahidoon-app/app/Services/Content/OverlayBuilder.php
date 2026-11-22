@@ -111,10 +111,13 @@ final class OverlayBuilder
 
             $sections = $r->sections->mapWithKeys(function (ReportSection $s): array {
                 $stats = $s->translated('stats', $this->locale);
+                $detail = $s->translated('detail', $this->locale);
 
                 return [$s->pillar->slug => $this->fields([
                     'lead' => $s->translated('lead', $this->locale),
                     'stats' => $stats === null ? null : json_decode($stats, true, 8, JSON_THROW_ON_ERROR),
+                    // التفصيل الكامل كتلةً واحدة؛ مطابقته للعربية يفحصها LocalizeContent
+                    'detail' => $detail === null ? null : json_decode($detail, true, 16, JSON_THROW_ON_ERROR),
                 ])];
             })->filter()->all();
             $this->put($node, 'sections', $sections);

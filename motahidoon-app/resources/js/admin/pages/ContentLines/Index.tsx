@@ -81,6 +81,8 @@ export default function Index({ lines, groups }: { lines: Line[]; groups: Option
       </div>
 
       <Card title={group.label} actions={editing !== "new" && <Button size="sm" onClick={() => setEditing("new")}>+ إضافة نصّ</Button>}>
+        {/* أين يظهر هذا النصّ في الموقع */}
+        {group.hint && <p className="mb-4 rounded-lg border border-olive/30 bg-olive/5 px-3 py-2 text-sm text-ink/80">{group.hint}</p>}
         {editing === "new" && (
           <div className="mb-5 rounded-lg border border-olive/40 bg-olive/5 p-4">
             <LineForm key={`new-${active}`} line={null} group={group} onDone={() => setEditing(null)} />

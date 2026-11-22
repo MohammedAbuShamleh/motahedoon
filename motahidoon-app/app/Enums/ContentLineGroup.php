@@ -22,6 +22,15 @@ enum ContentLineGroup: string
         };
     }
 
+    /** أين تظهر المجموعة في الموقع، ليعرف المحرّر أيّ سطر يغيّر أيّ قسم. */
+    public function hint(): ?string
+    {
+        return match ($this) {
+            self::Story => 'السطر الأول هو نصّ قسم «من نحن» في الصفحة الرئيسية، وتظهر الأسطر كلّها في صفحة «التعريف الكامل».',
+            default => null,
+        };
+    }
+
     /** المجموعة التي لكل سطر فيها مصطلح ونصّ، لا نصّ وحده. */
     public function hasTerm(): bool
     {

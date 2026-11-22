@@ -128,7 +128,7 @@ export function SiteHeader({ active }: { active?: string }) {
 
   return (
     <header className="site-header">
-      <div className="site-header__in glass">
+      <div className="site-header__in panel">
         <Link className="brand" href={home}>
           <img src={`/${org.logoMark}`} alt="" />
           <span>

@@ -15,7 +15,7 @@ export type Translations = {
   tr: Record<string, string | null>;
 };
 
-export type Option = { value: string; label: string; hasTerm?: boolean };
+export type Option = { value: string; label: string; hasTerm?: boolean; hint?: string | null };
 
 export type TableData = {
   title: string | null;

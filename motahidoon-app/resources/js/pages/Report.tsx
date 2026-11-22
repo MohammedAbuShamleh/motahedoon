@@ -4,6 +4,7 @@ import { Layout } from "@/app/Layout";
 import { Icon } from "@/components/Icon";
 import { FigureCell, Plate, Seal, Slot } from "@/components/primitives";
 import { ArOnly, SectionBrief, Table } from "@/features/report/parts";
+import { useStackCards } from "@/hooks/useStackCards";
 import { Nums } from "@/lib/nums";
 import { useSite, useU } from "@/lib/site";
 import type { Cover, Entry, Report as R, TitledList } from "@/types";
@@ -97,6 +98,7 @@ export default function Report({ report: rep, pillars, others }: Props) {
   const path = (x: string) => (locale === "ar" ? x : `${x}?lang=${locale}`);
 
   const chapters = pillars.filter((p) => rep.sections?.[p.id]);
+  const stackRef = useStackCards<HTMLDivElement>(`${rep.label}:${chapters.map((p) => p.id).join(",")}`);
 
   /* المؤشّر الموسوم accent يتصدّر بجانب الحلقات؛ الهرمية من وسم المصدر */
   const leadMetrics = rep.metrics.filter((m) => m.accent);
@@ -130,6 +132,11 @@ export default function Report({ report: rep, pillars, others }: Props) {
       <section className="band rp-cover">
         <div className="rp-cover__in">
           <div className="rp-cover__main">
+            {/* رجوع صريح إلى الرئيسية — كصفحة المجال؛ السهم مرسوم للعربية ويُعكس في اللاتينية */}
+            <Link className="pa-back" href={path("/")}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+              {U("العودة إلى الرئيسية")}
+            </Link>
             <p className="ph__kicker">{U("الإنجازات")}</p>
             <h1 className="h-page">{rep.reportTitle}</h1>
             <p className="lead rp-cover__range">{rep.range}</p>
@@ -242,47 +249,60 @@ export default function Report({ report: rep, pillars, others }: Props) {
         </section>
       )}
 
-      {/* فصول المجالات: شريحة منقسمة — الصورة يحضنها لوح أخضر وشارة الرقم،
-          والمتن بجانبها؛ تتبادل الجهتان من فصل إلى آخر. مجال بلا غلاف
-          يأخذ لوحاً هندسياً برمزه، فلا يختلّ الإيقاع ولا يُخترع شيء. */}
-      {chapters.map((p, idx) => {
-        const sec = rep.sections[p.id];
-        return (
-          <section className={`band rp-ch${idx % 2 ? " rp-ch--flip" : ""}`} id={`rp-${p.id}`} key={p.id}>
-            <div className="rp-ch__in reveal">
-              <div className="rp-ch__media">
-                {p.cover?.src ? (
-                  <figure className="rp-ch__fig">
-                    <img src={`/${p.cover.src}`} alt={p.cover.caption} loading="lazy" decoding="async" />
-                  </figure>
-                ) : (
-                  <div className="rp-ch__fig rp-ch__fig--geo" aria-hidden="true">
-                    <Icon id={p.id} />
+      {/* فصول المجالات: بطاقات ورقية بملء الشاشة تتراكب بالتمرير — كلّ
+          بطاقة نصفان: المتن في جهة، والصورة ورقم المجال في الأخرى؛ تتبادل
+          الجهتان من فصل إلى آخر. مجال بلا غلاف يأخذ رمزه على لوح حبري، فلا
+          يختلّ الإيقاع ولا يُخترع شيء. */}
+      {chapters.length > 0 && (
+        <div className="rp-stack" ref={stackRef}>
+          {chapters.map((p, idx) => {
+            const sec = rep.sections[p.id];
+            return (
+              <section className={`rp-area${idx % 2 ? " rp-area--flip" : ""}`}
+                       id={`rp-${p.id}`} key={p.id} data-stack="">
+                {/* reveal على النصفين لا على البطاقة: تحويل الظهور كان سيمحو
+                    تصغير التراكب المرسوم على البطاقة نفسها */}
+                <div className="rp-area__card">
+                  <div className="rp-area__body">
+                    <div className="rp-area__text reveal">
+                      <p className="rp-ch__k">
+                        <span className="rp-ch__ico" aria-hidden="true"><Icon id={p.id} /></span>
+                        <span>{U("مجال عمل")}</span>
+                        <PeriodTag label={rep.label} />
+                      </p>
+                      <h2 className="h-sec">{p.title}</h2>
+                      <p className="ph__orgs">{p.orgs}</p>
+                      <SectionBrief sec={sec} stagger />
+                      {sec.untranslated && <ArOnly href={`/p/${p.id}?lang=ar`} />}
+                      <p className="rp-ch__cta">
+                        <Link className="btn btn--ghost" href={path(`/p/${p.id}`)}>
+                          {U("تفاصيل")} {p.short}
+                        </Link>
+                      </p>
+                    </div>
                   </div>
-                )}
-                <span className="rp-ch__badge">{p.num}</span>
-              </div>
 
-              <div className="rp-ch__body">
-                <p className="rp-ch__k">
-                  <span className="rp-ch__ico" aria-hidden="true"><Icon id={p.id} /></span>
-                  <span>{U("مجال عمل")}</span>
-                  <PeriodTag label={rep.label} />
-                </p>
-                <h2 className="h-sec">{p.title}</h2>
-                <p className="ph__orgs">{p.orgs}</p>
-                <SectionBrief sec={sec} stagger />
-                {sec.untranslated && <ArOnly href={`/p/${p.id}?lang=ar`} />}
-                <p className="rp-ch__cta">
-                  <Link className="btn btn--ghost" href={path(`/p/${p.id}`)}>
-                    {U("تفاصيل")} {p.short}
-                  </Link>
-                </p>
-              </div>
-            </div>
-          </section>
-        );
-      })}
+                  <div className="rp-area__media reveal">
+                    {p.cover?.src ? (
+                      <figure className="rp-area__fig">
+                        <img src={`/${p.cover.src}`} alt={p.cover.caption} loading="lazy" decoding="async" />
+                      </figure>
+                    ) : (
+                      <div className="rp-area__fig rp-area__fig--geo" aria-hidden="true">
+                        <Icon id={p.id} />
+                      </div>
+                    )}
+                    <span className="rp-area__n" aria-hidden="true">{p.num}</span>
+                    <span className="rp-area__count" aria-hidden="true">
+                      {ord(idx)} / {ord(chapters.length - 1)}
+                    </span>
+                  </div>
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
 
       {rep.summary && (
         <RpSection id="rp-summary" title={rep.summary.title} tag={rep.label}>

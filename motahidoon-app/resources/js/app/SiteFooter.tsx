@@ -22,7 +22,7 @@ export function SiteFooter() {
         <div className="footer__top">
           <div>
             <span className="footer__logo">
-              <img src={`/${org.logoFull}`} alt={org.name} />
+              <img src={`/${org.logoFull}`} alt={org.name} loading="lazy" decoding="async" />
             </span>
             <p className="footer__h">{mediaOffice}</p>
           </div>

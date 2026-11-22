@@ -104,9 +104,18 @@ final class LocalizeContent
                     $sec['lead'] = $ts['lead'];
                 }
                 $sec['stats'] = $ts['stats'] ?? null;   // أرقام بوحدات مترجَمة
-                $sec['groups'] = [];
-                $sec['blocks'] = $sec['table'] = $sec['gallery'] = null;
-                $sec['untranslated'] = true;            // التفصيل الكامل بالعربية
+
+                // التفصيل الكامل: يُعرض مترجَماً إن طابق بنية العربية تماماً؛
+                // وإلا يُسقَط كلّه ويبقى رابط العربية — لا تفصيل نصفه عربي
+                $detail = $this->detail($sec, $ts['detail'] ?? null);
+                if ($detail !== null) {
+                    $sec = array_merge($sec, $detail);
+                    unset($sec['untranslated']);
+                } else {
+                    $sec['groups'] = [];
+                    $sec['blocks'] = $sec['table'] = $sec['gallery'] = null;
+                    $sec['untranslated'] = true;        // التفصيل الكامل بالعربية
+                }
                 $r['sections'][$id] = $sec;
             }
 
@@ -114,5 +123,143 @@ final class LocalizeContent
         }
 
         return $s;
+    }
+
+    /**
+     * يدمج التفصيل المترجَم فوق العربية بالترتيب، أو null إن لم يطابقها.
+     *
+     * المطابقة تامّة: العدد نفسه في كلّ قائمة، وكلّ حقل نصّي موجود في
+     * العربية موجود مترجَماً. الأرقام (value) والترقيم والأعلام والصور
+     * تُؤخذ من العربية دائماً — الترجمة لا تحمل رقماً يُعرض.
+     *
+     * @param  array<string, mixed>       $sec  القسم العربي
+     * @param  array<string, mixed>|null  $td   التفصيل المترجَم
+     * @return array<string, mixed>|null
+     */
+    private function detail(array $sec, ?array $td): ?array
+    {
+        if ($td === null) {
+            return null;
+        }
+        $has = fn (string $k): bool => ! empty($sec[$k]);
+        if (! $has('groups') && ! $has('blocks') && ! $has('table') && ! $has('gallery')) {
+            return null;                                   // لا تفصيل أصلاً
+        }
+        // نصّ مترجَم مطلوب حيث وُجد نصّ عربي، وغائب حيث غاب
+        $text = function (array $ar, array $tr, string $k, array &$out): bool {
+            if (! isset($ar[$k])) {
+                return true;
+            }
+            if (! is_string($tr[$k] ?? null) || trim($tr[$k]) === '') {
+                return false;
+            }
+            $out[$k] = $tr[$k];
+
+            return true;
+        };
+        $same = fn (mixed $a, mixed $b): bool => is_array($a) && is_array($b) && count($a) === count($b);
+        $out = [];
+
+        if ($has('groups')) {
+            if (! $same($sec['groups'], $td['groups'] ?? null)) {
+                return null;
+            }
+            foreach ($sec['groups'] as $gi => $g) {
+                $tg = $td['groups'][$gi];
+                if (! is_array($tg) || ! $text($g, $tg, 'title', $g) || ! $same($g['items'], $tg['items'] ?? null)) {
+                    return null;
+                }
+                foreach ($g['items'] as $ii => $it) {
+                    $ti = $tg['items'][$ii];
+                    if (! is_array($ti) || ! $text($it, $ti, 'term', $it) || ! $text($it, $ti, 'text', $it)) {
+                        return null;
+                    }
+                    $g['items'][$ii] = $it;
+                }
+                $out['groups'][$gi] = $g;
+            }
+        }
+
+        if ($has('blocks')) {
+            if (! $same($sec['blocks'], $td['blocks'] ?? null)) {
+                return null;
+            }
+            foreach ($sec['blocks'] as $bi => $b) {
+                $tb = $td['blocks'][$bi];
+                if (! is_array($tb) || ! $text($b, $tb, 'title', $b) || ! $same($b['figures'], $tb['figures'] ?? null)) {
+                    return null;
+                }
+                foreach ($b['figures'] as $fi => $f) {
+                    $tf = $tb['figures'][$fi];
+                    foreach (['label', 'unit', 'prefix'] as $k) {
+                        if (! is_array($tf) || ! $text($f, $tf, $k, $f)) {
+                            return null;
+                        }
+                    }
+                    $b['figures'][$fi] = $f;
+                }
+                if (isset($b['note'])) {
+                    $tn = $tb['note'] ?? null;
+                    if (! is_array($tn) || ! $text($b['note'], $tn, 'term', $b['note']) || ! $text($b['note'], $tn, 'text', $b['note'])) {
+                        return null;
+                    }
+                }
+                $out['blocks'][$bi] = $b;
+            }
+        }
+
+        if ($has('table')) {
+            $t = $sec['table'];
+            $tt = $td['table'] ?? null;
+            if (! is_array($tt) || ! $text($t, $tt, 'title', $t) || ! $text($t, $tt, 'footNote', $t)) {
+                return null;
+            }
+            // خانة بخانة: المترجَمة نصّ، وغير فارغة حيث العربية غير فارغة
+            $cells = function (mixed $a, mixed $b) use ($same): bool {
+                if (! $same($a, $b)) {
+                    return false;
+                }
+                foreach (array_values($a) as $i => $c) {
+                    $tc = array_values($b)[$i];
+                    if (! is_string($tc) || (trim((string) $c) !== '' && trim($tc) === '')) {
+                        return false;
+                    }
+                }
+
+                return true;
+            };
+            if (! $cells($t['head'], $tt['head'] ?? null) || ! $same($t['rows'], $tt['rows'] ?? null)) {
+                return null;
+            }
+            foreach ($t['rows'] as $ri => $row) {
+                if (! $cells($row, $tt['rows'][$ri])) {
+                    return null;
+                }
+            }
+            if (isset($t['foot']) && ! $cells($t['foot'], $tt['foot'] ?? null)) {
+                return null;
+            }
+            $t['head'] = $tt['head'];
+            $t['rows'] = $tt['rows'];
+            if (isset($t['foot'])) {
+                $t['foot'] = $tt['foot'];
+            }
+            $out['table'] = $t;
+        }
+
+        if ($has('gallery')) {
+            if (! $same($sec['gallery'], $td['gallery'] ?? null)) {
+                return null;
+            }
+            foreach ($sec['gallery'] as $i => $g) {
+                $tg = $td['gallery'][$i];
+                if (! is_array($tg) || ! $text($g, $tg, 'caption', $g)) {
+                    return null;
+                }
+                $out['gallery'][$i] = $g;
+            }
+        }
+
+        return $out;
     }
 }
