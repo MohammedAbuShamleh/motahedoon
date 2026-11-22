@@ -99,7 +99,22 @@ final class TranslationImporter
             $this->set($section, 'stats', isset($ts['stats'])
                 ? json_encode($ts['stats'], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR)
                 : null);
+            $this->set($section, 'detail', self::encodeDetail($ts['detail'] ?? null));
         }
+    }
+
+    /**
+     * التفصيل الكامل المترجم (المجموعات والكتل والجدول والمعرض) كتلةً JSON
+     * واحدة بترتيب العربية نفسه — كالأرقام. LocalizeContent لا يعرضه إلا إن
+     * طابق بنية العربية تماماً، فلا تختلط اللغتان إن تغيّرت العربية بعده.
+     *
+     * @param  array<string, mixed>|null  $detail
+     */
+    public static function encodeDetail(?array $detail): ?string
+    {
+        return $detail === null || $detail === []
+            ? null
+            : json_encode($detail, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     /** @param list<string> $values */

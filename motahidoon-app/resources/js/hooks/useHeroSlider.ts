@@ -74,14 +74,18 @@ export function useHeroSlider(
 
     const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    /* الصورة الثانية تُحمَّل مسبقاً، والبقية عند الحاجة */
-    const first = host.querySelector<HTMLImageElement>(
-      ".hero__layer:nth-child(2) img[data-src]",
-    );
-    if (first?.dataset.src) {
-      first.src = first.dataset.src;
-      first.removeAttribute("data-src");
-    }
+    /* أول تحميل صورة واحدة فقط (2026-11-22 — اتصال ضعيف في غزة): الثانية
+       قبل موعدها بثوانٍ، وكلّ انتقال يجلب التي بعده (go). مع «تقليل الحركة»
+       لا دوران، فلا تُجلب الثانية أصلاً حتى يطلبها الزائر بالنقر. */
+    const preload = calm ? 0 : window.setTimeout(() => {
+      const second = host.querySelector<HTMLImageElement>(
+        ".hero__layer:nth-child(2) img[data-src]",
+      );
+      if (second?.dataset.src) {
+        second.src = second.dataset.src;
+        second.removeAttribute("data-src");
+      }
+    }, Math.max(1500, dwell - 3000));
 
     if (calm) host.classList.add("is-stopped");
 
@@ -130,6 +134,7 @@ export function useHeroSlider(
 
     return () => {
       clearTimeout(timer.current);
+      clearTimeout(preload);
       zones.forEach((z) => {
         z.removeEventListener("pointerenter", hold);
         z.removeEventListener("pointerleave", free);

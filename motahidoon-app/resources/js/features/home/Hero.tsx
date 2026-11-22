@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useHeroScrim } from "@/hooks/useHeroScrim";
 import { useHeroSlider } from "@/hooks/useHeroSlider";
 import { useSite, useU } from "@/lib/site";
 import type { Pillar } from "@/types";
@@ -113,6 +114,7 @@ export function Hero({
   ];
 
   const { at, go, take } = useHeroSlider(ref, slides.length, DWELL);
+  useHeroScrim(ref, slides.length);   // ستارة مقيسة لكلّ شريحة
 
   return (
     <section

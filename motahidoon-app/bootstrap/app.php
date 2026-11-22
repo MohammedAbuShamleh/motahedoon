@@ -36,6 +36,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 return $response;
             }
 
+            /* مسار غير مسجَّل لا يمرّ بوسيط الويب، فلا يُضبط rootView
+               من HandleInertiaRequests ويعود Inertia إلى 'app' غير الموجود. */
+            Inertia::setRootView('site');
+
             return Inertia::render('NotFound', [
                 'pillars' => collect(app(\App\Services\SiteContent::class)->get('pillars'))
                     ->map(fn (array $p) => ['id' => $p['id'], 'short' => $p['short']])->all(),

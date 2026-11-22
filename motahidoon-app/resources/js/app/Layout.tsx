@@ -6,7 +6,6 @@ import {
   useScrolled,
 } from "@/hooks/useDocumentChrome";
 import { useSmoothWheel } from "@/hooks/useSmoothWheel";
-import { useGlassSheen } from "@/hooks/useGlassSheen";
 import { useFilmstrip, useReveal, useStagger } from "@/hooks/useReveal";
 import { usePage } from "@inertiajs/react";
 import { SiteHeader } from "./SiteHeader";
@@ -29,7 +28,6 @@ export function Layout({
   useScrolled();
   useBannerOffset(Boolean(unapproved));
   useSmoothWheel();
-  useGlassSheen();
   useReveal(key);
   useStagger(key);
   useFilmstrip(key);

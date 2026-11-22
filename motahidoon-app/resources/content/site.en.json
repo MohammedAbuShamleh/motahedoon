@@ -84,6 +84,8 @@
     "الصورة السابقة": "Previous photo",
     "الصورة التالية": "Next photo",
     "عرض الصورة": "View photo",
+    "عرض كل الصور": "Show all photos",
+    "عرض أقل": "Show fewer",
     "محتويات التقرير": "Report contents",
     "الافتتاحية": "Introduction",
     "شرائح الافتتاحية": "Introduction slides"
@@ -99,7 +101,7 @@
   ],
   "founding": {
     "story": [
-      "An independent civil coalition working in outreach, Qur'anic education, development and humanitarian relief, founded in 2026 as a strategic partnership bringing together leading organisations among the largest associations operating in the Gaza Strip (Ibn Baz Charitable Society, Dar Al-Itqan for Teaching the Qur'an, Wahat Al-Usra Society, and Saed Society for Human Development).",
+      "An independent civil coalition working in outreach, Qur'anic education, development and humanitarian relief, founded in 2026 as a strategic partnership bringing together leading organisations among the largest associations operating in the Gaza Strip (Dar Al-Itqan for Teaching the Qur'an, Wahat Al-Usra Society, and Saed Society for Human Development).",
       "The coalition aims to unify efforts and pool shared expertise and resources, moving Gaza's community from emergency relief towards comprehensive recovery and the rebuilding of the human being — through an integrated system meeting religious, outreach, scholarly, Qur'anic, educational, psychological, material and developmental needs across every segment of Palestinian society (orphans, children, women, youth and the elderly)."
     ]
   },
@@ -145,7 +147,6 @@
   "partners": {
     "saed": "Saed Society for Human Development",
     "itqan": "Dar Al-Itqan Society for Teaching the Qur'an",
-    "ibnbaz": "Ibn Baz Charitable Society",
     "basaer": "Basaer Institute for Islamic Sciences",
     "sufaraa": "Sufaraa Al-Dawah",
     "wahat": "Wahat Al-Usra Society",
@@ -156,7 +157,7 @@
       "title": "Faith, Outreach and Authentic Religious Education",
       "short": "Faith & Outreach",
       "coverCaption": "Field gathering of preachers",
-      "orgs": "Ibn Baz Charitable Society | Sufaraa Al-Dawah Team | Basaer Institute for Islamic Sciences",
+      "orgs": "Sufaraa Al-Dawah Team | Basaer Institute for Islamic Sciences",
       "definition": "This outreach and scholarly front represents the highest priority and the backbone of the coalition's work in the Gaza Strip. It acts as a wall of faith and thought that protects the community's belief, steadies hearts, supplies the community with religious learning, and carries outreach into the field among the displaced in camps, gathering points and markets."
     },
     "quran": {
@@ -268,7 +269,102 @@
               "value": "960",
               "unit": "Basaer Institute students"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "The Outreach Department and field activities",
+                "items": [
+                  {
+                    "text": "Delivering 4,359 sermon-lessons during the quarter, with activity peaking in September at 2,403 lessons."
+                  },
+                  {
+                    "text": "Preparing and organising 687 outreach sermons."
+                  },
+                  {
+                    "text": "Carrying out 1,032 outreach rounds, 299 outreach visits, and 22 visits to prominent figures and institutions."
+                  },
+                  {
+                    "text": "Completing 173 reconciliation activities, reflecting a presence that goes beyond awareness-raising to resolving disputes and strengthening social cohesion."
+                  },
+                  {
+                    "text": "Carrying out 45 visits to camps under the programme for leveraging relief work in calling to God, starting in August."
+                  },
+                  {
+                    "text": "Holding 51 outreach gatherings, organising 58 outreach weeks, and supervising 37 prayer spaces."
+                  },
+                  {
+                    "text": "Delivering the “The Influential Preacher 4” course with the participation of 60 students as part of the specialist training track."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "The Scholarly Department and building the student of knowledge",
+                "items": [
+                  {
+                    "text": "Holding 26 administrative meetings to organise and coordinate scholarly work."
+                  },
+                  {
+                    "text": "Sponsoring and running 42 Beginning Knowledge circles, 10 Acquiring Knowledge circles and 4 Grounding Knowledge circles."
+                  },
+                  {
+                    "text": "Holding 160 fixed central study assemblies."
+                  },
+                  {
+                    "text": "Providing scholarly care to 57 sponsored students of knowledge, alongside 28 volunteer students."
+                  },
+                  {
+                    "text": "Organising 4 scholarly courses, followed by 3 graduation ceremonies, and completing 8 scholarly weeks."
+                  },
+                  {
+                    "text": "Recording 25 visits to scholarly figures and bodies, and visiting 28 lessons and study circles."
+                  },
+                  {
+                    "text": "Forming 20 examination committees for the “In the Footsteps of the Beloved ﷺ” competition and organising its honouring ceremony."
+                  },
+                  {
+                    "text": "Completing 13 issues of the monthly book, reviewing 66 scholarly reports, and preparing 39 completed administrative forms and reports."
+                  },
+                  {
+                    "text": "Establishing a dedicated online platform for the “Ascents of Knowledge” programme, strengthening the organisation and accessibility of the scholarly pathway."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Basaer Institute for Islamic Sciences: sustaining education and digital transformation",
+                "items": [
+                  {
+                    "text": "The Institute's report stated that the educational process continued regularly through an online system linking the WhatsApp platform for study, the Moodle platform for examinations, and Drive for archiving. The total number of beneficiaries reached 960 students, of whom 592 were female and 368 male. The data indicate that about 74% of learners are in the 18–35 age group, 15% in the 36–45 group, and 11% aged 46 and over, while the proportion of degree holders among learners reached 52%."
+                  },
+                  {
+                    "text": "Establishing the “Scholarly Council” for the Institute's male and female graduates, with the aim of sustaining scholarly impact after graduation."
+                  },
+                  {
+                    "text": "Preparing written curricula and scholarly materials for all courses in PDF format for students, and printing them for teachers."
+                  },
+                  {
+                    "text": "Completing the electronic archiving of audio, video and written materials and uploading them to Google Drive links."
+                  },
+                  {
+                    "text": "Adopting unified administrative forms, including grade transcripts, enrolment certificates, graduate statements and experience certificates."
+                  }
+                ]
+              },
+              {
+                "num": "4",
+                "title": "Summary of outreach and scholarly impact",
+                "items": [
+                  {
+                    "text": "The value of these achievements lies in the convergence of three tracks: an outreach presence close to people, organised and graduated religious education, and the building of institutional tools that preserve knowledge and support continuity. Combining field work, study circles, training and documentation also prepares the way for the impact of outreach to move from one-off events to a more regular and sustainable pathway."
+                  }
+                ],
+                "recap": true
+              }
+            ]
+          }
         },
         "quran": {
           "lead": "Dar Al-Itqan delivered a large-scale model of Qur'anic education, combining memorisation, revision and examination, technical training for teachers, educational programmes, supervision of centres, community partnerships and media work. The report records a network of 181 operating centres, 237 staff, serving 2,825 students across the Khan Younis, Central and Gaza governorates.",
@@ -305,7 +401,84 @@
               "value": "738",
               "unit": "students in recitation courses"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Institutional reach and Qur'anic achievement",
+                "items": [
+                  {
+                    "text": "2,825 male and female students, of whom 1,517 are female and 1,308 male."
+                  },
+                  {
+                    "text": "181 operating centres, of which 142 are memorisation centres and 39 are Diwan Al-Huffaz centres."
+                  },
+                  {
+                    "text": "377 male and female memorisers completed the memorisation of the Noble Qur'an, according to the indicator given in the report."
+                  },
+                  {
+                    "text": "Achieving 2,271 Qur'an parts memorised and 11,756 parts revised."
+                  },
+                  {
+                    "text": "Conducting 3,200 individual and group examinations, of which 1,625 were individual and 1,575 group examinations."
+                  },
+                  {
+                    "text": "The participation of 1,220 male and female participants in central and individual Qur'anic continuous recitation events."
+                  },
+                  {
+                    "text": "Delivering 62 courses in the rules of recitation and tajweed, benefiting 738 male and female students, ranging across introductory and advanced levels, mastery of Al-Fatiha, correction of common errors, qualification for ijazah (sanad), Al-Qaida Al-Nuraniyya, and Tuhfat Al-Atfal."
+                  },
+                  {
+                    "text": "Recording 481 entries in central Qur'anic competitions, including “With the Noble Scribes”, “Pearls of Itqan 2”, and the recitation-rules course curriculum examination."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "Supervision and quality assurance",
+                "items": [
+                  {
+                    "text": "Carrying out 1,274 supervisory visits and 223 performance development visits."
+                  },
+                  {
+                    "text": "Holding 76 meetings with teachers and supervisors, and 132 meetings with parents."
+                  },
+                  {
+                    "text": "Delivering 2,564 exhortations and lessons, 1,595 educational lessons, and 230 lessons in theoretical and practical tajweed."
+                  },
+                  {
+                    "text": "These figures show that Dar Al-Itqan's system is not limited to memorisation circles, but includes regular performance follow-up, assessment of students' levels, communication with families, and raising the competence of staff, strengthening the quality of outcomes and the stability of the educational process.",
+                    "recap": true
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Scholarly and educational programmes and supporting activities",
+                "items": [
+                  {
+                    "text": "The programmes included the sessions “The Eloquence of the Uthmani Script”, “His Character Was the Qur'an” and “Reviving the Sunnahs of the Beloved”, the “Gathering of the Proficient” programme, a course in the science of maqamat, the Qur'anic camp, and scholarly and exegesis sessions for Diwan students. The educational programmes also included “My Values Notebook”, the “My Prayer, My Life” campaign, “My Hijab, My Modesty”, “Making Impact”, “The Young Preacher”, and theatrical and values activities."
+                  },
+                  {
+                    "text": "Delivering 12 activities and programmes supporting the curriculum, including 615 activities or implementations according to the report's classification, with their targets reaching more than 5,907 beneficiaries in addition to the general public."
+                  },
+                  {
+                    "text": "Honouring 55 beneficiaries at the ceremony honouring ijazah holders on 24 August, and 300 beneficiaries at events honouring memorisers of Qur'an parts; a total of 355 honourees at the recorded central events."
+                  },
+                  {
+                    "text": "Recording 10 partnerships and agreements with institutions, schools and societies, 5 new programmes and initiatives, 6 institutional visits to learn about Dar Al-Itqan's experience, and 5 participations in community events and conferences."
+                  },
+                  {
+                    "text": "Recording 10 cases of reconciling family and social relationships, and 112 cases under the indicator of adherence to Islamic dress."
+                  },
+                  {
+                    "text": "Receiving 260 applications for enrolment in the centres and 371 applications to join from male and female teachers, indicating growing community demand."
+                  }
+                ]
+              }
+            ]
+          }
         },
         "women": {
           "lead": "The Women's Department's data shows work distributed between central foundation-building and delivery across the governorates, with attention to educational, scholarly and outreach pathways, the sponsorship of women preachers, educational messaging, social activities and online work. The significance of this area lies in reaching women and girls through programmes that combine awareness-building, values, training, and a sustained educational connection.",
@@ -334,7 +507,78 @@
               "value": "247",
               "unit": "in educational groups"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Central achievements",
+                "items": [
+                  {
+                    "text": "Forming 26 educational circles for women, 14 Sowing Seeds circles for girl students, and 14 circles for the Young Prodigy programme."
+                  },
+                  {
+                    "text": "Graduating 40 students from the two “Shaping Awareness” courses – Level One in the Southern Governorate."
+                  },
+                  {
+                    "text": "Sending “#Kunu_Rabbaniyyin” messages to 260 women according to the central indicator, while the governorates' activity table records 6,240 messages; these are two figures that appear in two different places in the source and are not added together, as they are treated as two separate activities pending a review of the counting method."
+                  },
+                  {
+                    "text": "Preparing a central plan for the Women's Department for the rest of 2026, alongside plans for the governorates and for the scholarly, outreach and educational women's departments."
+                  },
+                  {
+                    "text": "Sponsoring 17 women preachers since the start of the year, and delivering a project sponsoring 74 women preachers for two months."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "Key activities in the governorates",
+                "items": [
+                  {
+                    "text": "Recording administrative, scholarly and outreach meetings, general meetings for women and women preachers, and meetings for female students of study circles."
+                  },
+                  {
+                    "text": "Delivering outreach and scholarly lessons, outreach, scholarly and social visits, outreach courses, outreach rounds, book-reading sessions, and educational meetings with female students."
+                  },
+                  {
+                    "text": "Forming educational circles, and holding recreational days, trips, events for the continuous recitation of parts of the Noble Qur'an, and competitions."
+                  },
+                  {
+                    "text": "Recording 104 sessions of the core circles according to the Educational Department's table, and 36 sessions of the Diwan circles in the same table, alongside qualification sessions, central educational bulletins and educational visits to the circles."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "The Muslima online Qur'an recitation platform",
+                "items": [
+                  {
+                    "text": "Women's work extended to the online track through the Muslima recitation platform, and the report recorded 7 memorisation circles with 80 beneficiaries participating, 104 Qur'an recitation groups with 180 beneficiaries participating, 13 recitation and tajweed courses linked to an indicator of 235 beneficiaries, 13 outreach lessons with 500 beneficiaries, 25 educational groups with 247 beneficiaries, one scholarly course with 560 beneficiaries, 4 in-person activities with the participation of two people, and 10 administrative meetings with the participation of 19 people. These indicators are presented as given, noting that the numbers of implementations and participants differ from one activity to another."
+                  }
+                ]
+              },
+              {
+                "num": "4",
+                "title": "Educational camps and empowerment",
+                "items": [
+                  {
+                    "text": "The Education Office's report recorded the delivery of two camps with educational, developmental and recreational aims: the “Towards Excellence” camp for male students in grades nine and ten, with a target of 60 students, and the “Impact Makers” camp for girls in grades seven to ten, with a target of 80 students. The programmes included lectures in Islamic sciences, identity and history, values-based dialogues, workshops in leadership, management, critical thinking and problem-solving, life skills, physical and recreational activities, and the formation of educational groups. The target number should not be assumed to equal actual attendance unless this is explicitly stated."
+                  }
+                ]
+              },
+              {
+                "num": "5",
+                "title": "Summary of the women's area",
+                "items": [
+                  {
+                    "text": "The data confirm the variety of tools the Women's Department uses to reach its target groups: regular circles, lessons, sponsorships, messages, camps, online recitation groups, and social and educational activities. They also highlight the need to standardise the definition of monthly and central indicators, so that growth and impact can be measured more easily in future reports."
+                  }
+                ],
+                "recap": true
+              }
+            ]
+          }
         },
         "education": {
           "lead": "The Education Office combined direct activities for students with institutional planning to develop educational infrastructure. Work was not limited to camps: it included preparing a new school project, licensing procedures, recruiting staff, securing land, beginning construction, marketing furnishing projects, and monitoring the readiness of facilities.",
@@ -359,7 +603,88 @@
               "value": "3",
               "unit": "furnishing projects"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "The “Towards Excellence” camp – July 2026",
+                "items": [
+                  {
+                    "term": "Target group",
+                    "text": "60 male students from basic grades nine and ten."
+                  },
+                  {
+                    "text": "Delivering lectures in the Islamic sciences that no Muslim may be ignorant of, covering creed, jurisprudence, hadith and the Noble Qur'an, with students assigned to prepare summaries of the lectures."
+                  },
+                  {
+                    "text": "Delivering dialogue-based lectures and interactive activities to strengthen values and morals, and workshops in leadership, management, critical thinking and problem-solving."
+                  },
+                  {
+                    "text": "Delivering lectures in Islamic history and civilisation, as well as cultural, sports and recreational activities and sea trips."
+                  },
+                  {
+                    "text": "Forming two educational groups with a total of 32 students, according to the note given in the report."
+                  },
+                  {
+                    "text": "Introducing participants to the coalition's organisations, including Dar Al-Itqan, Saed, Sufaraa Al-Dawah and Al-Hamd Medical Centre, noting that some students joined Dar Al-Itqan's programmes."
+                  },
+                  {
+                    "text": "Assigning leadership, administrative and educational tasks to the facilitators, and securing sponsorship for the camp from the Quebec Solidarity Society, alongside other funding efforts."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "The “Impact Makers” camp – August 2026",
+                "items": [
+                  {
+                    "term": "Target group",
+                    "text": "80 female students from grades seven to ten."
+                  },
+                  {
+                    "text": "Delivering lectures in Islamic sciences, values and morals, and programmes to strengthen the identity of the Muslim girl and the importance of the family."
+                  },
+                  {
+                    "text": "Delivering workshops in cooking and handicrafts, alongside cultural and physical activities, interactive games and sea trips."
+                  },
+                  {
+                    "text": "Forming two educational groups with a total of 34 female students, according to the note given in the report."
+                  },
+                  {
+                    "text": "Training the female facilitators in leadership, administrative and educational tasks, and introducing participants to the partner organisations."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Al-Shuaa School project and developing the learning environment – September 2026",
+                "items": [
+                  {
+                    "text": "Preparing 3 project proposals and estimated costs for the project to establish Al-Shuaa Private School, with the project approved according to the report."
+                  },
+                  {
+                    "text": "Completing 10 licensing procedures."
+                  },
+                  {
+                    "text": "Searching for plots of land and approving a plot in cooperation with the Society's executive management."
+                  },
+                  {
+                    "text": "Recruiting 11 teaching staff, conducting interviews and selecting suitable teachers."
+                  },
+                  {
+                    "text": "Beginning construction works, and marketing and delivering 3 projects to furnish the school with funding from several institutions."
+                  },
+                  {
+                    "text": "Monitoring the readiness of the facilities of Judhoor Al-Saada School for the start of the school year, noting the need to maintain some classrooms."
+                  },
+                  {
+                    "text": "The report identified challenges relating to the high costs of camps, operation and maintenance, and the scarcity of suitable land for building schools. It recommended expanding the Education Office to activate educational supervision of schools, and allocating part of the Society's relief projects to support the Office's programmes."
+                  }
+                ]
+              }
+            ]
+          }
         },
         "relief": {
           "lead": "According to the joint documentation report between Saed and Al-Hamd Medical Centre, during the third quarter Saed Society delivered 1,125 relief and development projects, with 465,248 recorded beneficiary instances, at a total cost of USD 1,935,006. Interventions were distributed across emergency relief, orphan sponsorship and social care, education, and the health sector.",
@@ -396,7 +721,118 @@
               "value": "6",
               "unit": "health projects"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "5",
+                "title": "Managing the response and challenges",
+                "items": [
+                  {
+                    "text": "The report pointed to security risks facing teams and volunteers, restrictions on supply chains and shortages of shelter and construction materials, medicines, medical supplies and fuel, in addition to limited funding relative to needs. It recommended expanding partnerships and sustainable funding, developing a strategic food and medical stockpile, measuring beneficiary satisfaction, and continuing documentation based on impact measurement."
+                  }
+                ]
+              }
+            ],
+            "blocks": [
+              {
+                "title": "Relief sector:",
+                "figures": [
+                  {
+                    "value": "849",
+                    "label": "Number of projects",
+                    "unit": "projects"
+                  },
+                  {
+                    "value": "460,932",
+                    "label": "Beneficiary instances",
+                    "unit": "beneficiary instances"
+                  },
+                  {
+                    "value": "1,748,625",
+                    "prefix": "$",
+                    "label": "Budget"
+                  }
+                ],
+                "note": {
+                  "term": "Key interventions",
+                  "text": "Delivering feeding programmes, providing fresh water and water supply, charitable bread, direct cash assistance, emergency shelter, children's needs, food parcels and fresh vegetable parcels."
+                }
+              },
+              {
+                "title": "Orphan sponsorship and social care:",
+                "figures": [
+                  {
+                    "value": "252",
+                    "label": "Number of projects",
+                    "unit": "projects"
+                  },
+                  {
+                    "value": "555",
+                    "label": "Beneficiary instances",
+                    "unit": "beneficiary instances"
+                  },
+                  {
+                    "value": "106,449",
+                    "prefix": "$",
+                    "label": "Budget"
+                  }
+                ],
+                "note": {
+                  "term": "Key interventions",
+                  "text": "Providing regular living sponsorships for orphans, psychosocial support programmes, and social empowerment for mothers who are breadwinners, to reduce children's dropout into the labour market."
+                }
+              },
+              {
+                "title": "Education sector:",
+                "figures": [
+                  {
+                    "value": "18",
+                    "label": "Number of projects",
+                    "unit": "projects"
+                  },
+                  {
+                    "value": "3,505",
+                    "label": "Beneficiary instances",
+                    "unit": "beneficiary instances"
+                  },
+                  {
+                    "value": "49,889",
+                    "prefix": "$",
+                    "label": "Budget"
+                  }
+                ],
+                "note": {
+                  "term": "Key interventions",
+                  "text": "Setting up temporary classrooms, securing stationery and school supplies, providing incentives and prizes, and sponsoring university fees for affected students."
+                }
+              },
+              {
+                "title": "Health sector:",
+                "figures": [
+                  {
+                    "value": "6",
+                    "label": "Number of projects",
+                    "unit": "projects"
+                  },
+                  {
+                    "value": "256",
+                    "label": "Beneficiary instances",
+                    "unit": "beneficiary instances"
+                  },
+                  {
+                    "value": "30,043",
+                    "prefix": "$",
+                    "label": "Budget"
+                  }
+                ],
+                "note": {
+                  "term": "Key interventions",
+                  "text": "Providing critical medicines and medical supplies, and supporting the operation of hospitals and health centres to reduce complications and save lives."
+                }
+              }
+            ]
+          }
         },
         "health": {
           "lead": "Al-Hamd Medical Centre in Al-Mawasi, Khan Younis recorded 7,567 medical visits and services during the third quarter, across 12 clinics and departments, with recorded operating revenue and humanitarian projects amounting to ILS 152,607.",
@@ -429,7 +865,111 @@
               "value": "639",
               "unit": "services under the Judhoor project"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "2",
+                "title": "Revenue and humanitarian programmes",
+                "items": [
+                  {
+                    "text": "Total revenue: ILS 152,607."
+                  },
+                  {
+                    "text": "Specialist medical clinics: ILS 46,586, according to the financial indicator given in the report."
+                  },
+                  {
+                    "text": "Dental clinic: ILS 44,339."
+                  },
+                  {
+                    "text": "Pharmacy: ILS 32,604."
+                  },
+                  {
+                    "text": "Laboratory: ILS 29,078."
+                  },
+                  {
+                    "text": "Providing 639 medical services under the Judhoor project, 108 services for patients from poor households, 143 services for sponsored orphans, 86 services under the medical circumcision programme, and 24 services for Al-Wifaq Society for Children and Women."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Developing operations",
+                "items": [
+                  {
+                    "text": "Purchasing and launching specialised software to manage the work of the medical testing laboratory, with the aim of raising the efficiency of test management and the accuracy of results."
+                  },
+                  {
+                    "text": "Maintaining the variety of services and continuing the evening shift to widen access."
+                  },
+                  {
+                    "text": "Developing accounting and administrative follow-up tools and linking them to operational records and daily inventory movements."
+                  },
+                  {
+                    "text": "The financial report gives a total of ILS 152,607, and also states that some humanitarian services are supported by projects and partnerships. In the final financial presentation, operating revenue should be separated from the value of funding or in-kind support, if additional detailed data become available."
+                  }
+                ]
+              }
+            ],
+            "table": {
+              "title": "Activity of departments and services:",
+              "head": [
+                "Department",
+                "Number of services"
+              ],
+              "rows": [
+                [
+                  "Obstetrics and gynaecology",
+                  "1,793 services."
+                ],
+                [
+                  "Pharmacy",
+                  "1,766 dispensing services."
+                ],
+                [
+                  "Laboratory",
+                  "1,519 tests."
+                ],
+                [
+                  "Dental clinic",
+                  "650 visits."
+                ],
+                [
+                  "Speech therapy",
+                  "428 services."
+                ],
+                [
+                  "General medicine",
+                  "417 services."
+                ],
+                [
+                  "Physiotherapy",
+                  "406 services."
+                ],
+                [
+                  "Nursing",
+                  "339 services."
+                ],
+                [
+                  "Circumcision",
+                  "86 services."
+                ],
+                [
+                  "Dermatology",
+                  "85 services."
+                ],
+                [
+                  "Mental health",
+                  "61 services."
+                ],
+                [
+                  "Physiotherapy / Sanad field service",
+                  "17 services."
+                ]
+              ],
+              "footNote": "7,567 medical visits and services across 12 clinics and medical departments"
+            }
+          }
         },
         "media": {
           "lead": "The unified media report showed that documentation was not a marginal activity but a means of highlighting field efforts, widening reach, and building trust with partners and donors. Across the five organisations' platforms, 760 posts were published on Facebook and Instagram, recording 15,919,211 views, 10,373,513 reach and 533,241 interactions during the quarter.",
@@ -466,7 +1006,124 @@
               "value": "31,188",
               "unit": "Instagram followers"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Production and coverage",
+                "items": [
+                  {
+                    "text": "1,197 field shoots, of which 920 were for Saed and 214 for Dar Al-Itqan."
+                  },
+                  {
+                    "text": "2,199 edits/reels produced, of which 1,840 were for Saed and 194 for Dar Al-Itqan."
+                  },
+                  {
+                    "text": "207 designs according to the aggregation given in the report: 61 for Saed and 72 for Dar Al-Itqan."
+                  },
+                  {
+                    "text": "343 posts classified on the pages of the three organisations according to the unified classification: 157 for Dar Al-Itqan and 76 for Saed."
+                  },
+                  {
+                    "text": "The classified posts were distributed into 178 news coverage items, 46 ongoing programmes or series, 41 awareness and outreach campaigns, 36 impact stories and mission-driven media items, 18 items for donation and marketing campaigns, 6 items for occasions and seasons, and 18 announcements and designs."
+                  },
+                  {
+                    "term": "Methodological note",
+                    "text": "The media report contains more than one statistical scope: some indicators relate to the three organisations in the production table, some cover the five organisations in the platform data, and some relate to the classification of Facebook posts for three organisations. These indicators are therefore not added to one another as independent counts."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Digital impact by platform",
+                "items": [
+                  {
+                    "text": "Facebook: 448 posts, 10,460,374 views, 6,988,918 reach and 282,826 interactions."
+                  },
+                  {
+                    "text": "Instagram: 312 posts, 5,458,837 views, 3,384,595 reach and 250,415 interactions."
+                  },
+                  {
+                    "text": "The number of Facebook followers of the five organisations rose from 317,000 in the second quarter to 376,300 in the third quarter, an increase of 59,300 followers according to the report."
+                  },
+                  {
+                    "text": "Total Instagram followers reached 31,188, and the accounts recorded 6,267 new followers during the quarter, compared with 1,985 in the second quarter."
+                  }
+                ]
+              },
+              {
+                "num": "4",
+                "title": "Notable campaigns and content",
+                "items": [
+                  {
+                    "term": "Dar Al-Itqan",
+                    "text": "“Pearls of Itqan 2” achieved 3.63 million views and “With the Noble Scribes” 1.35 million views, while the film “So Your Lord Willed” achieved more than 1.5 million views across the two platforms mentioned in the report."
+                  },
+                  {
+                    "term": "Saed",
+                    "text": "Coverage of the thousand food parcels campaign through 8 posts achieved 257,638 views, and a post on assistance for war amputees achieved 148,500 views. The Society also released awareness materials under the “Dignity Campaign” on filming during distribution, the trust of donations, and preserving the dignity of beneficiaries."
+                  },
+                  {
+                    "term": "Sufaraa Al-Dawah",
+                    "text": "Publishing 94 video clips according to the qualitative summary, with coverage of outreach rounds and convoys and of the two series “Glorifying the Lord and the Religion” and “And Turn to God in Repentance”."
+                  },
+                  {
+                    "text": "The media performance reflects the ability of visual and story-based content to widen reach, while underlining the importance of continuing to measure engagement and its conversion into actual support, participation or benefit. The media report recommends increasing reels production, improving the regularity of publishing, and linking reach indicators to programme results on the ground.",
+                    "recap": true
+                  }
+                ]
+              }
+            ],
+            "table": {
+              "title": "Digital impact by organisation:",
+              "head": [
+                "Organisation",
+                "Posts",
+                "Views",
+                "Reach",
+                "Interactions"
+              ],
+              "rows": [
+                [
+                  "Dar Al-Itqan",
+                  "249 posts",
+                  "13,347,144 views",
+                  "8,926,807 reach",
+                  "504,408 interactions"
+                ],
+                [
+                  "Saed",
+                  "114 posts",
+                  "1,206,007 views",
+                  "706,020 reach",
+                  "10,081 interactions"
+                ],
+                [
+                  "Sufaraa Al-Dawah",
+                  "156 posts",
+                  "142,846 views",
+                  "85,296 reach",
+                  "2,752 interactions"
+                ],
+                [
+                  "Wahat Al-Usra",
+                  "24 posts",
+                  "25,318 views",
+                  "12,285 reach",
+                  "715 interactions"
+                ]
+              ],
+              "foot": [
+                "Unified total",
+                "760 posts",
+                "15,919,211 views",
+                "10,373,513 reach",
+                "533,241 interactions"
+              ],
+              "footNote": "The figure of 15,919,211 views is the unified total given for the five organisations' platforms, and the organisations' individual view totals are not added to it."
+            }
+          }
         }
       }
     },
@@ -532,7 +1189,64 @@
               "value": "$ 62,185",
               "unit": "seasonal cost"
             }
-          ]
+          ],
+          "detail": {
+            "blocks": [
+              {
+                "title": "General relief and food security:",
+                "figures": [
+                  {
+                    "value": "821",
+                    "label": "Number of projects",
+                    "unit": "projects"
+                  },
+                  {
+                    "value": "375,495",
+                    "label": "Number of beneficiaries",
+                    "unit": "beneficiary instances"
+                  },
+                  {
+                    "value": "1,465,362",
+                    "prefix": "$",
+                    "label": "Total cost"
+                  }
+                ],
+                "note": {
+                  "term": "Key interventions",
+                  "text": "Meals, safe drinking water, charitable bread, food and vegetable parcels, tents and emergency shelter, cash assistance, clothing and hygiene supplies."
+                }
+              },
+              {
+                "title": "Seasonal projects (Ramadan and Eid):",
+                "figures": [
+                  {
+                    "value": "53",
+                    "label": "Number of projects",
+                    "unit": "projects"
+                  },
+                  {
+                    "value": "6,218",
+                    "label": "Number of beneficiaries",
+                    "unit": "beneficiary instances"
+                  },
+                  {
+                    "value": "62,185",
+                    "prefix": "$",
+                    "label": "Total cost"
+                  }
+                ],
+                "note": {
+                  "term": "Key interventions",
+                  "text": "Distributing generous Ramadan parcels, distributing sacrificial (udhiyah) meat, and bringing joy to displaced families during the Eids."
+                }
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Eid clothing — one of the seasonal projects"
+              }
+            ]
+          }
         },
         "education": {
           "lead": "The Education Office at Saed Society, in integration with partner organisations, worked to protect younger generations from educational interruption.",
@@ -553,7 +1267,250 @@
               "value": "60",
               "unit": "students in the summer camp"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "items": [
+                  {
+                    "term": "Classroom lessons and values reinforcement",
+                    "text": "Delivering 997 classroom lessons to 3,360 male and female students in 7 schools at the preparatory and secondary stages, combining the school curriculum with the behavioural values reinforcement programme."
+                  },
+                  {
+                    "term": "School competitions",
+                    "text": "Holding competitions in Qur'an memorisation, beautiful voices and poetry exchange, and honouring outstanding students."
+                  },
+                  {
+                    "term": "The “Towards Excellence” camp",
+                    "text": "Launching a specialised summer camp with support from “Saed” and the “Quebec Solidarity Society/Canada”, reaching 60 students to strengthen leadership skills and provide psychological support."
+                  },
+                  {
+                    "term": "Development and engineering planning",
+                    "text": "Preparing the environmental analysis and organisational structure for the Education Office, and completing the financial and engineering study for rebuilding Saed School to ensure the continuity of education."
+                  }
+                ]
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Values reinforcement programme"
+              },
+              {
+                "caption": "Values activity for children"
+              }
+            ]
+          }
+        },
+        "dawah": {
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Sufaraa Al-Dawah (the field outreach battalion)",
+                "items": [
+                  {
+                    "term": "The major field campaign “Be Merciful to One Another”",
+                    "text": "Launching and expanding the “Be Merciful to One Another” campaign, which toured the streets, markets and camps of the Strip to consolidate the values of mutual solidarity, brotherhood and tolerance, and to provide religious guidance and moral support to the displaced in the field."
+                  },
+                  {
+                    "term": "Comprehensive outreach gatherings and evenings",
+                    "text": "Organising a large outreach evening with the participation of more than 50 preachers and mentors, who were then distributed across gathering points and camps to deliver sermons and moving exhortations and to strengthen the steadfastness of citizens."
+                  },
+                  {
+                    "term": "Rounds in markets and public squares",
+                    "text": "Carrying out dozens of intensive field outreach rounds in the largest gathering points and markets (such as Al-Sahaba Market and the shelter camps), which included distributing outreach publications, engaging directly with people, and answering their requests for religious rulings and their everyday religious questions."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "Basaer Institute for Islamic Sciences (the digital academic edifice)",
+                "items": [
+                  {
+                    "term": "Advanced academic education and overcoming obstacles",
+                    "text": "The Institute succeeded in managing and updating its comprehensive Moodle learning platform and its specialised interaction groups, and fully succeeded in running the second semester in a modern, interactive teaching style that defies the conditions of disconnection and displacement."
+                  },
+                  {
+                    "term": "Intensive scholarly broadcasting",
+                    "text": "Completing 286 audio and video lectures and scholarly materials covering the principal courses of the Islamic sciences: (pure Islamic creed, the jurisprudence of contemporary financial transactions, family jurisprudence, the jurisprudence of outreach and jihad, contemporary jurisprudential issues, and the sciences of the noble Prophetic hadith)."
+                  },
+                  {
+                    "term": "Enrolment and graduation",
+                    "text": "Enrolling 128 new male and female students during this quarter, bringing the total number of students committed to academic study to 636, and the Institute celebrated the qualification and graduation of 164 male and female graduates awarded the diploma in Islamic sciences, to serve as preachers and mentors among their people."
+                  }
+                ]
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Field outreach round"
+              },
+              {
+                "caption": "Scholarly lesson"
+              },
+              {
+                "caption": "Public lecture"
+              }
+            ]
+          }
+        },
+        "quran": {
+          "detail": {
+            "groups": [
+              {
+                "items": [
+                  {
+                    "term": "Qur'anic staff and infrastructure",
+                    "text": "Leading and operating a large Qur'anic system of 227 male and female staff (117 male, 110 female) distributed across 171 integrated Qur'an centres (comprising 28 Diwan Al-Huffaz centres and 143 memorisation centres) spread across the Khan Younis, Central and Gaza governorates."
+                  },
+                  {
+                    "term": "Students and memorisation achievements",
+                    "text": "Hosting and nurturing 4,670 male and female students (2,096 male, 2,574 female). This quarter was crowned by 32 male and female memorisers completing the memorisation of the entire Book of God Almighty, with 1,900 new parts memorised and 9,000 parts thoroughly revised."
+                  }
+                ]
+              },
+              {
+                "title": "Continuous recitation and Qur'an completion events:",
+                "items": [
+                  {
+                    "text": "Delivering Qur'anic continuous recitation projects in a single sitting: 105 participants reciting 10 parts, and 355 participants reciting 5 parts."
+                  },
+                  {
+                    "text": "Delivering complete individual recitations for 276 male and female students."
+                  },
+                  {
+                    "text": "Organising an exceptional honouring ceremony for 155 male and female doctors who recited the Book of God from memory, in the field of service."
+                  },
+                  {
+                    "term": "Scholarly and educational courses",
+                    "text": "Holding foundational courses in tajweed and Arabic reading for 910 participants, and delivering 951 specialised tajweed lessons, 4,296 educational lessons and 3,637 live faith exhortations inside memorisation centres and prayer spaces."
+                  }
+                ]
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Memorisation circle"
+              },
+              {
+                "caption": "Honouring at the doctors' recitation event"
+              }
+            ]
+          }
+        },
+        "women": {
+          "detail": {
+            "groups": [
+              {
+                "items": [
+                  {
+                    "term": "Sponsorship of orphans and families",
+                    "text": "Delivering 241 monthly cash sponsorship projects and comprehensive care for 584 orphans and dignified families in need, at a cost of USD 179,971."
+                  },
+                  {
+                    "term": "Wahat Al-Usra Society",
+                    "text": "Distributing “Dignity Bags” and Eid sweets, holding an iftar for those fasting on the Day of Arafah, delivering psychological support days and field competitions in the camps, and launching the “Comprehensive Care for Orphans' Mothers” programme and the “5 Minutes Make a Difference” series."
+                  }
+                ]
+              },
+              {
+                "title": "The Central Women's Department and the “Muslima” programme:",
+                "items": [
+                  {
+                    "term": "The Muslima online programme",
+                    "text": "Running 286 Qur'an recitation groups, 70 memorisation circles, 150 outreach lessons, 500 educational groups and 247 recreational days."
+                  },
+                  {
+                    "term": "Women's field work",
+                    "text": "Delivering 966 outreach lessons, 62 scholarly lessons, 64 outreach visits and 38 social visits, and disseminating 13,000 faith messages (#Kunu_Rabbaniyyin)."
+                  },
+                  {
+                    "term": "Recreational activities and psychological relief",
+                    "text": "Delivering 12 social and psychological projects reaching 18,151 children and women, at a cost of USD 207,917."
+                  }
+                ]
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Classroom session"
+              },
+              {
+                "caption": "Psychological support day"
+              }
+            ]
+          }
+        },
+        "media": {
+          "detail": {
+            "groups": [
+              {
+                "title": "Digital transformation and information technology:",
+                "items": [
+                  {
+                    "text": "Developing the memorisation circle management system for Dar Al-Itqan (a mobile app for teachers + a website)."
+                  },
+                  {
+                    "text": "Developing the preacher management and follow-up system for the Sufaraa Al-Dawah team."
+                  },
+                  {
+                    "text": "Developing the online project management and follow-up system for Saed Society."
+                  },
+                  {
+                    "text": "Updating and developing the profile websites of all partner organisations."
+                  }
+                ]
+              }
+            ],
+            "table": {
+              "title": "Summary of coverage and digital engagement:",
+              "head": [
+                "Organisation",
+                "Edits",
+                "Posts",
+                "Views",
+                "Reach"
+              ],
+              "rows": [
+                [
+                  "Dar Al-Itqan",
+                  "93 edits",
+                  "281 posts",
+                  "10,979,096 views",
+                  "4.69M reach."
+                ],
+                [
+                  "Saed Society",
+                  "1,770 edits",
+                  "189 posts",
+                  "1,416,633 views",
+                  "807k reach."
+                ],
+                [
+                  "Sufaraa Al-Dawah",
+                  "59 edits",
+                  "119 posts",
+                  "196,235 views",
+                  "118k reach."
+                ],
+                [
+                  "Wahat Al-Usra",
+                  "Digital posts",
+                  "37 posts",
+                  "37,144 views",
+                  "20k reach."
+                ]
+              ],
+              "foot": [
+                "Unified total",
+                "1,959 edits",
+                "772 posts",
+                "12,013,597 views",
+                "5.86M reach."
+              ],
+              "footNote": "2,970 field shoots"
+            }
+          }
         }
       }
     }

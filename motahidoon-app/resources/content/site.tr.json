@@ -84,6 +84,8 @@
     "الصورة السابقة": "Önceki fotoğraf",
     "الصورة التالية": "Sonraki fotoğraf",
     "عرض الصورة": "Fotoğrafı görüntüle",
+    "عرض كل الصور": "Tüm fotoğrafları göster",
+    "عرض أقل": "Daha az göster",
     "محتويات التقرير": "Rapor içeriği",
     "الافتتاحية": "Giriş",
     "شرائح الافتتاحية": "Giriş slaytları"
@@ -99,7 +101,7 @@
   ],
   "founding": {
     "story": [
-      "Davet, Kur'an eğitimi, kalkınma ve insani yardım alanlarında çalışan bağımsız bir sivil koalisyon olup, Gazze Şeridi'nde faaliyet gösteren en büyük derneklerin önde gelenlerini bir araya getiren stratejik bir ortaklık olarak 2026 yılında kurulmuştur (İbn Baz Hayır Derneği, Dâru'l-İtkân Kur'an Öğretim Derneği, Vâhatü'l-Usra Derneği ve Sâid İnsani Kalkınma Derneği).",
+      "Davet, Kur'an eğitimi, kalkınma ve insani yardım alanlarında çalışan bağımsız bir sivil koalisyon olup, Gazze Şeridi'nde faaliyet gösteren en büyük derneklerin önde gelenlerini bir araya getiren stratejik bir ortaklık olarak 2026 yılında kurulmuştur (Dâru'l-İtkân Kur'an Öğretim Derneği, Vâhatü'l-Usra Derneği ve Sâid İnsani Kalkınma Derneği).",
       "Koalisyon; çabaları birleştirmeyi, ortak uzmanlık ve kaynakları değerlendirerek Gazze toplumunu acil yardım aşamasından kapsamlı iyileşme ve insanın yeniden inşası aşamasına taşımayı hedefler. Bunu, Filistin toplumunun bütün kesimlerinin (yetimler, çocuklar, kadınlar, gençler ve yaşlılar) dinî, davet, ilmî, Kur'anî, eğitsel, psikolojik, maddi ve kalkınmaya dönük ihtiyaçlarını karşılayan bütüncül bir sistemle yapar."
     ]
   },
@@ -145,7 +147,6 @@
   "partners": {
     "saed": "Sâid İnsani Kalkınma Derneği",
     "itqan": "Dâru'l-İtkân Kur'an Öğretim Derneği",
-    "ibnbaz": "İbn Baz Hayır Derneği",
     "basaer": "Besâir İslamî İlimler Enstitüsü",
     "sufaraa": "Sufarâu'd-Da've",
     "wahat": "Vâhatü'l-Usra Derneği",
@@ -156,7 +157,7 @@
       "title": "İman, Davet ve Köklü Dinî Eğitim",
       "short": "İman ve Davet",
       "coverCaption": "Davetçilerin saha buluşması",
-      "orgs": "İbn Baz Hayır Derneği | Sufarâu'd-Da've Ekibi | Besâir İslamî İlimler Enstitüsü",
+      "orgs": "Sufarâu'd-Da've Ekibi | Besâir İslamî İlimler Enstitüsü",
       "definition": "Bu davet ve ilim cephesi, koalisyonun Gazze Şeridi'ndeki çalışmasının en öncelikli alanı ve omurgasıdır. Toplumun inancını koruyan, kalpleri sabitleyen, topluma dinî ilim azığı sağlayan ve kamplardaki yerinden edilmişler ile toplanma alanları ve çarşılarda sahaya davet taşıyan imanî ve fikrî bir settir."
     },
     "quran": {
@@ -268,7 +269,102 @@
               "value": "960",
               "unit": "Besâir Enstitüsü öğrencisi"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Davet Birimi ve Saha Faaliyetleri",
+                "items": [
+                  {
+                    "text": "Çeyrek boyunca 4,359 vaaz dersi verilmesi; faaliyet, 2,403 dersle Eylül ayında zirveye ulaştı."
+                  },
+                  {
+                    "text": "687 davet hutbesinin hazırlanması ve düzenlenmesi."
+                  },
+                  {
+                    "text": "1,032 davet turu, 299 davet ziyareti ve önde gelen şahsiyet ve kurumlara 22 ziyaret gerçekleştirilmesi."
+                  },
+                  {
+                    "text": "Ara bulma amaçlı 173 faaliyetin gerçekleştirilmesi; bu, bilinçlendirmenin ötesine geçerek anlaşmazlıkların çözümüne ve toplumsal kenetlenmenin güçlendirilmesine uzanan bir varlığı yansıtmaktadır."
+                  },
+                  {
+                    "text": "Ağustos ayından itibaren, yardım çalışmalarının Allah'a davette değerlendirilmesi programı kapsamında kamplara 45 ziyaret gerçekleştirilmesi."
+                  },
+                  {
+                    "text": "51 davet buluşması yapılması, 58 davet haftası düzenlenmesi ve 37 namazgâhın denetlenmesi."
+                  },
+                  {
+                    "text": "Nitelikli eğitim hattı kapsamında 60 öğrencinin katılımıyla “Etkili Hatip 4” kursunun düzenlenmesi."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "İlim Birimi ve İlim Talebesinin Yetiştirilmesi",
+                "items": [
+                  {
+                    "text": "İlmî çalışmayı düzenlemek ve koordine etmek amacıyla 26 idari toplantı yapılması."
+                  },
+                  {
+                    "text": "İlme başlangıç için 42 halka, ilim tahsili için 10 halka ve ilmin temellendirilmesi için 4 halkanın himaye edilmesi ve yürütülmesi."
+                  },
+                  {
+                    "text": "160 sabit merkezî ilim meclisinin düzenlenmesi."
+                  },
+                  {
+                    "text": "28 gönüllü öğrencinin yanı sıra kefaletli 57 ilim talebesine ilmî himaye sağlanması."
+                  },
+                  {
+                    "text": "4 ilmî kurs düzenlenmesi, ardından 3 mezuniyet töreni yapılması ve 8 ilim haftasının tamamlanması."
+                  },
+                  {
+                    "text": "İlmî şahsiyet ve kurumlara 25 ziyaretin kaydedilmesi ve 28 ilmî ders ve halkanın ziyaret edilmesi."
+                  },
+                  {
+                    "text": "“Habib'in ﷺ İzinde” yarışması için 20 sınav komitesi oluşturulması ve yarışmanın onur töreninin düzenlenmesi."
+                  },
+                  {
+                    "text": "Aylık kitabın 13 sayısının çıkarılması, 66 ilmî raporun incelenmesi ve 39 idari form ile doldurulmuş raporun hazırlanması."
+                  },
+                  {
+                    "text": "“İlmin Basamakları” programına özel bir elektronik platform kurulması; bu, ilmî hattın düzenlenmesini ve erişilebilirliğini güçlendirmektedir."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Besâir İslamî İlimler Enstitüsü: Eğitimin Sürdürülebilirliği ve Dijital Dönüşüm",
+                "items": [
+                  {
+                    "text": "Enstitünün raporu, eğitim sürecinin; dersler için WhatsApp platformunu, sınavlar için Moodle platformunu ve arşivleme için Drive'ı birbirine bağlayan elektronik bir sistem aracılığıyla düzenli biçimde sürdüğünü bildirdi. Yararlananların toplamı, 592'si kadın ve 368'i erkek olmak üzere 960 öğrenciye ulaştı. Veriler, öğrencilerin yaklaşık %74'ünün 18–35, %15'inin 36–45 yaş grubunda, %11'inin ise 46 yaş ve üzerinde olduğunu; öğrenciler arasında akademik diploma sahiplerinin oranının %52'ye ulaştığını göstermektedir."
+                  },
+                  {
+                    "text": "Mezuniyet sonrasında ilmî etkinin sürekliliğini sağlamak amacıyla enstitünün kadın ve erkek mezunları için “İlim Meclisi”nin kurulması."
+                  },
+                  {
+                    "text": "Tüm dersler için müfredatın ve yazılı ilmî materyallerin öğrenciler için PDF formatında hazırlanması ve öğretmenler için basılması."
+                  },
+                  {
+                    "text": "Sesli, görüntülü ve yazılı materyallerin elektronik arşivlemesinin tamamlanması ve Google Drive bağlantılarına yüklenmesi."
+                  },
+                  {
+                    "text": "Not dökümleri, öğrenci belgeleri, mezun belgeleri ve tecrübe belgelerini kapsayan birleşik idari formların kabul edilmesi."
+                  }
+                ]
+              },
+              {
+                "num": "4",
+                "title": "Davet ve İlim Etkisinin Özeti",
+                "items": [
+                  {
+                    "text": "Bu başarıların değeri üç hattın bir araya gelmesinde kendini göstermektedir: insanlara yakın bir davet varlığı, düzenli ve kademeli bir dinî eğitim ve bilgiyi koruyup sürekliliği destekleyen kurumsal araçların inşası. Ayrıca saha çalışması, ilim halkaları, eğitim ve belgelemenin bir araya getirilmesi, davetin etkisinin anlık etkinlikten daha düzenli ve sürdürülebilir bir hatta taşınmasına zemin hazırlamaktadır."
+                  }
+                ],
+                "recap": true
+              }
+            ]
+          }
         },
         "quran": {
           "lead": "Dâru'l-İtkân; hıfz, murâcaa ve sınavı, öğreticilerin teknik yetiştirilmesini, terbiye programlarını, merkezlerin denetimini, toplumsal ortaklıkları ve medyayı bir araya getiren geniş ölçekli bir Kur'an eğitimi modeli sundu. Rapora göre kurumun sistemi 181 faal merkez ve 237 çalışanı kapsamakta; Han Yunus, Orta Bölge ve Gazze vilayetlerinde 2.825 öğrenciye hizmet vermektedir.",
@@ -305,7 +401,84 @@
               "value": "738",
               "unit": "tecvid kursu öğrencisi"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Kurumsal Yaygınlık ve Kur'an Başarısı",
+                "items": [
+                  {
+                    "text": "1,517'si kız ve 1,308'i erkek olmak üzere 2,825 öğrenci."
+                  },
+                  {
+                    "text": "142'si hıfz merkezi ve 39'u hafızlar divanı merkezi olmak üzere 181 faal merkez."
+                  },
+                  {
+                    "text": "Raporda yer alan göstergeye göre Kur'an-ı Kerim'in hıfzını tamamlayan 377 kadın ve erkek hafız."
+                  },
+                  {
+                    "text": "2,271 cüz ezberlenmesi ve 11,756 cüzün murâcaa edilmesi."
+                  },
+                  {
+                    "text": "1,625'i bireysel ve 1,575'i toplu olmak üzere 3,200 bireysel ve toplu sınav yapılması."
+                  },
+                  {
+                    "text": "Merkezî ve bireysel Kur'an serdi etkinliklerine 1,220 kadın ve erkek katılımcının iştirak etmesi."
+                  },
+                  {
+                    "text": "738 kız ve erkek öğrencinin yararlandığı; giriş ve ileri seviyeler, Fatiha'nın itkânı, yaygın hataların düzeltilmesi, sened hazırlığı, Nûrâniyye Kaidesi ve Tuhfetü'l-Etfâl arasında çeşitlenen 62 ahkâm ve tecvid kursunun düzenlenmesi."
+                  },
+                  {
+                    "text": "“Sefere ile Birlikte”, “İtkân İncileri 2” ve ahkâm kursu müfredat sınavı dahil olmak üzere merkezî Kur'an yarışmalarında 481 katılım kaydedilmesi."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "Denetim ve Kalite Güvencesi",
+                "items": [
+                  {
+                    "text": "1,274 denetim ziyareti ve 223 performans geliştirme ziyareti gerçekleştirilmesi."
+                  },
+                  {
+                    "text": "Öğreticiler ve denetçilerle 76, velilerle 132 toplantı yapılması."
+                  },
+                  {
+                    "text": "2,564 vaaz ve ders, 1,595 terbiye dersi ve teorik ve uygulamalı tecvide dair 230 ders verilmesi."
+                  },
+                  {
+                    "text": "Bu rakamlar, kurumun sisteminin hıfz halkalarıyla sınırlı kalmadığını; performansın düzenli takibini, öğrenci seviyelerinin değerlendirilmesini, aileyle iletişimi ve kadroların yetkinliğinin artırılmasını da kapsadığını, bunun da çıktıların kalitesini ve eğitim sürecinin istikrarını güçlendirdiğini göstermektedir.",
+                    "recap": true
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "İlmî ve Terbiye Programları ile Destekleyici Faaliyetler",
+                "items": [
+                  {
+                    "text": "Programlar arasında “Resm-i Osmânî'nin Belâgati”, “Ahlakı Kur'an'dı” ve “Habib'in Sünnetlerini İhya” buluşmaları, “Mahirler Buluşması” programı, makamat ilmi kursu, Kur'an kampı ve divan öğrencilerine yönelik ilmî ve tefsir buluşmaları yer aldı. Terbiye programları ise “Değerler Defterim”, “Namazım Hayatım” kampanyası, “Tesettürüm İffetim”, “Eser Bırakmak”, “Küçük Davetçi” ile tiyatro ve değer etkinliklerini kapsadı."
+                  },
+                  {
+                    "text": "Müfredatı destekleyen 12 faaliyet ve program yürütülmesi; raporun sınıflandırmasına göre bunlar 615 faaliyet veya uygulamayı içermekte olup hedef kitleleri genel kamuoyuna ek olarak 5,907'den fazla yararlanana ulaştı."
+                  },
+                  {
+                    "text": "24 Ağustos tarihli sened sahiplerini onurlandırma töreninde 55, cüz hafızlarını onurlandırma etkinliklerinde 300 yararlananın onurlandırılması; kayıtlı merkezî etkinliklerde onurlandırılanların toplamı 355'tir."
+                  },
+                  {
+                    "text": "Kurum, okul ve derneklerle 10 ortaklık ve anlaşma, 5 yeni program ve girişim, kurumun deneyimini tanımaya yönelik 6 kurumsal ziyaret ve toplumsal etkinlik ve konferanslara 5 katılım kaydedilmesi."
+                  },
+                  {
+                    "text": "10 aile ve sosyal ilişki ıslahı vakası ile şer'î kıyafete bağlılık göstergesi kapsamında 112 vaka kaydedilmesi."
+                  },
+                  {
+                    "text": "Merkezlere 260 kayıt başvurusu ve kadın ve erkek öğreticilerden 371 katılım başvurusu alınması; bu, artan bir toplumsal talebe işaret etmektedir."
+                  }
+                ]
+              }
+            ]
+          }
         },
         "women": {
           "lead": "Kadın Birimi'nin verileri, merkezî kuruluş ile vilayetlerdeki uygulama arasında dağılan bir çalışmayı; terbiye, ilim ve davet hatlarına, davetçi kadınların kefaletine, terbiye mesajlarına, sosyal faaliyetlere ve çevrim içi çalışmaya verilen önemi gösteriyor. Bu alanın önemi; kadınlara ve genç kızlara bilinç inşası, değerlerin güçlendirilmesi, yetiştirme ve eğitim bağının sürdürülmesini birleştiren programlarla ulaşmasında yatmaktadır.",
@@ -334,7 +507,78 @@
               "value": "247",
               "unit": "terbiye grubunda"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Merkezî Başarılar",
+                "items": [
+                  {
+                    "text": "Kadınlar için 26 terbiye halkası, kız öğrenciler için 14 “Tohum Ekme” halkası ve “Küçük Dâhi” programı için 14 halka oluşturulması."
+                  },
+                  {
+                    "text": "Güney vilayetinde “Bilinç İnşası” – Birinci Seviye kapsamındaki iki kurstan 40 kız öğrencinin mezun edilmesi."
+                  },
+                  {
+                    "text": "Merkezî göstergeye göre 260 kadına “#كونوا_ربانيين” mesajlarının gönderilmesi; vilayetlerdeki faaliyet tablosu ise 6,240 mesaj kaydetmektedir. Bu iki rakam kaynağın iki farklı yerinde yer almakta olup hesaplama yöntemi gözden geçirilmeden iki bağımsız faaliyet olarak toplanmamaktadır."
+                  },
+                  {
+                    "text": "2026 yılının geri kalanı için Kadın Birimi'ne yönelik merkezî bir plan ile vilayetlere ve ilmî, davet ve terbiye alanlarındaki kadın birimlerine yönelik planların hazırlanması."
+                  },
+                  {
+                    "text": "Yıl başından bu yana 17 davetçi kadına kefalet sağlanması ve 74 davetçi kadın için iki ay süreli kefalet projesinin uygulanması."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "Vilayetlerdeki Öne Çıkan Faaliyetler",
+                "items": [
+                  {
+                    "text": "İdari, ilmî ve davet toplantıları ile kadınlara ve davetçi kadınlara yönelik genel toplantıların ve ilim halkası öğrencileriyle toplantıların kaydedilmesi."
+                  },
+                  {
+                    "text": "Davet ve ilim dersleri; davet, ilim ve sosyal ziyaretler; davet kursları, davet turları, kitap oturumları ve kız öğrencilerle terbiye buluşmalarının gerçekleştirilmesi."
+                  },
+                  {
+                    "text": "Terbiye halkalarının oluşturulması; eğlence günleri, geziler, Kur'an-ı Kerim'den cüzlerin serd edildiği etkinlikler ve yarışmaların düzenlenmesi."
+                  },
+                  {
+                    "text": "Terbiye Birimi tablosuna göre temel halkalar için 104 oturum ve aynı tabloda divan halkaları için 36 oturumun yanı sıra yeterlilik oturumlarının, merkezî terbiye bültenlerinin ve halkalara yapılan terbiye ziyaretlerinin kaydedilmesi."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Müslime Çevrim İçi Kur'an Okuma Halkası",
+                "items": [
+                  {
+                    "text": "Kadın çalışmaları, Müslime çevrim içi Kur'an okuma halkası aracılığıyla elektronik hatta da uzandı. Rapor; 80 yararlananın katıldığı 7 hıfz halkası, 180 yararlananın katıldığı 104 Kur'an okuma halkası, 235 yararlanan göstergesine bağlı 13 tilavet ve tecvid kursu, 500 yararlananla 13 davet dersi, 247 yararlananla 25 terbiye grubu, 560 yararlananla bir ilmî kurs, iki kişinin katıldığı 4 yüz yüze faaliyet ve 19 kişinin katıldığı 10 idari toplantı kaydetti. Bu göstergeler, uygulama ve katılımcı sayılarının faaliyetten faaliyete farklılık gösterdiği hatırlatılarak kaynakta yer aldığı haliyle sunulmaktadır."
+                  }
+                ]
+              },
+              {
+                "num": "4",
+                "title": "Terbiye Kampları ve Güçlendirme",
+                "items": [
+                  {
+                    "text": "Eğitim Ofisi'nin raporu, terbiye, kalkınma ve eğlence amaçlı iki kampın düzenlendiğini bildirdi: dokuzuncu ve onuncu sınıf erkek öğrencilere yönelik, hedef sayısı 60 öğrenci olan “Yüceliğe Doğru” kampı ile yedinci sınıftan onuncu sınıfa kadar kız öğrencilere yönelik, hedef sayısı 80 öğrenci olan “Eser Bırakanlar” kampı. Programlar; İslamî ilimler, kimlik ve tarih alanlarında konferansları, değer odaklı sohbetleri, liderlik, yönetim, eleştirel düşünme ve problem çözme atölyelerini, yaşam becerilerini, hareketli ve eğlenceli etkinlikleri ve terbiye gruplarının oluşturulmasını kapsadı. Açıkça belirtilmedikçe hedef sayının fiilî katılım sayısına eşit olduğu varsayılmamalıdır."
+                  }
+                ]
+              },
+              {
+                "num": "5",
+                "title": "Kadın Alanının Özeti",
+                "items": [
+                  {
+                    "text": "Veriler, Kadın Birimi'nin hedef kitlelere ulaşmada kullandığı araçların çeşitliliğini teyit etmektedir: düzenli halkalar, dersler, kefaletler, mesajlar, kamplar, çevrim içi Kur'an okuma halkaları ve sosyal ve terbiye faaliyetleri. Ayrıca gelecek raporlarda büyümenin ve etkinin ölçülmesini kolaylaştırmak için aylık ve merkezî göstergelerin tanımının birleştirilmesi ihtiyacı öne çıkmaktadır."
+                  }
+                ],
+                "recap": true
+              }
+            ]
+          }
         },
         "education": {
           "lead": "Eğitim Ofisi, öğrencilere yönelik doğrudan faaliyetlerle eğitim altyapısını geliştirmeye dönük kurumsal planlamayı birleştirdi. Çalışma kamplarla sınırlı kalmadı; yeni bir okul projesinin hazırlanmasını, ruhsat işlemlerini, nitelikli kadroların kazanılmasını, arsa teminini, inşaatın başlatılmasını, donatım projelerinin tanıtımını ve tesislerin hazırlığının takibini kapsadı.",
@@ -359,7 +603,88 @@
               "value": "3",
               "unit": "donatım projesi"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "“Yüceliğe Doğru” Kampı – Temmuz 2026",
+                "items": [
+                  {
+                    "term": "Hedef kitle",
+                    "text": "Temel eğitimin dokuzuncu ve onuncu sınıflarından 60 erkek öğrenci."
+                  },
+                  {
+                    "text": "Müslümanın bilmemesi caiz olmayan İslamî ilimlere dair akide, fıkıh, hadis ve Kur'an-ı Kerim'i kapsayan konferanslar verilmesi ve öğrencilerden konferansların özetlerini hazırlamalarının istenmesi."
+                  },
+                  {
+                    "text": "Değerleri ve ahlakı güçlendirmek için sohbet tarzı konferanslar ve etkileşimli faaliyetler ile liderlik, yönetim, eleştirel düşünme ve problem çözme atölyeleri düzenlenmesi."
+                  },
+                  {
+                    "text": "İslam tarihi ve medeniyetine dair konferanslar ile kültürel, sportif ve eğlence faaliyetleri ve deniz gezileri düzenlenmesi."
+                  },
+                  {
+                    "text": "Raporda yer alan nota göre toplam 32 öğrenciden oluşan iki terbiye grubunun oluşturulması."
+                  },
+                  {
+                    "text": "Katılımcılara Dâru'l-İtkân, Sâid, Sufarâu'd-Da've ve El-Hamd Tıp Merkezi dahil olmak üzere koalisyon kuruluşlarının tanıtılması; bazı öğrencilerin Dâru'l-İtkân programlarına katıldığı da belirtildi."
+                  },
+                  {
+                    "text": "Rehberlere liderlik, yönetim ve terbiye görevleri verilmesi ve diğer finansman çabalarının yanı sıra Quebec Dayanışma Derneği'nden kamp için sponsorluk sağlanması."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "“Eser Bırakanlar” Kampı – Ağustos 2026",
+                "items": [
+                  {
+                    "term": "Hedef kitle",
+                    "text": "Yedinci sınıftan onuncu sınıfa kadar 80 kız öğrenci."
+                  },
+                  {
+                    "text": "İslamî ilimler, değerler ve ahlak alanlarında konferanslar ile Müslüman genç kızın kimliğini ve ailenin önemini güçlendirmeye yönelik programlar düzenlenmesi."
+                  },
+                  {
+                    "text": "Kültürel ve hareketli etkinlikler, etkileşimli oyunlar ve deniz gezilerinin yanı sıra yemek sanatları ve el işi atölyeleri düzenlenmesi."
+                  },
+                  {
+                    "text": "Raporda yer alan nota göre toplam 34 kız öğrenciden oluşan iki terbiye grubunun oluşturulması."
+                  },
+                  {
+                    "text": "Kadın rehberlerin liderlik, yönetim ve terbiye görevleri konusunda eğitilmesi ve katılımcılara ortak kuruluşların tanıtılması."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Şuâ Okulu Projesi ve Eğitim Ortamının Geliştirilmesi – Eylül 2026",
+                "items": [
+                  {
+                    "text": "Özel Şuâ Okulu'nun kurulması projesi için 3 proje önerisi ve tahminî maliyetlerin hazırlanması ve rapora göre projenin onaylanması."
+                  },
+                  {
+                    "text": "Ruhsat almak için 10 işlemin tamamlanması."
+                  },
+                  {
+                    "text": "Arsa araştırılması ve derneğin icra yönetimiyle iş birliği içinde bir arsa üzerinde karar kılınması."
+                  },
+                  {
+                    "text": "11 eğitim kadrosunun kazanılması, mülakatların yapılması ve uygun öğretmenlerin seçilmesi."
+                  },
+                  {
+                    "text": "İnşaat çalışmalarının başlatılması ve birden fazla kuruluşun finansmanıyla okulun donatılmasına yönelik 3 projenin tanıtılması ve uygulanması."
+                  },
+                  {
+                    "text": "Cuzûru's-Saâde Okulu tesislerinin eğitim yılının başlangıcına hazır olmasının takip edilmesi; bazı sınıfların bakıma ihtiyaç duyduğu da belirtildi."
+                  },
+                  {
+                    "text": "Rapor; kampların, işletmenin ve bakımın yüksek maliyetleri ile okul kurmaya uygun arsaların azlığına ilişkin zorlukları belirledi. Okullarda terbiye denetimini etkinleştirmek için Eğitim Ofisi'nin genişletilmesini ve derneğin yardım projelerinin bir kısmının ofisin programlarını desteklemeye ayrılmasını tavsiye etti."
+                  }
+                ]
+              }
+            ]
+          }
         },
         "relief": {
           "lead": "Sâid ile El-Hamd Tıp Merkezi arasındaki ortak belgeleme raporuna göre Sâid Derneği üçüncü çeyrekte 1.125 yardım ve kalkınma projesi gerçekleştirdi; kayıtlı yararlanma 465.248'e ulaştı ve toplam maliyet 1.935.006 ABD doları oldu. Müdahaleler acil yardım, yetim kefaleti ve sosyal bakım, eğitim ve sağlık sektörüne dağıldı.",
@@ -396,7 +721,118 @@
               "value": "6",
               "unit": "sağlık projesi"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "5",
+                "title": "Müdahale Yönetimi ve Zorluklar",
+                "items": [
+                  {
+                    "text": "Rapor, ekiplerin ve gönüllülerin karşılaştığı güvenlik risklerine, tedarik zincirlerine yönelik kısıtlamalara ve barınma ve inşaat malzemeleri, ilaç, tıbbi malzeme ve yakıt eksikliğine, bunun yanı sıra ihtiyaçlara kıyasla finansmanın sınırlılığına işaret etti. Ortaklıkların ve sürdürülebilir finansmanın genişletilmesini, stratejik bir gıda ve tıbbi stokun geliştirilmesini, yararlanıcı memnuniyetinin ölçülmesini ve etki ölçümüne dayalı belgelemenin sürdürülmesini tavsiye etti."
+                  }
+                ]
+              }
+            ],
+            "blocks": [
+              {
+                "title": "Yardım Sektörü:",
+                "figures": [
+                  {
+                    "value": "849",
+                    "label": "Proje sayısı",
+                    "unit": "proje"
+                  },
+                  {
+                    "value": "460,932",
+                    "label": "Yararlanmalar",
+                    "unit": "yararlanma"
+                  },
+                  {
+                    "value": "1,748,625",
+                    "prefix": "$",
+                    "label": "Bütçe"
+                  }
+                ],
+                "note": {
+                  "term": "Öne çıkan müdahaleler",
+                  "text": "Beslenme programlarının uygulanması, tatlı su ve su dağıtımının sağlanması, hayır ekmeği, doğrudan nakdi yardımlar, acil barınma, çocukların ihtiyaçları, gıda kolileri ve taze sebze kolileri."
+                }
+              },
+              {
+                "title": "Yetim Kefaleti ve Sosyal Bakım:",
+                "figures": [
+                  {
+                    "value": "252",
+                    "label": "Proje sayısı",
+                    "unit": "proje"
+                  },
+                  {
+                    "value": "555",
+                    "label": "Yararlanmalar",
+                    "unit": "yararlanma"
+                  },
+                  {
+                    "value": "106,449",
+                    "prefix": "$",
+                    "label": "Bütçe"
+                  }
+                ],
+                "note": {
+                  "term": "Öne çıkan müdahaleler",
+                  "text": "Yetimlere düzenli geçim kefaletleri sağlanması, psikososyal destek programları ve çocukların iş gücü piyasasına kaymasını önlemek amacıyla ailenin geçimini üstlenen annelerin sosyal açıdan güçlendirilmesi."
+                }
+              },
+              {
+                "title": "Eğitim Sektörü:",
+                "figures": [
+                  {
+                    "value": "18",
+                    "label": "Proje sayısı",
+                    "unit": "proje"
+                  },
+                  {
+                    "value": "3,505",
+                    "label": "Yararlanmalar",
+                    "unit": "yararlanma"
+                  },
+                  {
+                    "value": "49,889",
+                    "prefix": "$",
+                    "label": "Bütçe"
+                  }
+                ],
+                "note": {
+                  "term": "Öne çıkan müdahaleler",
+                  "text": "Geçici derslikler kurulması, kırtasiye ve okul malzemelerinin temin edilmesi, teşvik ve ödüllerin verilmesi ve zarar gören öğrencilerin üniversite taksitlerinin karşılanması."
+                }
+              },
+              {
+                "title": "Sağlık Sektörü:",
+                "figures": [
+                  {
+                    "value": "6",
+                    "label": "Proje sayısı",
+                    "unit": "proje"
+                  },
+                  {
+                    "value": "256",
+                    "label": "Yararlanmalar",
+                    "unit": "yararlanma"
+                  },
+                  {
+                    "value": "30,043",
+                    "prefix": "$",
+                    "label": "Bütçe"
+                  }
+                ],
+                "note": {
+                  "term": "Öne çıkan müdahaleler",
+                  "text": "Kritik ilaç ve tıbbi malzemelerin temin edilmesi ve komplikasyonları azaltmak ve hayat kurtarmak amacıyla hastanelerin ve sağlık merkezlerinin işletilmesinin desteklenmesi."
+                }
+              }
+            ]
+          }
         },
         "health": {
           "lead": "Han Yunus'un el-Mevâsî bölgesindeki El-Hamd Tıp Merkezi, üçüncü çeyrekte 12 klinik ve bölüm aracılığıyla 7.567 ziyaret ve tıbbi hizmet kaydetti; kayıtlı işletme geliri ve insani projelerin tutarı 152.607 şekel oldu.",
@@ -429,7 +865,111 @@
               "value": "639",
               "unit": "Cuzûr projesi kapsamında hizmet"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "2",
+                "title": "Gelirler ve İnsani Programlar",
+                "items": [
+                  {
+                    "text": "Toplam gelir: 152,607 şekel."
+                  },
+                  {
+                    "text": "Uzman tıp klinikleri: raporda yer alan mali göstergeye göre 46,586 şekel."
+                  },
+                  {
+                    "text": "Diş kliniği: 44,339 şekel."
+                  },
+                  {
+                    "text": "Eczane: 32,604 şekel."
+                  },
+                  {
+                    "text": "Laboratuvar: 29,078 şekel."
+                  },
+                  {
+                    "text": "Cuzûr projesi kapsamında 639, yoksul hastalara 108, kefaletli yetimlere 143, tıbbi sünnet programı kapsamında 86 ve El-Vifâk Çocuk ve Kadın Derneği'ne 24 tıbbi hizmet sunulması."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "İşletmenin Geliştirilmesi",
+                "items": [
+                  {
+                    "text": "Tahlil yönetiminin verimliliğini ve sonuçların doğruluğunu artırmak amacıyla tıbbi tahlil laboratuvarının işlerini yönetmeye yönelik özel bir yazılımın satın alınması ve devreye alınması."
+                  },
+                  {
+                    "text": "Yararlanma kapsamını genişletmek için hizmet çeşitliliğinin korunması ve akşam mesaisinin sürdürülmesi."
+                  },
+                  {
+                    "text": "Muhasebe ve idari takip araçlarının geliştirilmesi ve bunların işletme kayıtları ile günlük stok hareketlerine bağlanması."
+                  },
+                  {
+                    "text": "Mali rapor 152,607 şekel tutarında bir toplam bildirmekte ve bazı insani hizmetlerin projeler ve ortaklıklarla desteklendiğini belirtmektedir. Nihai mali sunumda, ek ayrıntılı veriler mevcut olduğu takdirde işletme gelirleri ile finansman veya ayni destek tutarı birbirinden ayrılmalıdır."
+                  }
+                ]
+              }
+            ],
+            "table": {
+              "title": "Bölüm ve Hizmet Hareketleri:",
+              "head": [
+                "Bölüm",
+                "Hizmet sayısı"
+              ],
+              "rows": [
+                [
+                  "Kadın Hastalıkları ve Doğum",
+                  "1,793 hizmet."
+                ],
+                [
+                  "Eczane",
+                  "1,766 ilaç verme hizmeti."
+                ],
+                [
+                  "Laboratuvar",
+                  "1,519 tahlil."
+                ],
+                [
+                  "Diş Kliniği",
+                  "650 ziyaret."
+                ],
+                [
+                  "Konuşma Terapisi",
+                  "428 hizmet."
+                ],
+                [
+                  "Genel Tıp",
+                  "417 hizmet."
+                ],
+                [
+                  "Fizik Tedavi",
+                  "406 hizmet."
+                ],
+                [
+                  "Hemşirelik",
+                  "339 hizmet."
+                ],
+                [
+                  "Sünnet",
+                  "86 hizmet."
+                ],
+                [
+                  "Dermatoloji",
+                  "85 hizmet."
+                ],
+                [
+                  "Ruh Sağlığı",
+                  "61 hizmet."
+                ],
+                [
+                  "Fizik Tedavi/Saha Sened",
+                  "17 hizmet."
+                ]
+              ],
+              "footNote": "12 klinik ve tıbbi bölüm aracılığıyla 7,567 ziyaret ve tıbbi hizmet"
+            }
+          }
         },
         "media": {
           "lead": "Birleşik medya raporu, belgelemenin ikincil bir faaliyet değil; saha çabalarını görünür kılmanın, kitleye erişimi genişletmenin ve ortaklarla bağışçılar nezdinde güven inşa etmenin bir aracı olduğunu gösterdi. Beş kuruluşun platformlarında Facebook ve Instagram'da 760 paylaşım yapıldı; çeyrek boyunca 15.919.211 görüntülenme, 10.373.513 erişim ve 533.241 etkileşim kaydedildi.",
@@ -466,7 +1006,124 @@
               "value": "31,188",
               "unit": "Instagram takipçisi"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Üretim ve Kapsam",
+                "items": [
+                  {
+                    "text": "920'si Sâid, 214'ü Dâru'l-İtkân için olmak üzere 1,197 saha çekimi."
+                  },
+                  {
+                    "text": "1,840'ı Sâid, 194'ü Dâru'l-İtkân için olmak üzere üretilen 2,199 kurgu/reels materyali."
+                  },
+                  {
+                    "text": "Raporda yer alan derlemeye göre 207 tasarım: 61'i Sâid, 72'si Dâru'l-İtkân için."
+                  },
+                  {
+                    "text": "Birleşik sınıflandırmaya göre üç kuruluşun sayfalarında sınıflandırılmış 343 paylaşım: 157'si Dâru'l-İtkân, 76'sı Sâid için."
+                  },
+                  {
+                    "text": "Sınıflandırılmış paylaşımlar; 178 haber kapsamı, 46 program veya devam eden seri, 41 bilinçlendirme ve davet kampanyası, 36 etki hikâyesi ve misyon odaklı medya içeriği, bağış ve pazarlama kampanyalarına yönelik 18 materyal, 6 özel gün ve mevsim materyali ve 18 ilan ve tasarım olarak dağıldı."
+                  },
+                  {
+                    "term": "Metodolojik not",
+                    "text": "Medya raporu birden fazla istatistiksel kapsam içermektedir; bazı göstergeler üretim tablosundaki üç kuruluşa ait, bazıları platform verilerinde beş kuruluşu kapsamakta, bazıları ise üç kuruluşun Facebook paylaşımlarının sınıflandırmasına ilişkindir. Bu nedenle bu göstergeler bağımsız sayılar olarak birbirine eklenmemektedir."
+                  }
+                ]
+              },
+              {
+                "num": "3",
+                "title": "Platformlara Göre Dijital Etki",
+                "items": [
+                  {
+                    "text": "Facebook: 448 paylaşım, 10,460,374 görüntülenme, 6,988,918 erişim ve 282,826 etkileşim."
+                  },
+                  {
+                    "text": "Instagram: 312 paylaşım, 5,458,837 görüntülenme, 3,384,595 erişim ve 250,415 etkileşim."
+                  },
+                  {
+                    "text": "Rapora göre beş kuruluşun Facebook takipçi sayısı ikinci çeyrekteki 317,000'den üçüncü çeyrekte 376,300'e yükseldi; artış 59,300 takipçi oldu."
+                  },
+                  {
+                    "text": "Instagram takipçilerinin toplamı 31,188'e ulaştı; hesaplar çeyrek boyunca, ikinci çeyrekteki 1,985'e karşılık 6,267 yeni takipçi kaydetti."
+                  }
+                ]
+              },
+              {
+                "num": "4",
+                "title": "Öne Çıkan Kampanyalar ve İçerikler",
+                "items": [
+                  {
+                    "term": "Dâru'l-İtkân",
+                    "text": "“İtkân İncileri 2” 3.63 milyon, “Sefere ile Birlikte” 1.35 milyon görüntülenmeye ulaştı; “Rabbin Diledi ki” filmi de raporda belirtilen iki platformda 1.5 milyondan fazla görüntülenme elde etti."
+                  },
+                  {
+                    "term": "Sâid",
+                    "text": "Bin gıda kolisi kampanyasının kapsamı 8 paylaşımla 257,638 görüntülenmeye ulaştı; savaşta uzuv kaybedenlere yönelik yardım paylaşımı da 148,500 görüntülenme elde etti. Dernek ayrıca “Onur Kampanyası” kapsamında dağıtım sırasında görüntü çekme, bağış emaneti ve yararlanıcının onurunun korunmasına dair bilinçlendirme materyalleri yayımladı."
+                  },
+                  {
+                    "term": "Sufarâu'd-Da've",
+                    "text": "Nitel özete göre 94 video yayımlanması; davet turları ve kervanlarının yanı sıra “Rabbi ve Dini Yüceltmek” ile “Allah'a Tövbe Edin” serilerinin kapsanması."
+                  },
+                  {
+                    "text": "Medya performansı, görsel ve hikâye odaklı içeriğin erişimi genişletme kapasitesini yansıtmakta; etkileşimin ve bunun fiilî desteğe, katılıma veya yararlanmaya dönüşümünün ölçülmeye devam edilmesinin önemini ortaya koymaktadır. Medya raporu reels üretiminin artırılmasını, yayın düzeninin iyileştirilmesini ve erişim göstergelerinin sahadaki program sonuçlarıyla ilişkilendirilmesini tavsiye etmektedir.",
+                    "recap": true
+                  }
+                ]
+              }
+            ],
+            "table": {
+              "title": "Kuruluşlara Göre Dijital Etki:",
+              "head": [
+                "Kuruluş",
+                "Paylaşımlar",
+                "Görüntülenme",
+                "Erişim",
+                "Etkileşim"
+              ],
+              "rows": [
+                [
+                  "Dâru'l-İtkân",
+                  "249 paylaşım",
+                  "13,347,144 görüntülenme",
+                  "8,926,807 erişim",
+                  "504,408 etkileşim"
+                ],
+                [
+                  "Sâid",
+                  "114 paylaşım",
+                  "1,206,007 görüntülenme",
+                  "706,020 erişim",
+                  "10,081 etkileşim"
+                ],
+                [
+                  "Sufarâu'd-Da've",
+                  "156 paylaşım",
+                  "142,846 görüntülenme",
+                  "85,296 erişim",
+                  "2,752 etkileşim"
+                ],
+                [
+                  "Vâhatü'l-Usra",
+                  "24 paylaşım",
+                  "25,318 görüntülenme",
+                  "12,285 erişim",
+                  "715 etkileşim"
+                ]
+              ],
+              "foot": [
+                "Birleşik toplam",
+                "760 paylaşım",
+                "15,919,211 görüntülenme",
+                "10,373,513 erişim",
+                "533,241 etkileşim"
+              ],
+              "footNote": "15,919,211 görüntülenme rakamı, beş kuruluşun platformları için bildirilen birleşik toplamdır; kuruluşların tek tek görüntülenme toplamları buna eklenmez."
+            }
+          }
         }
       }
     },
@@ -532,7 +1189,64 @@
               "value": "$ 62,185",
               "unit": "mevsimlik maliyet"
             }
-          ]
+          ],
+          "detail": {
+            "blocks": [
+              {
+                "title": "Genel Yardım ve Gıda Güvenliği:",
+                "figures": [
+                  {
+                    "value": "821",
+                    "label": "Proje sayısı",
+                    "unit": "proje"
+                  },
+                  {
+                    "value": "375,495",
+                    "label": "Yararlanan sayısı",
+                    "unit": "yararlanma"
+                  },
+                  {
+                    "value": "1,465,362",
+                    "prefix": "$",
+                    "label": "Toplam maliyet"
+                  }
+                ],
+                "note": {
+                  "term": "Öne çıkan müdahaleler",
+                  "text": "Beslenme, içme suyu, hayır ekmeği, gıda ve sebze kolileri, çadır ve acil barınma, nakdi yardımlar, giyim ve hijyen malzemeleri."
+                }
+              },
+              {
+                "title": "Mevsimlik Projeler (Ramazan ve Bayram):",
+                "figures": [
+                  {
+                    "value": "53",
+                    "label": "Proje sayısı",
+                    "unit": "proje"
+                  },
+                  {
+                    "value": "6,218",
+                    "label": "Yararlanan sayısı",
+                    "unit": "yararlanma"
+                  },
+                  {
+                    "value": "62,185",
+                    "prefix": "$",
+                    "label": "Toplam maliyet"
+                  }
+                ],
+                "note": {
+                  "term": "Öne çıkan müdahaleler",
+                  "text": "Bereketli Ramazan kolilerinin dağıtımı, kurban etlerinin dağıtımı ve bayramlarda yerinden edilmiş ailelere sevinç ulaştırılması."
+                }
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Bayramlık kıyafet — mevsimlik projelerden"
+              }
+            ]
+          }
         },
         "education": {
           "lead": "Sâid Derneği Eğitim Ofisi, ortak kuruluşlarla bütünleşik biçimde genç nesilleri eğitimden kopmaktan korumak için çalıştı.",
@@ -553,7 +1267,250 @@
               "value": "60",
               "unit": "yaz kampı öğrencisi"
             }
-          ]
+          ],
+          "detail": {
+            "groups": [
+              {
+                "items": [
+                  {
+                    "term": "Sınıf Dersleri ve Değerlerin Güçlendirilmesi",
+                    "text": "Ortaokul ve lise kademelerinde 7 okulda 3,360 kız ve erkek öğrenciyi hedefleyen, müfredat ile davranışsal değerleri güçlendirme programını harmanlayan 997 sınıf dersi verilmesi."
+                  },
+                  {
+                    "term": "Okul Yarışmaları",
+                    "text": "Kur'an hıfzı, güzel ses ve şiir atışması yarışmalarının düzenlenmesi ve başarılı öğrencilerin onurlandırılması."
+                  },
+                  {
+                    "term": "“Yüceliğe Doğru” Kampı",
+                    "text": "“Sâid” ile “Quebec Dayanışma Derneği/Kanada”nın desteğiyle, liderlik becerilerini ve psikolojik desteği güçlendirmek amacıyla 60 öğrenciyi hedefleyen uzmanlaşmış bir yaz kampının başlatılması."
+                  },
+                  {
+                    "term": "Geliştirme ve Mühendislik Planlaması",
+                    "text": "Eğitim Ofisi için çevre analizi ve yapılanmanın hazırlanması; eğitimin sürekliliğini sağlamak amacıyla Sâid Okulu'nun yeniden inşasına ilişkin mali ve mühendislik çalışmasının tamamlanması."
+                  }
+                ]
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Değerleri güçlendirme programı"
+              },
+              {
+                "caption": "Çocuklar için değer etkinliği"
+              }
+            ]
+          }
+        },
+        "dawah": {
+          "detail": {
+            "groups": [
+              {
+                "num": "1",
+                "title": "Sufarâu'd-Da've (Saha Davet Taburu)",
+                "items": [
+                  {
+                    "term": "“Birbirinize Merhamet Edin” Büyük Saha Kampanyası",
+                    "text": "Şeridin sokaklarını, çarşılarını ve kamplarını dolaşan “Birbirinize Merhamet Edin” kampanyasının başlatılması ve genişletilmesi; dayanışma, kardeşlik ve hoşgörü değerlerinin pekiştirilmesi ve sahada yerinden edilmişlere şer'î rehberlik ile manevi destek sunulması."
+                  },
+                  {
+                    "term": "Kapsamlı Davet Buluşmaları ve Akşam Programları",
+                    "text": "50'den fazla davetçi ve rehberin katılımıyla kalabalık bir davet akşamı düzenlenmesi; bu davetçiler etkili hutbe ve vaazlar vermek ve halkın sebatını pekiştirmek üzere toplanma alanlarına ve kamplara dağıtıldı."
+                  },
+                  {
+                    "term": "Çarşı ve Kamusal Meydan Turları",
+                    "text": "En büyük toplanma alanlarında ve çarşılarda (Sahabe Çarşısı ve barınma kampları gibi) onlarca yoğun saha davet turu gerçekleştirilmesi; turlar davet yayınlarının dağıtımını, halkla doğrudan etkileşimi ve gündelik hayata ilişkin fetva taleplerinin ve şer'î sorularının cevaplanmasını kapsadı."
+                  }
+                ]
+              },
+              {
+                "num": "2",
+                "title": "Besâir İslamî İlimler Enstitüsü (Dijital Akademik Yapı)",
+                "items": [
+                  {
+                    "term": "İleri Akademik Eğitim ve Engellerin Aşılması",
+                    "text": "Enstitü, kapsamlı Moodle eğitim platformunu ve uzmanlık etkileşim gruplarını yönetip güncellemeyi başardı; kesintiler ve yerinden edilme koşullarına meydan okuyan modern ve etkileşimli bir eğitim yöntemiyle ikinci dönemi tam bir başarıyla yürüttü."
+                  },
+                  {
+                    "term": "Yoğun İlmî Yayın",
+                    "text": "Temel şer'î derslere dair 286 sesli ve görüntülü ders ve ilmî materyal hazırlandı: (Saf İslam Akaidi, Çağdaş Mali Muamelat Fıkhı, Aile Fıkhı, Davet ve Cihad Fıkhı, Çağdaş Fıkhî Meseleler ve Hadis-i Şerif İlimleri)."
+                  },
+                  {
+                    "term": "Öğrenci Kazanımı ve Mezuniyet",
+                    "text": "Bu çeyrekte 128 yeni kız ve erkek öğrenci kazanıldı; böylece akademik eğitime devam eden öğrencilerin toplamı 636'ya ulaştı. Enstitü ayrıca İslamî ilimler diploması almaya hak kazanan 164 kadın ve erkek mezunun yetiştirilmesini ve mezuniyetini kutladı; mezunlar halkları arasında davetçi ve rehber olacaklar."
+                  }
+                ]
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Saha davet turu"
+              },
+              {
+                "caption": "İlmî ders"
+              },
+              {
+                "caption": "Genel konferans"
+              }
+            ]
+          }
+        },
+        "quran": {
+          "detail": {
+            "groups": [
+              {
+                "items": [
+                  {
+                    "term": "Kur'an Kadrosu ve Altyapısı",
+                    "text": "Han Yunus, Orta Bölge ve Gazze vilayetlerine yayılmış 171 bütünleşik Kur'an merkezine (28 hafızlar divanı ve 143 hıfz merkezi) dağılan 227 kadın ve erkek çalışanı (117 erkek, 110 kadın) kapsayan büyük bir Kur'an sisteminin yönetilmesi ve işletilmesi."
+                  },
+                  {
+                    "term": "Öğrenciler ve Hıfz Başarıları",
+                    "text": "4,670 kız ve erkek öğrenciye (2,096 erkek, 2,574 kız) kucak açılması ve bakım sağlanması. Bu çeyrek, 32 kadın ve erkek hafızın Allah Teâlâ'nın Kitabı'nın tamamını ezberlemesiyle taçlandı; 1,900 yeni cüz ezberlendi ve 9,000 cüz itkânla murâcaa edildi."
+                  }
+                ]
+              },
+              {
+                "title": "Kur'an Serdi ve Hatim Etkinlikleri:",
+                "items": [
+                  {
+                    "text": "Tek oturumda Kur'an serdi projelerinin uygulanması: 10 cüz serdinde 105 katılımcı, 5 cüz serdinde 355 katılımcı."
+                  },
+                  {
+                    "text": "276 kız ve erkek öğrenci için tam bireysel serd uygulanması."
+                  },
+                  {
+                    "text": "Hizmet sahasında Allah'ın Kitabı'nı serd eden 155 kadın ve erkek doktor için olağanüstü bir onur töreni düzenlenmesi."
+                  },
+                  {
+                    "term": "İlmî ve Terbiye Kursları",
+                    "text": "910 katılımcıya tecvid ve temel Arapça okuma kursları düzenlenmesi; hıfz merkezleri ve namazgâhlarda 951 uzman tecvid dersi, 4,296 terbiye dersi ve 3,637 canlı imanî vaaz gerçekleştirilmesi."
+                  }
+                ]
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Hıfz halkası"
+              },
+              {
+                "caption": "Doktorların serd etkinliğinde onurlandırma"
+              }
+            ]
+          }
+        },
+        "women": {
+          "detail": {
+            "groups": [
+              {
+                "items": [
+                  {
+                    "term": "Yetim ve Aile Kefaleti",
+                    "text": "584 yetim ve iffetli ihtiyaç sahibi aile için 179,971 $ maliyetle 241 aylık nakdi kefalet ve kapsamlı bakım projesinin uygulanması."
+                  },
+                  {
+                    "term": "Vâhatü'l-Usra Derneği",
+                    "text": "“Onur Çantaları” ve bayram şekeri dağıtılması, Arefe günü iftar sofrası kurulması, kamplarda psikolojik destek günleri ve saha yarışmaları düzenlenmesi; “Yetim Annelerine Kapsamlı Bakım” programının ve “Fark Yaratan 5 Dakika” serisinin başlatılması."
+                  }
+                ]
+              },
+              {
+                "title": "Merkez Kadın Birimi ve “Müslime” Programı:",
+                "items": [
+                  {
+                    "term": "Müslime Çevrim İçi Programı",
+                    "text": "286 Kur'an okuma halkası, 70 hıfz halkası, 150 davet dersi, 500 terbiye grubu ve 247 eğlence gününün yönetilmesi."
+                  },
+                  {
+                    "term": "Kadınların Saha Çalışması",
+                    "text": "966 davet dersi, 62 ilmî ders, 64 davet ziyareti ve 38 sosyal ziyaret gerçekleştirilmesi ve 13,000 imanî mesajın yayılması (#كونوا_ربانيين)."
+                  },
+                  {
+                    "term": "Eğlence Faaliyetleri ve Psikolojik Rahatlama",
+                    "text": "18,151 çocuk ve kadını hedefleyen, 207,917 $ maliyetli 12 sosyal ve psikolojik projenin uygulanması."
+                  }
+                ]
+              }
+            ],
+            "gallery": [
+              {
+                "caption": "Sınıf dersi"
+              },
+              {
+                "caption": "Psikolojik destek günü"
+              }
+            ]
+          }
+        },
+        "media": {
+          "detail": {
+            "groups": [
+              {
+                "title": "Dijital Dönüşüm ve Bilgi Teknolojileri:",
+                "items": [
+                  {
+                    "text": "Dâru'l-İtkân için hıfz halkaları yönetim sisteminin geliştirilmesi (öğreticiler için mobil uygulama + web sitesi)."
+                  },
+                  {
+                    "text": "Sufarâu'd-Da've ekibine özel davetçi yönetim ve takip sisteminin geliştirilmesi."
+                  },
+                  {
+                    "text": "Sâid Derneği için elektronik proje yönetim ve takip sisteminin geliştirilmesi."
+                  },
+                  {
+                    "text": "Tüm ortak derneklerin tanıtım web sitelerinin güncellenmesi ve geliştirilmesi."
+                  }
+                ]
+              }
+            ],
+            "table": {
+              "title": "Kapsam ve Dijital Etkileşim Özeti:",
+              "head": [
+                "Kuruluş",
+                "Kurgu",
+                "Paylaşımlar",
+                "Görüntülenme",
+                "Erişim"
+              ],
+              "rows": [
+                [
+                  "Dâru'l-İtkân",
+                  "93 kurgu",
+                  "281 paylaşım",
+                  "10,979,096 görüntülenme",
+                  "4.69M erişim."
+                ],
+                [
+                  "Sâid Derneği",
+                  "1,770 kurgu",
+                  "189 paylaşım",
+                  "1,416,633 görüntülenme",
+                  "807k erişim."
+                ],
+                [
+                  "Sufarâu'd-Da've",
+                  "59 kurgu",
+                  "119 paylaşım",
+                  "196,235 görüntülenme",
+                  "118k erişim."
+                ],
+                [
+                  "Vâhatü'l-Usra",
+                  "Dijital paylaşımlar",
+                  "37 paylaşım",
+                  "37,144 görüntülenme",
+                  "20k erişim."
+                ]
+              ],
+              "foot": [
+                "Birleşik toplam",
+                "1,959 kurgu",
+                "772 paylaşım",
+                "12,013,597 görüntülenme",
+                "5.86M erişim."
+              ],
+              "footNote": "2,970 saha çekimi"
+            }
+          }
         }
       }
     }

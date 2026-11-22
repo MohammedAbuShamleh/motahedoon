@@ -19,7 +19,7 @@ final class ContentLineController extends Controller
         return Inertia::render('Admin/ContentLines/Index', [
             'lines' => ContentLineResource::collection($service->listing())->resolve(),
             'groups' => collect(ContentLineGroup::cases())->map(fn ($g) => [
-                'value' => $g->value, 'label' => $g->label(), 'hasTerm' => $g->hasTerm(),
+                'value' => $g->value, 'label' => $g->label(), 'hasTerm' => $g->hasTerm(), 'hint' => $g->hint(),
             ]),
         ]);
     }
