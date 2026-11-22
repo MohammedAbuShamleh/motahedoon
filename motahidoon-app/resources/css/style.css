@@ -45,13 +45,99 @@
   --r-sm:   8px;
   --line:   1px;                            /* سماكة حد واحدة في الموقع كله */
 
-  /* خطوط النظام وحدها (2026-11-22): لا ملفّ خطّ يُحمَّل للزائر ولا يُنشر في
-     المستودع — ثمانية رُفعت من الواجهة والمستودع حتى تُحسم رخصة نشرها. «Segoe UI»
-     على ويندوز، و«SF Arabic» على أجهزة آبل، و«Noto» على أندرويد — كلّها
-     تحمل العربية. ثلاثة متغيّرات تبقى نقاط ربط إن اعتُمد خطّ مرخَّص لاحقاً. */
-  --f-ui:      system-ui, -apple-system, "Segoe UI", "SF Arabic", "Noto Sans Arabic", Tahoma, sans-serif;
-  --f:         var(--f-ui);
-  --f-display: var(--f-ui);
+  /* ثمانية (أُعيدت بطلب صاحب المشروع 2026-11-22) — ثلاث عائلات:
+       --f-display  ثمانية Serif Display — العناوين والأرقام الكبرى
+       --f          ثمانية Serif Text    — المتن والقراءة
+       --f-ui       ثمانية Sans          — أدوات الواجهة (الشريط، الأزرار، الحقول)
+     للخطّ الواحد غير المُذيّل: اجعل --f و--f-display مساويين لـ --f-ui. */
+  --f-ui:      "Thmanyah Sans", "Segoe UI", system-ui, sans-serif;
+  --f:         "Thmanyah Serif Text", "Thmanyah Sans", "Segoe UI", system-ui, serif;
+  --f-display: "Thmanyah Serif Display", "Thmanyah Serif Text", "Thmanyah Sans", system-ui, serif;
+}
+
+/* ---------- الخطّ: ثمانية Sans (أدوات الواجهة)، مستضاف محلياً (resources/fonts — يبصمه Vite) ----------
+   خمسة ملفات، والأوزان الوسيطة مربوطة صراحةً: 200–300 خفيف · 400 عادي ·
+   500 متوسط · 600–800 عريض · 900 أسود. بلا الربط كان 800 (أكثر من ثلاثين
+   موضعاً) يقفز إلى الأسود فتثقل العناوين والتسميات؛ الأسود للأرقام الكبرى. swap: النصّ يظهر
+   فوراً بخطّ النظام ثم يُستبدل — لا صفحة فارغة أثناء التحميل. */
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 200 300;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Light.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 600 800;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Sans"; font-style: normal; font-weight: 900;
+  font-display: swap;
+  src: url("../fonts/thmanyah/thmanyahsans-Black.woff2") format("woff2");
+}
+
+/* ---------- الخطّان المُذيّلان: ثمانية Serif Text وSerif Display ----------
+   بالربط نفسه للأوزان: 200–300 خفيف · 400 عادي · 500 متوسط · 600–800 عريض ·
+   900 أسود. لا يُحمَّل ملفّ إلا حين يُرسم نصّ بوزنه. */
+@font-face {
+  font-family: "Thmanyah Serif Text"; font-style: normal; font-weight: 200 300;
+  font-display: swap;
+  src: url("../fonts/thmanyahseriftext/woff2/thmanyahseriftext-Light.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Text"; font-style: normal; font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/thmanyahseriftext/woff2/thmanyahseriftext-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Text"; font-style: normal; font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/thmanyahseriftext/woff2/thmanyahseriftext-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Text"; font-style: normal; font-weight: 600 800;
+  font-display: swap;
+  src: url("../fonts/thmanyahseriftext/woff2/thmanyahseriftext-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Text"; font-style: normal; font-weight: 900;
+  font-display: swap;
+  src: url("../fonts/thmanyahseriftext/woff2/thmanyahseriftext-Black.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Display"; font-style: normal; font-weight: 200 300;
+  font-display: swap;
+  src: url("../fonts/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Light.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Display"; font-style: normal; font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Display"; font-style: normal; font-weight: 500;
+  font-display: swap;
+  src: url("../fonts/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Display"; font-style: normal; font-weight: 600 800;
+  font-display: swap;
+  src: url("../fonts/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Thmanyah Serif Display"; font-style: normal; font-weight: 900;
+  font-display: swap;
+  src: url("../fonts/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Black.woff2") format("woff2");
 }
 
 /* أدوات الواجهة على --f-ui — نقطة ربط إن افترق خطّ المتن عن خطّ الواجهة.
