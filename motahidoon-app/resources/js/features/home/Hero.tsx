@@ -119,6 +119,7 @@ export function Hero({
   return (
     <section
       className="hero"
+      data-stat="hero"
       ref={ref}
       style={{ "--dwell": `${DWELL}ms` } as React.CSSProperties}
       {...(slides.length > 1 ? { "data-slider": "" } : {})}

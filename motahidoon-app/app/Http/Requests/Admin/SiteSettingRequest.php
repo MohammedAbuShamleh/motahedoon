@@ -2,19 +2,13 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Models\SiteSetting;
-
 final class SiteSettingRequest extends AdminRequest
 {
     public const TRANSLATABLE = ['name', 'short_name', 'tagline', 'media_office', 'vision', 'mission', 'unapproved_notice'];
 
     public function rules(): array
     {
-        $social = [];
-        foreach (SiteSetting::SOCIAL as $key) {
-            $social["social.{$key}"] = ['nullable', 'url', 'max:512'];
-        }
-
+        // روابط التواصل الاجتماعي صارت صفحة مستقلّة (SocialLinkController)
         return [
             'name' => ['required', 'string', 'max:255'],
             'short_name' => ['required', 'string', 'max:120'],
@@ -27,8 +21,6 @@ final class SiteSettingRequest extends AdminRequest
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:64'],
             'contact_address' => ['nullable', 'string', 'max:512'],
-            'social' => ['nullable', 'array:'.implode(',', SiteSetting::SOCIAL)],
-            ...$social,
             'donate_url' => ['nullable', 'url', 'max:512'],
             'donate_label' => ['required', 'string', 'max:255'],
             'home_metrics_count' => ['required', 'integer', 'min:0', 'max:12'],

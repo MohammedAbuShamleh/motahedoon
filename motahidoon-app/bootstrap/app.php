@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
         ]);
         $middleware->alias(['role' => \App\Http\Middleware\EnsureRole::class]);
+        /* نبضات العدّ تُرسَل بـ navigator.sendBeacon الذي لا يحمل ترويسة CSRF؛
+           النقطة تكتب عدّادات مجمّعة وحدها، ومحدودة المعدّل — فلا خطر فيها */
+        $middleware->validateCsrfTokens(except: ['stats']);
         $middleware->redirectGuestsTo('/admin/login');
         $middleware->redirectUsersTo('/admin');
     })

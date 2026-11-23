@@ -19,6 +19,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/', Admin\DashboardController::class)->name('dashboard');
 
+    // الملف الشخصي: كلّ مستخدم يحرّر بياناته وكلمة مروره (التفويض في الطلبين)
+    Route::get('profile', [Admin\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('profile', [Admin\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('profile/password', [Admin\ProfileController::class, 'password'])
+        ->middleware('throttle:6,1')->name('profile.password');
+
     Route::middleware('role:admin,editor,translator')->group(function () {
         Route::get('translations', [Admin\TranslationController::class, 'index'])->name('translations.index');
         Route::put('translations/{translation}', [Admin\TranslationController::class, 'update'])->name('translations.update');
@@ -29,18 +35,26 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     });
 
     Route::middleware('role:admin,editor')->group(function () {
+        Route::get('stats', [Admin\StatsController::class, 'index'])->name('stats.index');
         Route::get('settings', [Admin\SiteSettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [Admin\SiteSettingController::class, 'update'])->name('settings.update');
 
         Route::resource('content-lines', Admin\ContentLineController::class)
             ->only(['index', 'store', 'update', 'destroy'])->parameters(['content-lines' => 'line']);
         Route::resource('partners', Admin\PartnerController::class)->except('show');
+        // قبل المورد: لئلّا يُقرأ «display» معرّفَ رابط
+        Route::put('social-links/display', [Admin\SocialLinkController::class, 'display'])->name('social-links.display');
+        Route::resource('social-links', Admin\SocialLinkController::class)
+            ->only(['index', 'store', 'update', 'destroy'])->parameters(['social-links' => 'link']);
         Route::resource('pillars', Admin\PillarController::class)->except('show');
 
         Route::get('field-photos', [Admin\FieldPhotoController::class, 'index'])->name('field-photos.index');
         Route::post('field-photos', [Admin\FieldPhotoController::class, 'store'])->name('field-photos.store');
         Route::put('field-photos/order', [Admin\FieldPhotoController::class, 'reorder'])->name('field-photos.reorder');
         Route::delete('field-photos/{photo}', [Admin\FieldPhotoController::class, 'destroy'])->name('field-photos.destroy');
+
+        Route::resource('contact-messages', Admin\ContactMessageController::class)->only(['index', 'update', 'destroy'])
+            ->parameters(['contact-messages' => 'message']);
 
         Route::get('video-albums/guide', [Admin\VideoAlbumController::class, 'guide'])->name('video-albums.guide');
         Route::resource('video-albums', Admin\VideoAlbumController::class)->except('show')

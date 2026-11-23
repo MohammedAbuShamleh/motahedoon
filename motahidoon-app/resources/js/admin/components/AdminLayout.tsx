@@ -14,7 +14,10 @@ type NavItem = { href: string; label: string; icon: GlyphName; roles: Role[]; al
 /* التسميات بلغة يفهمها المحرّر: «المحتوى الثابت» لما لا يتغيّر بالفترة
    (كان «المتن»)، و«التقارير الدورية» لما يُؤرَّخ بفترة (كان «الحاشية»). */
 const NAV: { title: string; items: NavItem[] }[] = [
-  { title: "", items: [{ href: "/admin", label: "الرئيسية", icon: "home", roles: ["admin", "editor", "translator"] }] },
+  { title: "", items: [
+    { href: "/admin", label: "الرئيسية", icon: "home", roles: ["admin", "editor", "translator"] },
+    { href: "/admin/stats", label: "الإحصاءات", icon: "stats", roles: ["admin", "editor"] },
+  ] },
   {
     title: "المحتوى الثابت",
     items: [
@@ -23,6 +26,8 @@ const NAV: { title: string; items: NavItem[] }[] = [
       { href: "/admin/partners", label: "المؤسسات الشريكة", icon: "partners", roles: ["admin", "editor"] },
       { href: "/admin/pillars", label: "مجالات العمل", icon: "pillars", roles: ["admin", "editor"] },
       { href: "/admin/field-photos", label: "الصور الميدانية", icon: "photos", roles: ["admin", "editor"] },
+      { href: "/admin/contact-messages", label: "رسائل التواصل", icon: "mail", roles: ["admin", "editor"] },
+      { href: "/admin/social-links", label: "روابط التواصل الاجتماعي", icon: "share", roles: ["admin", "editor"] },
       { href: "/admin/video-albums", label: "مكتبة الفيديو", icon: "video", roles: ["admin", "editor"], also: ["/admin/videos"] },
     ],
   },
@@ -139,7 +144,8 @@ export function AdminLayout({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="border-t border-paper/10 p-4">
-          <div className="flex items-center gap-3">
+          {/* بطاقة المستخدم رابطٌ إلى ملفّه الشخصي */}
+          <Link href="/admin/profile" className={`-m-1.5 flex items-center gap-3 rounded-lg p-1.5 transition hover:bg-paper/5 ${under("/admin/profile") ? "bg-paper/10" : ""}`}>
             <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-lg bg-olive text-sm font-black text-paper">
               {auth?.name?.trim().charAt(0) ?? "؟"}
             </span>
@@ -150,8 +156,12 @@ export function AdminLayout({ children }: { children: ReactNode }) {
                 {auth?.email && <> · <span dir="ltr">{auth.email}</span></>}
               </p>
             </div>
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-2">
+          </Link>
+          <Link href="/admin/profile" className="mt-3 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border border-paper/15 text-xs font-bold text-paper/85 transition hover:border-paper/40 hover:text-paper">
+            <Glyph name="settings" className="size-4" />
+            الملف الشخصي
+          </Link>
+          <div className="mt-2 grid grid-cols-2 gap-2">
             <a href="/" target="_blank" rel="noreferrer" className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-paper/15 text-xs font-bold text-paper/85 transition hover:border-paper/40 hover:text-paper">
               <Glyph name="site" className="size-4" />
               عرض الموقع

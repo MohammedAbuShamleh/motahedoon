@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Admin\SocialLinkService;
+use App\Services\Content\ContentCache;
 use App\Services\SiteContent;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -40,7 +42,28 @@ final class HandleInertiaRequests extends Middleware
             'donors'      => $this->content->get('donors'),
             'mediaOffice' => $this->content->get('mediaOffice'),
             'footerData'  => $this->footerData(),
+            // زرّ واتساب العائم: رابط محادثة جاهز بالرقم ونصّ بلغة الصفحة (config/site.php)
+            'whatsapp'    => $this->whatsapp(),
+            // روابط التواصل للتذييل: مخبّأة وتُبطَل عند أيّ حفظ من اللوحة
+            'social'      => app(ContentCache::class)->remember('social', fn () => SocialLinkService::forFooter()),
         ]);
+    }
+
+    /**
+     * رابط wa.me بالرقم والنصّ الجاهز بلغة الصفحة، واسم التجمّع بلغتها مكان
+     * «:org». لغة بلا نصّ تسقط إلى العربية. بلا رقم لا زرّ (null).
+     */
+    private function whatsapp(): ?string
+    {
+        $number = preg_replace('/\D+/', '', (string) config('site.whatsapp.number'));
+        if ($number === '') {
+            return null;
+        }
+        $texts = (array) config('site.whatsapp.text');
+        $text = $texts[app()->getLocale()] ?? $texts['ar'] ?? '';
+        $text = str_replace(':org', (string) $this->content->get('org.name'), $text);
+
+        return "https://wa.me/{$number}".($text === '' ? '' : '?text='.rawurlencode($text));
     }
 
     private function isAdmin(Request $request): bool

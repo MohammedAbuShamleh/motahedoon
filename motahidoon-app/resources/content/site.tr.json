@@ -100,7 +100,17 @@
     "الألبومات": "Albümler",
     "لا مقاطع منشورة بعد": "Henüz yayımlanmış video yok",
     "أحدث المقاطع": "En son videolar",
-    "ألبومات أخرى": "Diğer albümler"
+    "ألبومات أخرى": "Diğer albümler",
+    "تواصل معنا عبر واتساب": "WhatsApp üzerinden bize ulaşın",
+    "تواصل معنا": "Bize ulaşın",
+    "اكتب رسالتك وسنعود إليك عبر البريد أو الهاتف.": "Mesajınızı yazın, size e-posta veya telefonla dönelim.",
+    "الاسم": "Ad",
+    "البريد الإلكتروني": "E-posta",
+    "رقم الهاتف": "Telefon numarası",
+    "إرسال": "Gönder",
+    "جارٍ الإرسال…": "Gönderiliyor…",
+    "وصلت رسالتك، شكراً لك. سنعود إليك قريباً.": "Mesajınız ulaştı, teşekkür ederiz. En kısa sürede size döneceğiz.",
+    "تعذّر الإرسال الآن، حاول بعد قليل.": "Şu anda gönderilemedi, lütfen biraz sonra tekrar deneyin."
   },
   "org": {
     "name": "Gazze İçin Mutahidoon Koalisyonu",

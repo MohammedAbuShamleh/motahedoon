@@ -7,9 +7,11 @@ import {
 } from "@/hooks/useDocumentChrome";
 import { useSmoothWheel } from "@/hooks/useSmoothWheel";
 import { useFilmstrip, useReveal, useStagger } from "@/hooks/useReveal";
+import { useVisitStats } from "@/hooks/useVisitStats";
 import { usePage } from "@inertiajs/react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
+import { WhatsAppFab } from "./WhatsAppFab";
 
 export function Layout({
   children,
@@ -31,6 +33,7 @@ export function Layout({
   useReveal(key);
   useStagger(key);
   useFilmstrip(key);
+  useVisitStats(key, locale);   // عدّ الزيارات والأقسام الظاهرة
 
   return (
     <>
@@ -42,6 +45,7 @@ export function Layout({
       <SiteHeader active={active} />
       <main id="main">{children}</main>
       <SiteFooter />
+      <WhatsAppFab />
     </>
   );
 }
