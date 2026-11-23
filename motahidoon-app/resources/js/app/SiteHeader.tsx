@@ -100,30 +100,65 @@ function anchor(onHome: boolean, hash: string, home: string): string {
   return onHome ? `#${hash}` : `${home}#${hash}`;
 }
 
+/* أيقونات روابط القائمة — خطّية هندسية بلا دوائر (قرار الهوية). تظهر في
+   درج الجوّال وحده؛ قائمة الشاشات الواسعة نصّ كما كانت. */
+const NAV_ICONS: Record<string, React.ReactNode> = {
+  about: <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 10.5V16M12 7.5v.5" />,
+  partners: <path d="M3.5 4.5h7v7h-7zM13.5 4.5h7v7h-7zM3.5 13.5h7v7h-7zM13.5 13.5h7v7h-7z" />,
+  fields: <path d="M12 3l9 9-9 9-9-9zM12 8.5l3.5 3.5-3.5 3.5L8.5 12z" />,
+  report: <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 17v-3M12 17v-6M15 17v-4" />,
+  support: <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />,
+};
+
+function NavIcon({ id }: { id: string }) {
+  return (
+    <svg className="nav__ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{NAV_ICONS[id]}</svg>
+  );
+}
+
 export function SiteHeader({ active }: { active?: string }) {
   const { org, locale, locales } = useSite();
   const U = useU();
   const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const onHome = active === "home";
   const home = locale === "ar" ? "/" : `/?lang=${locale}`;
   const keep = (path: string) => (locale === "ar" ? path : `${path}?lang=${locale}`);
 
+  /* الدرج مفتوحاً: Esc يغلقه، والصفحة خلفه لا تتمرّر، والتركيز ينتقل إلى
+     زرّ الإغلاق — ويعود إلى زرّ القائمة عند الإغلاق */
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) setOpen(false);
-    };
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const root = document.documentElement;
+    const prev = root.style.overflow;
+    root.style.overflow = "hidden";
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    closeRef.current?.focus();
+    return () => {
+      root.style.overflow = prev;
+      document.removeEventListener("keydown", onKey);
+      toggleRef.current?.focus({ preventScroll: true });
+    };
   }, [open]);
 
+  /* الشاشة اتّسعت (تدوير الجهاز): الدرج لا معنى له، فيُغلق */
+  useEffect(() => {
+    const mq = matchMedia("(min-width: 1201px)");
+    const onChange = () => { if (mq.matches) setOpen(false); };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   const links = [
-    { href: anchor(onHome, "about", home), label: U("من نحن") },
-    { href: anchor(onHome, "partners", home), label: U("المؤسسات الشريكة") },
-    { href: anchor(onHome, "fields", home), label: U("مجالات العمل") },
-    { href: keep("/reports"), label: U("الإنجازات"), key: "report", inertia: true },
-    { href: anchor(onHome, "support", home), label: U("الدعم والتواصل") },
+    { id: "about", href: anchor(onHome, "about", home), label: U("من نحن") },
+    { id: "partners", href: anchor(onHome, "partners", home), label: U("المؤسسات الشريكة") },
+    { id: "fields", href: anchor(onHome, "fields", home), label: U("مجالات العمل") },
+    { id: "report", href: keep("/reports"), label: U("الإنجازات"), key: "report", inertia: true },
+    { id: "support", href: anchor(onHome, "support", home), label: U("الدعم والتواصل") },
   ];
 
   return (
@@ -138,14 +173,20 @@ export function SiteHeader({ active }: { active?: string }) {
         </Link>
 
         <button
+          ref={toggleRef}
           className="nav-toggle"
           type="button"
           aria-expanded={open}
           aria-controls="nav"
-          onClick={() => setOpen((v) => !v)}
+          aria-label={U("القائمة")}
+          onClick={() => setOpen(true)}
         >
-          {U("القائمة")}
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h10" /></svg>
+          <span className="nav-toggle__t">{U("القائمة")}</span>
         </button>
+
+        {/* خلفية الدرج: تعتيم الصفحة، والنقر عليها يغلقه */}
+        <div className={open ? "nav-backdrop is-open" : "nav-backdrop"} aria-hidden="true" onClick={() => setOpen(false)} />
 
         <nav
           ref={navRef}
@@ -156,6 +197,17 @@ export function SiteHeader({ active }: { active?: string }) {
             if ((e.target as HTMLElement).closest("a")) setOpen(false);
           }}
         >
+          {/* رأس الدرج (الجوّال وحده): الشعار وزرّ الإغلاق */}
+          <div className="nav__head">
+            <span className="nav__brand">
+              <img src={`/${org.logoMark}`} alt="" />
+              <span>{org.shortName}</span>
+            </span>
+            <button ref={closeRef} type="button" className="nav__close" aria-label={U("إغلاق")} onClick={() => setOpen(false)}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18" /></svg>
+            </button>
+          </div>
+
           {links.map((l) =>
             l.inertia ? (
               <Link
@@ -164,11 +216,13 @@ export function SiteHeader({ active }: { active?: string }) {
                 href={l.href}
                 aria-current={l.key === active ? "page" : undefined}
               >
-                {l.label}
+                <NavIcon id={l.id} />
+                <span>{l.label}</span>
               </Link>
             ) : (
               <a key={l.label} className="nav__a" href={l.href}>
-                {l.label}
+                <NavIcon id={l.id} />
+                <span>{l.label}</span>
               </a>
             ),
           )}

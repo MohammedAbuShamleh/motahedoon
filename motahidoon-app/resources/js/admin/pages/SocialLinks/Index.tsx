@@ -1,6 +1,7 @@
 import { Head, useForm } from "@inertiajs/react";
 import { useState, type FormEvent } from "react";
 import { AdminLayout } from "../../components/AdminLayout";
+import { WhatsAppCard, type WhatsAppSettings } from "./WhatsAppCard";
 import { Badge, Button, Card, DeleteButton, Empty, ErrorSummary, IndexChip, PageHeader, Select, TextField, Toggle } from "../../components/ui";
 import { send, str } from "../../lib/form";
 import { BRAND_COLORS, SocialIcon, detectPlatform, type HoverEffect, type SocialPlatform, type SocialStyle, type SocialTheme } from "@/components/SocialIcon";
@@ -250,8 +251,9 @@ function DisplayCard({ display, styles }: { display: Display; styles: Record<str
 
 type Display = { social_enabled: boolean; social_style: SocialStyle; social_theme: SocialTheme | null };
 
-export default function Index({ links, platforms, display, styles }: {
+export default function Index({ links, platforms, display, styles, whatsapp, orgName }: {
   links: Link[]; platforms: Record<string, string>; display: Display; styles: Record<string, string>;
+  whatsapp: WhatsAppSettings; orgName: string;
 }) {
   const [editing, setEditing] = useState<number | "new" | null>(links.length === 0 ? "new" : null);
 
@@ -261,6 +263,7 @@ export default function Index({ links, platforms, display, styles }: {
       <PageHeader title="روابط التواصل الاجتماعي"
         subtitle="كلّ رابط منشور هنا يظهر أيقونةً في تذييل الموقع بالترتيب نفسه — فيسبوك وإنستغرام وX ويوتيوب وغيرها." />
 
+      <div className="mb-6"><WhatsAppCard settings={whatsapp} orgName={orgName} /></div>
       <div className="mb-6"><DisplayCard display={display} styles={styles} /></div>
 
       <Card title="الروابط" actions={editing !== "new" && <Button size="sm" onClick={() => setEditing("new")}>+ إضافة رابط</Button>}>

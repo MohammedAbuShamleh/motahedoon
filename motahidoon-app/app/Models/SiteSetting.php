@@ -20,6 +20,7 @@ class SiteSetting extends Model
         'vision', 'mission', 'founding_year', 'media_office', 'governance',
         'contact_email', 'contact_phone', 'contact_address', 'social',
         'social_enabled', 'social_style', 'social_theme',
+        'whatsapp_enabled', 'whatsapp_number', 'whatsapp_text',
         'donate_url', 'donate_qr_media_id', 'donate_label', 'home_metrics_count',
     ];
 
@@ -29,6 +30,7 @@ class SiteSetting extends Model
             'social' => 'array', 'home_metrics_count' => 'integer',
             'social_enabled' => 'boolean', 'social_style' => \App\Enums\SocialIconStyle::class,
             'social_theme' => 'array',
+            'whatsapp_enabled' => 'boolean', 'whatsapp_text' => 'array',
         ];
     }
 

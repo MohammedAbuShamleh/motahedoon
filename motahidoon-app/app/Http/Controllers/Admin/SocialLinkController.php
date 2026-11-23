@@ -29,6 +29,8 @@ final class SocialLinkController extends Controller
             'platforms' => collect(SocialPlatform::cases())
                 ->mapWithKeys(fn (SocialPlatform $p) => [$p->value => $p->label()])->all(),
             'display' => $service->display(),
+            'whatsapp' => \App\Services\WhatsAppLink::settings(),
+            'orgName' => \App\Models\SiteSetting::current()->name,
             'styles' => collect(SocialIconStyle::cases())
                 ->mapWithKeys(fn (SocialIconStyle $s) => [$s->value => $s->label()])->all(),
         ]);
@@ -42,6 +44,19 @@ final class SocialLinkController extends Controller
         return back()->with('success', $request->boolean('social_enabled')
             ? 'تم حفظ إعداد العرض.'
             : 'أُخفيت روابط التواصل من التذييل.');
+    }
+
+    /** زرّ واتساب العائم: الإظهار والرقم والنصّ الجاهز بكلّ لغة */
+    public function whatsapp(\App\Http\Requests\Admin\WhatsAppRequest $request): RedirectResponse
+    {
+        $data = $request->validated();
+        \App\Models\SiteSetting::current()->update([
+            'whatsapp_enabled' => (bool) $data['whatsapp_enabled'],
+            'whatsapp_number' => preg_replace('/\D+/', '', (string) $data['whatsapp_number']),
+            'whatsapp_text' => array_map(fn ($v) => is_string($v) ? $v : null, $data['whatsapp_text'] ?? []),
+        ]);
+
+        return back()->with('success', $data['whatsapp_enabled'] ? 'تم حفظ إعداد زرّ واتساب.' : 'أُخفي زرّ واتساب من الموقع.');
     }
 
     public function store(SocialLinkRequest $request, SocialLinkService $service): RedirectResponse

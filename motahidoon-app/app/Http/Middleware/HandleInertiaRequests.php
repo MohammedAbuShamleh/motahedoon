@@ -55,15 +55,7 @@ final class HandleInertiaRequests extends Middleware
      */
     private function whatsapp(): ?string
     {
-        $number = preg_replace('/\D+/', '', (string) config('site.whatsapp.number'));
-        if ($number === '') {
-            return null;
-        }
-        $texts = (array) config('site.whatsapp.text');
-        $text = $texts[app()->getLocale()] ?? $texts['ar'] ?? '';
-        $text = str_replace(':org', (string) $this->content->get('org.name'), $text);
-
-        return "https://wa.me/{$number}".($text === '' ? '' : '?text='.rawurlencode($text));
+        return \App\Services\WhatsAppLink::url(app()->getLocale(), (string) $this->content->get('org.name'));
     }
 
     private function isAdmin(Request $request): bool

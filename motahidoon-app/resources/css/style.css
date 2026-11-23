@@ -619,6 +619,13 @@ html.is-scrolled .nav__a { font-size: .9rem; padding: .55rem .62rem; }
   transition: border-color .2s ease, color .2s ease;
 }
 .nav-toggle:hover { border-color: var(--olive); color: var(--olive); }
+.nav-toggle svg {
+  inline-size: 1.25rem; block-size: 1.25rem; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round;
+}
+
+/* أجزاء الدرج غائبة على الشاشات الواسعة: القائمة نصّ في الشريط كما كانت */
+.nav__head, .nav__ico, .nav-backdrop { display: none; }
 
 /* ---------- زرّ اللغة — مربّع ليّن في طرف اللوح، كزرّ القائمة ----------
    لا دوائر ولا كبسولات في الهوية (طلب صاحب المشروع 2026-11-19).
@@ -694,24 +701,84 @@ html.is-scrolled .lang__btn { min-height: 40px; padding: .4rem .75rem; }
     grid-template-areas: "toggle brand lang";
   }
   .brand { justify-self: end; }
-  .nav-toggle { display: block; }
+  .nav-toggle { display: inline-flex; align-items: center; gap: .45rem; }
+
+  /* ---------- الدرج (بطلب صاحب المشروع 2026-11-23) ----------
+     لوح بكامل الارتفاع ينزلق من جهة البدء (جهة زرّ القائمة: يمين العربية،
+     ويسار اللاتينية) فوق خلفية معتمة. روابطه بأيقوناتها، ورأسه الشعار وزرّ
+     الإغلاق. مغلقاً: خارج الشاشة ومخفيّ عن التركيز (visibility). */
   .nav {
-    position: absolute; inset-inline: 0; top: calc(100% + .5rem);
-    flex-direction: column; align-items: stretch; gap: 0;
-    padding: .45rem;
-    background: rgba(252,252,250,.97);
-    border: var(--line) solid rgba(26,26,26,.08);
-    border-radius: var(--r);
-    box-shadow: 0 22px 48px -28px rgba(26,26,26,.55);
-    display: none;
+    --slide: 100%;
+    position: fixed; z-index: 120;
+    inset-block: 0; inset-inline-start: 0;
+    inline-size: min(86vw, 21rem);
+    display: flex; flex-direction: column; align-items: stretch; gap: .2rem;
+    padding: 0 .75rem 1.25rem;
+    background: var(--paper);
+    border-inline-end: var(--line) solid var(--rule);
+    box-shadow: 0 0 60px -20px rgba(26,26,26,.55);
+    overflow-y: auto; overscroll-behavior: contain;
+    pointer-events: auto;
+    transform: translateX(var(--slide));
+    visibility: hidden;
+    transition: transform .4s var(--ease-glass), visibility 0s .4s;
   }
-  .nav.is-open { display: flex; }
-  .nav__a { padding: .78rem .85rem; }
-  .nav__a + .nav__a { border-top: var(--line) solid var(--rule); }
-  .nav__a[aria-current="page"]::after { inset-inline: .85rem; bottom: .5rem; }
+  html.is-ltr .nav { --slide: -100%; }
+  .nav.is-open { transform: none; visibility: visible; transition: transform .4s var(--ease-glass), visibility 0s; }
+
+  .nav-backdrop {
+    display: block; position: fixed; inset: 0; z-index: 110;
+    background: rgba(26,26,26,.45);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .3s ease, visibility 0s .3s;
+  }
+  .nav-backdrop.is-open { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .3s ease, visibility 0s; }
+
+  .nav__head {
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 1;
+    margin: 0 -.75rem .5rem; padding: 1rem 1rem .9rem;
+    background: var(--paper);
+    border-bottom: 2px solid var(--ink);
+  }
+  .nav__brand { display: flex; align-items: center; gap: .55rem; font-size: .98rem; font-weight: 800; color: var(--ink); }
+  .nav__brand img { block-size: 32px; inline-size: auto; }
+  .nav__close {
+    display: grid; place-items: center;
+    inline-size: 2.5rem; block-size: 2.5rem; padding: 0;
+    border: var(--line) solid var(--rule); border-radius: var(--r-sm);
+    background: none; color: var(--ink); cursor: pointer;
+    transition: border-color .2s ease, background-color .2s ease;
+  }
+  .nav__close:hover { border-color: var(--ink); background: rgba(26,26,26,.04); }
+  .nav__close svg { inline-size: 1.15rem; block-size: 1.15rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+  .nav__a {
+    display: flex; align-items: center; gap: .85rem;
+    padding: .85rem .8rem;
+    border-radius: var(--r-sm);
+    font-size: 1rem; font-weight: 700; color: var(--ink);
+  }
+  html.is-scrolled .nav__a { font-size: 1rem; padding: .85rem .8rem; }
+  .nav__a:hover { background: rgba(26,26,26,.05); color: var(--ink); }
+  .nav__ico {
+    display: block; flex: none;
+    inline-size: 2.4rem; block-size: 2.4rem; padding: .55rem;
+    border: var(--line) solid var(--rule); border-radius: var(--r-sm);
+    fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+    transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .nav__a:hover .nav__ico { border-color: var(--ink); }
+  /* الصفحة الحالية: الأيقونة ممتلئة بالحبري بدل خطّ تحت الرابط */
+  .nav__a[aria-current="page"] { color: var(--ink); }
+  .nav__a[aria-current="page"]::after { display: none; }
+  .nav__a[aria-current="page"] .nav__ico { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .nav__a:focus-visible, .nav__close:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 }
 
 @media (max-width: 520px) {
+  .nav-toggle__t { display: none; }  /* الرمز وحده؛ الاسم في aria-label */
+  .nav-toggle { padding-inline: .6rem; }
   .brand__s { display: none; }
   .lang__name { display: none; }    /* يبقى الرمز وحده؛ الاسم في aria-label */
   .lang__btn { padding-inline: .55rem; }
@@ -1732,6 +1799,8 @@ html.is-ltr .wafab__label { --wa-shift: -.4rem; }
 @media (hover: none) { .wafab__label { display: none; } }
 @media (prefers-reduced-motion: reduce) { .wafab:hover, .wafab:focus-visible { transform: none; } }
 @media print { .wafab { display: none !important; } }
+/* الدرج مفتوحاً: زرّ واتساب (طبقة أعلى من الترويسة) لا يطفو فوقه */
+html:has(.nav.is-open) .wafab { opacity: 0; visibility: hidden; }
 
 /* ---------- العارض بملء الشاشة ---------- */
 .lightbox {

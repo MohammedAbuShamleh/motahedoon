@@ -44,6 +44,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::resource('partners', Admin\PartnerController::class)->except('show');
         // قبل المورد: لئلّا يُقرأ «display» معرّفَ رابط
         Route::put('social-links/display', [Admin\SocialLinkController::class, 'display'])->name('social-links.display');
+        Route::put('social-links/whatsapp', [Admin\SocialLinkController::class, 'whatsapp'])->name('social-links.whatsapp');
         Route::resource('social-links', Admin\SocialLinkController::class)
             ->only(['index', 'store', 'update', 'destroy'])->parameters(['social-links' => 'link']);
         Route::resource('pillars', Admin\PillarController::class)->except('show');
