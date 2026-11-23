@@ -32,7 +32,6 @@ final class SiteSettingService
                     'governance', 'contact_email', 'contact_phone', 'contact_address', 'donate_url',
                     'donate_label', 'home_metrics_count',
                 ])->all(),
-                'social' => collect(SiteSetting::SOCIAL)->mapWithKeys(fn ($k) => [$k => $data['social'][$k] ?? null])->all(),
                 'logo_full_media_id' => $this->image($data, 'logo_full', $s->logo_full_media_id, $by),
                 'logo_mark_media_id' => $this->image($data, 'logo_mark', $s->logo_mark_media_id, $by),
                 'donate_qr_media_id' => $this->image($data, 'donate_qr', $s->donate_qr_media_id, $by),

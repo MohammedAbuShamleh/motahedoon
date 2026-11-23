@@ -17,7 +17,7 @@ final class ContentCache
     private const PREFIX = 'content.';
 
     /* videos.*: مكتبة الفيديو بكلّ لغة (VideoLibrary) — تُبطَل مع الشجرة */
-    private const KEYS = ['base', 'overlay.en', 'overlay.tr', 'videos.ar', 'videos.en', 'videos.tr'];
+    private const KEYS = ['base', 'overlay.en', 'overlay.tr', 'videos.ar', 'videos.en', 'videos.tr', 'social'];
 
     private bool $paused = false;
 

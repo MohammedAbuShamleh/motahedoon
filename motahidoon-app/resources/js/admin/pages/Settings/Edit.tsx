@@ -11,12 +11,10 @@ type Settings = {
   founding_year: string | null; media_office: string; governance: string | null;
   contact_email: string | null; contact_phone: string | null; contact_address: string | null;
   donate_url: string | null; donate_label: string; home_metrics_count: number;
-  social: Record<string, string | null>;
   logo_full: MediaBrief; logo_mark: MediaBrief; donate_qr: MediaBrief;
   translations: Translations;
 };
 
-const SOCIAL: Record<string, string> = { facebook: "فيسبوك", instagram: "إنستغرام", youtube: "يوتيوب", telegram: "تيليجرام", x: "X" };
 const PENDING = "اتركه فارغاً إن لم يُعتمد بعد؛ سيظهر في الموقع «بانتظار اعتماد التجمع». لا تضع نصّاً مؤقّتاً.";
 
 export default function Edit({ settings: s }: { settings: Settings }) {
@@ -25,7 +23,6 @@ export default function Edit({ settings: s }: { settings: Settings }) {
     founding_year: str(s.founding_year), media_office: s.media_office, governance: str(s.governance),
     contact_email: str(s.contact_email), contact_phone: str(s.contact_phone), contact_address: str(s.contact_address),
     donate_url: str(s.donate_url), donate_label: s.donate_label, home_metrics_count: String(s.home_metrics_count),
-    social: Object.fromEntries(Object.keys(SOCIAL).map((k) => [k, str(s.social[k])])) as Record<string, string>,
     logo_full: null as File | null, remove_logo_full: false,
     logo_mark: null as File | null, remove_logo_mark: false,
     donate_qr: null as File | null, remove_donate_qr: false,
@@ -72,9 +69,6 @@ export default function Edit({ settings: s }: { settings: Settings }) {
             <TextField label="البريد الإلكتروني" dir="ltr" value={data.contact_email} onChange={(v) => setData("contact_email", v)} error={e.contact_email} hint={PENDING} />
             <TextField label="الهاتف" dir="ltr" value={data.contact_phone} onChange={(v) => setData("contact_phone", v)} hint={PENDING} />
             <TextField label="العنوان" value={data.contact_address} onChange={(v) => setData("contact_address", v)} hint={PENDING} />
-            {Object.entries(SOCIAL).map(([k, label]) => (
-              <TextField key={k} label={label} dir="ltr" placeholder="https://" value={data.social[k] ?? ""} onChange={(v) => setData("social", { ...data.social, [k]: v })} error={e[`social.${k}`]} />
-            ))}
             <TextField label="رابط التبرّع" dir="ltr" value={data.donate_url} onChange={(v) => setData("donate_url", v)} error={e.donate_url} />
             <TextField label="نصّ زرّ الدعم" value={data.donate_label} onChange={(v) => setData("donate_label", v)} error={e.donate_label} />
             <TextField label="عدد الأرقام في «لمحة أثر»" type="number" dir="ltr" value={data.home_metrics_count} onChange={(v) => setData("home_metrics_count", v)} error={e.home_metrics_count} />

@@ -3,6 +3,7 @@
    بلا تعديل حرف. */
 
 import { useEffect, useRef } from "react";
+import { ContactForm } from "./ContactForm";
 import { Link } from "@inertiajs/react";
 import { useSpotlight } from "@/hooks/useSpotlight";
 import { SpotCount } from "@/components/spot";
@@ -510,6 +511,7 @@ export function Support() {
           </ul>
         </section>
       </div>
+      <ContactForm />
     </Section>
   );
 }

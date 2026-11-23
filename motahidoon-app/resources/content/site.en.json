@@ -100,7 +100,17 @@
     "الألبومات": "Albums",
     "لا مقاطع منشورة بعد": "No videos published yet",
     "أحدث المقاطع": "Latest videos",
-    "ألبومات أخرى": "Other albums"
+    "ألبومات أخرى": "Other albums",
+    "تواصل معنا عبر واتساب": "Contact us on WhatsApp",
+    "تواصل معنا": "Contact us",
+    "اكتب رسالتك وسنعود إليك عبر البريد أو الهاتف.": "Write your message and we will get back to you by email or phone.",
+    "الاسم": "Name",
+    "البريد الإلكتروني": "Email",
+    "رقم الهاتف": "Phone number",
+    "إرسال": "Send",
+    "جارٍ الإرسال…": "Sending…",
+    "وصلت رسالتك، شكراً لك. سنعود إليك قريباً.": "Your message has arrived — thank you. We will get back to you soon.",
+    "تعذّر الإرسال الآن، حاول بعد قليل.": "Could not send right now — please try again shortly."
   },
   "org": {
     "name": "Mutahidoon for Gaza Coalition",

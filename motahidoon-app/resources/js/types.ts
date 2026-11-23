@@ -2,6 +2,8 @@
    الحقول المحجوزة `| null` عمداً: الموقع يرسمها خانات موسومة، فلا
    يُسمح لـTypeScript أن يوحي بأنها موجودة دائماً. */
 
+import type { SocialFooter } from "@/components/SocialIcon";
+
 export type Locale = "ar" | "en" | "tr";
 
 export interface Org {
@@ -149,6 +151,10 @@ export interface SharedProps {
   contact: Contact;
   donors: Donors;
   mediaOffice: string;
+  /** رابط محادثة واتساب الجاهز (wa.me + النصّ) لزرّ التواصل العائم */
+  whatsapp: string | null;
+  /** روابط التواصل للتذييل: الإظهار والنمط والروابط المنشورة (صفحة «روابط التواصل» في اللوحة) */
+  social: SocialFooter;
   footerData: {
     pillars: { id: string; short: string }[];
     partners: { name: string }[];

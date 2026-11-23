@@ -687,10 +687,13 @@ html.is-scrolled .lang__btn { min-height: 40px; padding: .4rem .75rem; }
 .lang__a:hover, .lang__a:focus-visible { color: var(--bg); background: var(--olive); }
 
 @media (max-width: 1200px) {
+  /* الجوّال (بطلب صاحب المشروع 2026-11-23): زرّ القائمة وموضع الشعار
+     متبادلان — القائمة في جهة البدء، والشعار حيث كان الزرّ بجانب اللغة */
   .site-header__in {
-    grid-template-columns: 1fr auto auto;
-    grid-template-areas: "brand toggle lang";
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "toggle brand lang";
   }
+  .brand { justify-self: end; }
   .nav-toggle { display: block; }
   .nav {
     position: absolute; inset-inline: 0; top: calc(100% + .5rem);
@@ -1632,6 +1635,103 @@ html.js-reveal .reveal:not(.is-in) .valbums > li { opacity: 0; transform: transl
 @media print {
   .vfp__list, .vplayer__play { display: none !important; }
 }
+
+/* =====================================================================
+   نموذج «تواصل معنا» وزرّ واتساب العائم (2026-11-23)
+   ===================================================================== */
+
+/* ---------- النموذج: لوح ورقيّ تحت لوحي الدعم والتواصل ---------- */
+.cform {
+  margin-top: clamp(.9rem, 1.8vw, 1.25rem);
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  border: var(--line) solid var(--rule);
+  border-radius: var(--r);
+  background: var(--paper);
+  box-shadow: 0 18px 36px -32px rgba(26,26,26,.45);
+}
+.cform__head {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: .4rem 1.5rem;
+  padding-bottom: clamp(.8rem, 1.6vw, 1.1rem);
+  margin-bottom: clamp(1rem, 2vw, 1.4rem);
+  border-bottom: 2px solid var(--ink);
+}
+.cform__title { margin: 0; font-size: clamp(1.3rem, 2.2vw, 1.7rem); font-weight: 800; }
+.cform__hint { margin: 0; font-size: .92rem; color: var(--ink-72); }
+
+.cform__grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(.8rem, 1.6vw, 1.1rem);
+}
+.cform__field { display: grid; gap: .4rem; min-width: 0; }
+.cform__field--wide { grid-column: 1 / -1; }
+.cform__label { font-family: var(--f-ui); font-size: .85rem; font-weight: 700; color: var(--ink); }
+.cform__input {
+  inline-size: 100%;
+  padding: .75rem .9rem;
+  border: var(--line) solid rgba(26,26,26,.2); border-radius: var(--r-sm);
+  background: var(--bg); color: var(--ink);
+  font: inherit; font-size: 1rem; line-height: 1.6;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.cform__input--area { resize: vertical; min-block-size: 8rem; }
+.cform__input:hover { border-color: rgba(26,26,26,.4); }
+.cform__input:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(26,26,26,.12); }
+.cform__input[aria-invalid="true"] { border-color: var(--red); }
+.cform__err { font-size: .82rem; font-weight: 600; color: var(--red); }
+.cform__foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; }
+.cform__send[disabled] { opacity: .6; cursor: progress; }
+.cform__ok {
+  margin: 0; padding: .55rem .9rem;
+  border-inline-start: 3px solid var(--green);
+  background: rgba(12,123,63,.07);
+  font-size: .92rem; font-weight: 700; color: var(--ink);
+}
+/* فخّ البرامج الآلية: خارج الشاشة، لا display:none (بعض البرامج تتجاهل المخفيّ) */
+.cform__trap { position: absolute; inset-inline-start: -9999px; inline-size: 1px; block-size: 1px; overflow: hidden; }
+
+@media (max-width: 760px) {
+  .cform__grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- زرّ واتساب العائم ----------
+   الركن السفلي من جهة نهاية السطر (inset-inline-end): يسار الصفحة في
+   العربية ويمينها في اللاتينية. أخضر الهوية، مربّع ليّن لا دائرة. التسمية
+   تنزلق من خلفه عند المرور والتركيز. تحت العارض بملء الشاشة (z-index 200). */
+.wafab {
+  position: fixed; z-index: 150;
+  inset-block-end: clamp(1rem, 2.4vw, 1.6rem);
+  inset-inline-end: clamp(1rem, 2.4vw, 1.6rem);
+  display: grid; place-items: center;
+  inline-size: 3.5rem; block-size: 3.5rem;
+  border-radius: var(--r);
+  background: var(--green); color: var(--bg);
+  box-shadow: 0 14px 30px -12px rgba(12,123,63,.6), 0 2px 6px rgba(26,26,26,.18);
+  text-decoration: none;
+  transition: transform .35s var(--ease-glass), box-shadow .35s var(--ease-glass), background-color .25s ease;
+}
+.wafab svg { inline-size: 1.75rem; block-size: 1.75rem; fill: currentColor; }
+.wafab:hover, .wafab:focus-visible {
+  transform: translateY(-3px);
+  background: #0a6634;
+  box-shadow: 0 20px 36px -12px rgba(12,123,63,.65), 0 2px 6px rgba(26,26,26,.2);
+}
+.wafab:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.wafab__label {
+  position: absolute; inset-inline-end: calc(100% + .6rem); inset-block: auto;
+  padding: .45rem .8rem;
+  border-radius: var(--r-sm);
+  background: var(--ink); color: var(--bg);
+  font-family: var(--f-ui); font-size: .82rem; font-weight: 700; white-space: nowrap;
+  opacity: 0; transform: translateX(var(--wa-shift, .4rem));
+  pointer-events: none;
+  transition: opacity .25s ease, transform .3s var(--ease-glass);
+}
+html.is-ltr .wafab__label { --wa-shift: -.4rem; }
+.wafab:hover .wafab__label, .wafab:focus-visible .wafab__label { opacity: 1; transform: none; }
+@media (hover: none) { .wafab__label { display: none; } }
+@media (prefers-reduced-motion: reduce) { .wafab:hover, .wafab:focus-visible { transform: none; } }
+@media print { .wafab { display: none !important; } }
 
 /* ---------- العارض بملء الشاشة ---------- */
 .lightbox {
@@ -2950,6 +3050,64 @@ html.js-reveal .reveal:not(.is-in) .shub__bar::before { transform: scaleY(0); }
   content: ""; display: inline-block; vertical-align: middle;
   width: 5px; height: 5px; margin-inline-end: .5rem;
   background: var(--red-soft); transform: rotate(45deg);
+}
+
+/* روابط التواصل: صفّ مربّعات ليّنة بأيقونة كلّ منصّة (لا دوائر — قرار الهوية).
+   ما يُضاف من اللوحة يلتحق بالصفّ تلقائياً ويلتفّ إلى سطر جديد عند الحاجة. */
+.footer__list .footer__social {
+  display: flex; flex-wrap: wrap; gap: .5rem;
+  margin-top: .9rem;
+}
+.footer__list .footer__soc {
+  display: grid; place-items: center;
+  inline-size: 2.5rem; aspect-ratio: 1;
+  border: var(--line) solid var(--rule-ink); border-radius: var(--r-sm);
+  color: var(--on-ink);
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .15s ease;
+}
+.footer__list .footer__soc:hover { color: var(--ink); background: var(--bg); border-color: var(--bg); }
+.footer__list .footer__soc:active { transform: scale(.94); }
+.footer__soc svg { inline-size: 1.2rem; block-size: 1.2rem; }
+
+/* الأنماط (تُختار من اللوحة). outline هو الأساس أعلاه. */
+/* solid: مربّعات ورقية ممتلئة والأيقونة حبرية */
+.footer__list .footer__social--solid .footer__soc { background: var(--bg); border-color: var(--bg); color: var(--ink); }
+.footer__list .footer__social--solid .footer__soc:hover { background: var(--green-soft); border-color: var(--green-soft); opacity: .85; }
+/* brand: لون كلّ منصّة الرسمي؛ الأسود منها بحدّ فاتح ليبين على الحبري */
+.footer__list .footer__social--brand .footer__soc {
+  background: var(--soc-bg); border-color: var(--soc-bg); color: var(--soc-fg);
+}
+.footer__list .footer__social--brand .footer__soc[style*="#000000"] { border-color: var(--rule-ink); }
+.footer__list .footer__social--brand .footer__soc:hover { filter: brightness(1.12); background: var(--soc-bg); color: var(--soc-fg); }
+/* plain: أيقونات وحدها بلا إطار، أكبر قليلاً */
+.footer__list .footer__social--plain { gap: .25rem; }
+.footer__list .footer__social--plain .footer__soc { border-color: transparent; background: none; }
+.footer__list .footer__social--plain .footer__soc svg { inline-size: 1.4rem; block-size: 1.4rem; }
+.footer__list .footer__social--plain .footer__soc:hover { background: none; border-color: transparent; color: var(--bg); }
+
+/* ألوان مخصّصة وأثر المرور (اللوحة ← روابط التواصل ← طريقة العرض). كلّ لون
+   يُفعَّل بصنفه وحده (is-icon …)، فما لم يُختر يبقى لون النمط. الخصوصية أعلى
+   من قواعد الأنماط أعلاه (0,4,0 مقابل 0,3,0) فتعلوها أيّاً كان النمط. */
+.footer__list .footer__social.is-icon .footer__soc { color: var(--soc-icon); }
+.footer__list .footer__social.is-border .footer__soc { border-color: var(--soc-border); }
+.footer__list .footer__social.is-hicon .footer__soc:hover,
+.footer__list .footer__social.is-hicon .footer__soc:focus-visible { color: var(--soc-hicon); }
+.footer__list .footer__social.is-hborder .footer__soc:hover,
+.footer__list .footer__social.is-hborder .footer__soc:focus-visible { border-color: var(--soc-hborder); }
+.footer__list .footer__social.is-hbg .footer__soc:hover,
+.footer__list .footer__social.is-hbg .footer__soc:focus-visible { background: var(--soc-hbg); }
+/* الآثار: رفع، تكبير، امتلاء من الأسفل (بلون أرضية المرور أو لون الحدّ) */
+.footer__list .footer__social.fx-lift .footer__soc:hover { transform: translateY(-3px); }
+.footer__list .footer__social.fx-grow .footer__soc:hover { transform: scale(1.14); }
+.footer__list .footer__social.fx-fill .footer__soc { transition: color .25s ease, border-color .25s ease, box-shadow .35s var(--ease-glass), transform .15s ease; }
+.footer__list .footer__social.fx-fill .footer__soc:hover,
+.footer__list .footer__social.fx-fill .footer__soc:focus-visible {
+  background: transparent;
+  box-shadow: inset 0 -2.6rem 0 0 var(--soc-hbg, var(--soc-hborder, var(--bg)));
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer__list .footer__social.fx-lift .footer__soc:hover,
+  .footer__list .footer__social.fx-grow .footer__soc:hover { transform: none; }
 }
 
 /* الكولوفون: سِجِلّ الوثيقة */

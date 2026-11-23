@@ -1,8 +1,10 @@
 import { Link } from "@inertiajs/react";
 import { useSite, useU } from "@/lib/site";
+import type { CSSProperties } from "react";
+import { BRAND_COLORS, SocialIcon, socialName, themeAttrs } from "@/components/SocialIcon";
 
 export function SiteFooter() {
-  const { org, contact, mediaOffice, footerData, locale } = useSite();
+  const { org, contact, mediaOffice, footerData, locale, social } = useSite();
   const U = useU();
   const PENDING = U("بانتظار اعتماد التجمع");
   const keep = (p: string) => (locale === "ar" ? p : `${p}?lang=${locale}`);
@@ -12,9 +14,6 @@ export function SiteFooter() {
   const pending = (value: string | null, label: string) =>
     value ? <li>{value}</li> : <li className="footer__pending">{label} — {PENDING}</li>;
 
-  const social = Object.entries(contact.social).filter(
-    (entry): entry is [string, string] => entry[1] !== null,
-  );
 
   return (
     <footer className="site-footer">
@@ -53,17 +52,29 @@ export function SiteFooter() {
               {pending(contact.email, U("البريد"))}
               {pending(contact.phone, U("الهاتف"))}
               {pending(contact.address, U("العنوان"))}
-              {social.length > 0 ? (
-                social.map(([k, v]) => (
-                  <li key={k}>
-                    <a href={v} target="_blank" rel="noopener">{k}</a>
-                  </li>
-                ))
+              {/* روابط التواصل: كلّ ما يُضاف من اللوحة يظهر هنا تلقائياً بترتيبه
+                  وبالنمط المختار. القسم المُطفأ من اللوحة لا يظهر أصلاً — ولا
+                  خانته المحجوزة (قرار صريح بالإخفاء، لا حقل ناقص). */}
+              {social.enabled && (social.links.length > 0 ? (
+                <li className={`footer__social footer__social--${social.style} ${themeAttrs(social.theme).className}`}
+                    style={themeAttrs(social.theme).style as CSSProperties}>
+                  {social.links.map((l) => {
+                    const name = socialName(l);
+                    const [bg, fg] = BRAND_COLORS[l.platform] ?? BRAND_COLORS.other;
+                    return (
+                      <a key={l.url} className="footer__soc" href={l.url} target="_blank" rel="noopener noreferrer"
+                         aria-label={name} title={name}
+                         style={{ "--soc-bg": bg, "--soc-fg": fg } as CSSProperties}>
+                        <SocialIcon platform={l.platform} />
+                      </a>
+                    );
+                  })}
+                </li>
               ) : (
                 <li className="footer__pending">
                   {U("روابط التواصل الاجتماعي")} — {PENDING}
                 </li>
-              )}
+              ))}
             </ul>
           </div>
         </div>
