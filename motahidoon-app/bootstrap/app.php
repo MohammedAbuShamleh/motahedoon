@@ -6,7 +6,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -32,26 +31,18 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
 
-        /* 404 يُرسَم بصفحة الموقع لا بصفحة الإطار الافتراضية —
-           كما كان renderNotFound() في الموقع الثابت. */
+        /* صفحات الخطأ بلغة الموقع لا بصفحة الإطار: الموقع العام أو اللوحة حسب
+           المسار، وصفحة ثابتة إن عجزتا (App\Http\ErrorPage). أخطاء الخادم في
+           وضع التطوير (APP_DEBUG) تبقى بتقريرها المفصّل. */
         $exceptions->respond(function (Response $response, Throwable $e, Request $request) {
-            if ($response->getStatusCode() !== 404 || $request->expectsJson()) {
+            $status = $response->getStatusCode();
+            if (! in_array($status, \App\Http\ErrorPage::STATUSES, true) || $request->expectsJson()) {
+                return $response;
+            }
+            if ($status === 500 && config('app.debug')) {
                 return $response;
             }
 
-            /* مسار غير مسجَّل لا يمرّ بوسيط الويب، فلا يُضبط rootView
-               من HandleInertiaRequests ويعود Inertia إلى 'app' غير الموجود. */
-            Inertia::setRootView('site');
-
-            return Inertia::render('NotFound', [
-                'pillars' => collect(app(\App\Services\SiteContent::class)->get('pillars'))
-                    ->map(fn (array $p) => ['id' => $p['id'], 'short' => $p['short']])->all(),
-            ])
-                ->withViewData(['meta' => app(\App\Services\BuildMeta::class)(
-                    app(\App\Services\SiteContent::class)->ui()['هذه الصفحة غير موجودة']
-                        ?? 'هذه الصفحة غير موجودة'
-                )])
-                ->toResponse($request)
-                ->setStatusCode(404);
+            return \App\Http\ErrorPage::render($request, $status);
         });
     })->create();

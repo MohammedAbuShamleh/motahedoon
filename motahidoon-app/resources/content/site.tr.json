@@ -110,7 +110,22 @@
     "إرسال": "Gönder",
     "جارٍ الإرسال…": "Gönderiliyor…",
     "وصلت رسالتك، شكراً لك. سنعود إليك قريباً.": "Mesajınız ulaştı, teşekkür ederiz. En kısa sürede size döneceğiz.",
-    "تعذّر الإرسال الآن، حاول بعد قليل.": "Şu anda gönderilemedi, lütfen biraz sonra tekrar deneyin."
+    "تعذّر الإرسال الآن، حاول بعد قليل.": "Şu anda gönderilemedi, lütfen biraz sonra tekrar deneyin.",
+    "الصفحة الرئيسية": "Ana sayfa",
+    "خطأ": "Hata",
+    "تحديث الصفحة": "Sayfayı yenile",
+    "الرجوع للصفحة السابقة": "Önceki sayfaya dön",
+    "روابط قد تفيدك": "Faydalı bağlantılar",
+    "لا تملك صلاحية الوصول إلى هذه الصفحة": "Bu sayfaya erişim yetkiniz yok",
+    "هذه الصفحة غير متاحة لك.": "Bu sayfa sizin için kullanılabilir değil.",
+    "انتهت صلاحية الصفحة": "Sayfanın süresi doldu",
+    "مرّ وقت طويل منذ فتح الصفحة. حدّثها ثم أعد المحاولة.": "Sayfa uzun süredir açık. Yenileyip tekrar deneyin.",
+    "طلبات كثيرة في وقت قصير": "Çok fazla istek",
+    "انتظر دقيقة ثم أعد المحاولة.": "Lütfen bir dakika bekleyip tekrar deneyin.",
+    "حدث خطأ غير متوقّع": "Beklenmeyen bir hata oluştu",
+    "تعذّر عرض هذه الصفحة الآن. حاول مرة أخرى بعد قليل.": "Bu sayfa şu anda gösterilemiyor. Lütfen biraz sonra tekrar deneyin.",
+    "الموقع قيد الصيانة": "Site bakımda",
+    "نعمل على تحديث الموقع، وسيعود خلال وقت قصير.": "Siteyi güncelliyoruz, kısa süre içinde geri döneceğiz."
   },
   "org": {
     "name": "Gazze İçin Mutahidoon Koalisyonu",

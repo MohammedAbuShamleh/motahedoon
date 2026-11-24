@@ -110,7 +110,22 @@
     "إرسال": "Send",
     "جارٍ الإرسال…": "Sending…",
     "وصلت رسالتك، شكراً لك. سنعود إليك قريباً.": "Your message has arrived — thank you. We will get back to you soon.",
-    "تعذّر الإرسال الآن، حاول بعد قليل.": "Could not send right now — please try again shortly."
+    "تعذّر الإرسال الآن، حاول بعد قليل.": "Could not send right now — please try again shortly.",
+    "الصفحة الرئيسية": "Home",
+    "خطأ": "Error",
+    "تحديث الصفحة": "Reload page",
+    "الرجوع للصفحة السابقة": "Go back",
+    "روابط قد تفيدك": "Helpful links",
+    "لا تملك صلاحية الوصول إلى هذه الصفحة": "You do not have access to this page",
+    "هذه الصفحة غير متاحة لك.": "This page is not available to you.",
+    "انتهت صلاحية الصفحة": "This page has expired",
+    "مرّ وقت طويل منذ فتح الصفحة. حدّثها ثم أعد المحاولة.": "The page has been open for a long time. Reload it and try again.",
+    "طلبات كثيرة في وقت قصير": "Too many requests",
+    "انتظر دقيقة ثم أعد المحاولة.": "Please wait a minute and try again.",
+    "حدث خطأ غير متوقّع": "Something went wrong",
+    "تعذّر عرض هذه الصفحة الآن. حاول مرة أخرى بعد قليل.": "This page cannot be shown right now. Please try again shortly.",
+    "الموقع قيد الصيانة": "The site is under maintenance",
+    "نعمل على تحديث الموقع، وسيعود خلال وقت قصير.": "We are updating the site. It will be back shortly."
   },
   "org": {
     "name": "Mutahidoon for Gaza Coalition",

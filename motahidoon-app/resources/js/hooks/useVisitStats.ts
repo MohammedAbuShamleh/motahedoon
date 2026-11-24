@@ -19,9 +19,9 @@ function beacon(body: Record<string, unknown>): void {
   void fetch(ENDPOINT, { method: "POST", body: json, headers: { "Content-Type": "application/json" }, keepalive: true }).catch(() => {});
 }
 
-export function useVisitStats(key: string, locale: string): void {
+export function useVisitStats(key: string, locale: string, enabled = true): void {
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (!enabled || typeof window === "undefined") return;
     const path = window.location.pathname;
     beacon({ path, locale, view: true });
 
@@ -63,5 +63,5 @@ export function useVisitStats(key: string, locale: string): void {
       document.removeEventListener("visibilitychange", onHide);
       window.removeEventListener("pagehide", flush);
     };
-  }, [key, locale]);
+  }, [key, locale, enabled]);
 }

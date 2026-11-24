@@ -4328,3 +4328,82 @@ p, li, dd, figcaption { text-wrap: pretty; }
   .shub__frame svg { stroke: #1A1A1A; }
   .plate__img, .fstage__frame { break-inside: avoid; }
 }
+
+/* ---------- صفحة الخطأ (404 · 403 · 419 · 429 · 500 · 503) ----------
+   ورقة بيضاء بعمودين: الرمز ضخماً مفرَّغاً بالحبري وخطّ الختم الأحمر تحته،
+   ثم العنوان والإجراءات؛ وفي الجانب لوح روابط مرقّم بالزيتوني بحدّ شعري.
+   زوايا مربّعة، بلا دوائر، والأخضر للإجراء وحده. */
+.err { background: var(--bg); }
+.err__in {
+  width: min(100% - var(--edge) * 2, var(--wrap)); margin-inline: auto;
+  display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(16rem, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem); align-items: start;
+}
+.err__k {
+  display: inline-flex; align-items: center; gap: .6rem;
+  font-family: var(--f-ui); font-size: .82rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--olive);
+}
+.err__k::before {                               /* المعيّن: نقطة الهوية بدل الدائرة */
+  content: ""; inline-size: .5rem; block-size: .5rem;
+  background: var(--red); transform: rotate(45deg);
+}
+.err__code {
+  margin-block: clamp(.75rem, 2vw, 1.25rem) 0;
+  font-family: var(--f-ui); font-weight: 900; line-height: .82;
+  font-size: clamp(6.5rem, 21vw, 15rem); letter-spacing: -.06em;
+  color: transparent; -webkit-text-stroke: 2px var(--ink);
+  font-variant-numeric: tabular-nums;
+  inline-size: fit-content;
+}
+.err__code::after {                             /* خطّ الختم */
+  content: ""; display: block; block-size: 4px; inline-size: 38%;
+  margin-block-start: clamp(1rem, 2.4vw, 1.6rem); background: var(--red);
+}
+.err__t { margin-block-start: clamp(1.75rem, 3.5vw, 2.5rem); max-width: 22ch; }
+.err__p { margin-block-start: clamp(1rem, 2vw, 1.4rem); }
+.err__actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-block-start: clamp(2rem, 4vw, 2.75rem); }
+.err__actions .btn { border-radius: 0; }
+
+.err__aside {
+  border: var(--line) solid var(--ink); background: var(--paper);
+  padding: clamp(1.4rem, 2.6vw, 2rem);
+  margin-block-start: clamp(0rem, 4vw, 3.25rem);
+}
+.err__ah {
+  font-family: var(--f-ui); font-size: .78rem; font-weight: 700;
+  letter-spacing: .06em; color: var(--ink-65);
+  padding-block-end: .9rem; border-block-end: var(--line) solid var(--ink);
+}
+.err__ah--sub { margin-block-start: 1.75rem; border-block-end-color: var(--rule); }
+.err__list { list-style: none; margin: 0; padding: 0; }
+.err__list li { border-block-end: var(--line) solid var(--rule); }
+.err__list a {
+  display: flex; align-items: baseline; gap: 1rem;
+  padding-block: .95rem; font-family: var(--f-ui); font-weight: 700;
+  color: var(--ink); text-decoration: none;
+  transition: color .2s, padding-inline-start .25s;
+}
+.err__list a::after {                           /* سهم الاتجاه يتبع لغة الصفحة */
+  content: "←"; margin-inline-start: auto; color: var(--rule); transition: color .2s, transform .25s;
+}
+[dir="ltr"] .err__list a::after { content: "→"; }
+.err__list a:hover { color: var(--green); padding-inline-start: .35rem; }
+.err__list a:hover::after { color: var(--green); }
+.err__n { font-size: .78rem; font-weight: 600; color: var(--olive); font-variant-numeric: tabular-nums; }
+.err__tags { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.err__tags a {
+  display: inline-block; padding: .45rem .8rem;
+  border: var(--line) solid var(--rule); font-family: var(--f-ui); font-size: .85rem; font-weight: 600;
+  color: var(--ink); text-decoration: none; transition: border-color .2s, color .2s;
+}
+.err__tags a:hover { border-color: var(--ink); color: var(--green); }
+.err__list a:focus-visible, .err__tags a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+@media (max-width: 860px) {
+  .err__in { grid-template-columns: 1fr; }
+  .err__aside { margin-block-start: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .err__list a, .err__list a::after { transition: none; }
+}

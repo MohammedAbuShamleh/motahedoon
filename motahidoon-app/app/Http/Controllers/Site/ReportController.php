@@ -15,9 +15,12 @@ final class ReportController extends Controller
     public function __invoke(SiteContent $content, BuildMeta $meta, ?string $slug = null): Response
     {
         $items = collect($content->get('reports.items'));
-        $slug ??= $content->get('reports.current');
 
-        $rep = $items->firstWhere('id', $slug) ?? $items->first();
+        /* /reports بلا معرّف: الحالي، وإلا الأحدث. معرّف لا يطابق تقريراً
+           منشوراً: 404 — لا يُعرض تقرير آخر مكانه بصمت. */
+        $rep = $slug === null
+            ? ($items->firstWhere('id', $content->get('reports.current')) ?? $items->first())
+            : $items->firstWhere('id', $slug);
 
         if ($rep === null) {
             throw new NotFoundHttpException();

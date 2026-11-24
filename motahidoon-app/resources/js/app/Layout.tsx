@@ -16,9 +16,12 @@ import { WhatsAppFab } from "./WhatsAppFab";
 export function Layout({
   children,
   active,
+  track = true,
 }: {
   children: ReactNode;
   active?: string;
+  /** صفحات الخطأ لا تُعدّ: روابطها اعتباطية */
+  track?: boolean;
 }) {
   const { locale, unapproved } = useSite();
   const U = useU();
@@ -33,7 +36,7 @@ export function Layout({
   useReveal(key);
   useStagger(key);
   useFilmstrip(key);
-  useVisitStats(key, locale);   // عدّ الزيارات والأقسام الظاهرة
+  useVisitStats(key, locale, track);   // عدّ الزيارات والأقسام الظاهرة
 
   return (
     <>
