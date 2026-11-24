@@ -1519,7 +1519,7 @@ html.js-reveal .reveal:not(.is-in) .about__media { opacity: 0; transform: transl
 /* =====================================================================
    مكتبة الفيديو (2026-11-22) — قسم الرئيسية وصفحتا /videos و/videos/{slug}
    رسمية على الورق بالأبيض والأسود: مشغّل كبير وقائمة مرقّمة بجانبه، والألبومات
-   شبكةً متساوية. الأغلفة كاملةً بنسبتها (contain) على الحبري — لا قصّ —
+   شبكةً متساوية. الأغلفة تملأ إطارها (cover) بلا حواشٍ سوداء
    وزوايا حادّة كبقية الصور. المشغّل غلافٌ حتى النقر (components/video.tsx).
    ===================================================================== */
 
@@ -1547,7 +1547,7 @@ html.js-reveal .reveal:not(.is-in) .about__media { opacity: 0; transform: transl
 }
 .vplayer__facade img {
   position: absolute; inset: 0; inline-size: 100%; block-size: 100%;
-  object-fit: contain;
+  object-fit: cover;
   animation: fade .5s ease both;
 }
 .vplayer__blank { position: absolute; inset: 0; background: #111; }
@@ -1619,7 +1619,7 @@ html.js-reveal .reveal:not(.is-in) .about__media { opacity: 0; transform: transl
   font-variant-numeric: tabular-nums; color: var(--ink-65);
 }
 .vfp__thumb { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--ink); }
-.vfp__thumb img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: contain; }
+.vfp__thumb img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
 .vfp__tplay {
   position: absolute; inset-block-end: .3rem; inset-inline-start: .3rem;
   display: grid; place-items: center;
@@ -1661,7 +1661,7 @@ html.js-reveal .reveal:not(.is-in) .valbums > li { opacity: 0; transform: transl
 .valbum:hover, .valbum:focus-visible { transform: translateY(-4px); border-color: var(--ink); box-shadow: 0 28px 48px -30px rgba(26,26,26,.55); }
 .valbum:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 .valbum__cover { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--ink); }
-.valbum__cover img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: contain; }
+.valbum__cover img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
 .valbum__count {
   position: absolute; inset-block-end: .6rem; inset-inline-start: .6rem;
   display: inline-flex; align-items: center; gap: .35rem;
@@ -1701,6 +1701,173 @@ html.js-reveal .reveal:not(.is-in) .valbums > li { opacity: 0; transform: transl
 }
 @media print {
   .vfp__list, .vplayer__play { display: none !important; }
+}
+
+/* ---------- فهرس المقاطع (2026-11-24): مركز إعلامي ----------
+   صفحتا المكتبة والألبوم. تبويبات بالألبومات تحت رأس الصفحة، ثم شبكة
+   بطاقات متساوية 16:9، والتشغيل في مسرح حبريّ فوق الصفحة. رسمية بالأبيض
+   والأسود: لا لون إلا خطّ التبويب الحالي حبرياً، والأحمر للتركيز وحده. */
+
+/* التبويبات: نصّ على خطّ شعريّ، والحالي يحمل خطّاً حبرياً تحته — لا كبسولات */
+.vtabs {
+  display: flex; gap: clamp(1rem, 2.4vw, 2rem);
+  margin: calc(-1 * clamp(.5rem, 1vw, .9rem)) 0 clamp(1.5rem, 3vw, 2.25rem);
+  border-bottom: var(--line) solid var(--rule);
+  overflow-x: auto; scrollbar-width: none;
+}
+.vtabs::-webkit-scrollbar { display: none; }
+.vtabs__t {
+  position: relative; flex: none;
+  display: inline-flex; align-items: baseline; gap: .45rem;
+  padding: .85rem 0 .95rem; margin: 0;
+  border: 0; background: none; cursor: pointer;
+  font: inherit; font-family: var(--f-ui); font-size: .95rem; font-weight: 700;
+  color: var(--ink-72); white-space: nowrap;
+  transition: color .2s ease;
+}
+.vtabs__t::after {
+  content: ""; position: absolute; inset-inline: 0; bottom: -1px; height: 2px;
+  background: var(--ink);
+  transform: scaleX(0); transition: transform .35s var(--ease-glass);
+}
+.vtabs__t:hover { color: var(--ink); }
+.vtabs__t[aria-selected="true"] { color: var(--ink); }
+.vtabs__t[aria-selected="true"]::after { transform: scaleX(1); }
+.vtabs__t:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.vtabs__n {
+  font-size: .76rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  color: var(--ink-65);
+}
+
+.vindex__lead {
+  margin: 0 0 clamp(1.25rem, 2.6vw, 1.75rem); max-width: 62ch;
+  font-size: 1rem; line-height: 1.9; color: var(--ink-72);
+}
+
+/* الشبكة: أعمدة متساوية بلا عدد مفترَض */
+.vindex {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: clamp(1.5rem, 3vw, 2.25rem) clamp(1rem, 2vw, 1.5rem);
+}
+/* البطاقات تدخل متتابعة عند ظهور الصفحة وعند كلّ تبديل تبويب (key يعيد رسمها) */
+.vindex > li { animation: vcard-in .55s var(--ease-glass) both; animation-delay: calc(var(--i, 0) * .04s); }
+@keyframes vcard-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.vcard {
+  display: flex; flex-direction: column; gap: .85rem;
+  inline-size: 100%; block-size: 100%; padding: 0; margin: 0;
+  border: 0; background: none; color: var(--ink);
+  text-align: start; cursor: pointer;
+}
+.vcard__shot {
+  position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden;
+  background: var(--ink); border-radius: 2px;
+  box-shadow: 0 18px 36px -30px rgba(26,26,26,.55);
+  transition: box-shadow .45s var(--ease-glass);
+}
+.vcard__shot img {
+  position: absolute; inset: 0; inline-size: 100%; block-size: 100%;
+  object-fit: cover;
+  transition: opacity .35s ease;
+}
+/* زرّ التشغيل: مربّع ورقيّ صغير يكبر ويقلب لونه عند المرور، كمشغّل الرئيسية */
+.vcard__play {
+  position: absolute; inset: 0; margin: auto;
+  display: grid; place-items: center;
+  inline-size: 3rem; block-size: 3rem; border-radius: var(--r-sm);
+  background: var(--bg); color: var(--ink);
+  box-shadow: 0 12px 28px -12px rgba(0,0,0,.7);
+  transition: transform .35s var(--ease-glass), background-color .25s ease, color .25s ease;
+}
+.vcard__play svg { inline-size: 42%; block-size: 42%; fill: currentColor; }
+.vcard__dur {
+  position: absolute; inset-block-end: .55rem; inset-inline-start: .55rem;
+  padding: .15rem .45rem;
+  background: rgba(26,26,26,.82); color: var(--bg);
+  font-family: var(--f-ui); font-size: .74rem; font-weight: 700;
+  font-variant-numeric: tabular-nums; direction: ltr;
+}
+.vcard__body { display: grid; gap: .35rem; }
+.vcard__meta {
+  display: flex; flex-wrap: wrap; gap: .25rem .75rem;
+  font-family: var(--f-ui); font-size: .78rem; font-weight: 700; letter-spacing: .02em;
+  color: var(--ink-65);
+}
+.vcard__meta time { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+.vcard__meta > * + *::before {
+  content: ""; display: inline-block; vertical-align: middle;
+  inline-size: 4px; block-size: 4px; margin-inline-end: .75rem;
+  background: currentColor; transform: rotate(45deg); opacity: .6;
+}
+.vcard__t {
+  font-size: 1.04rem; font-weight: 800; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  background: linear-gradient(currentColor, currentColor) no-repeat 100% 100% / 0 1px;
+  transition: background-size .4s var(--ease-glass);
+}
+html.is-ltr .vcard__t { background-position: 0 100%; }
+.vcard:hover .vcard__shot, .vcard:focus-visible .vcard__shot { box-shadow: 0 26px 46px -28px rgba(26,26,26,.6); }
+.vcard:hover .vcard__shot img { opacity: .82; }
+.vcard:hover .vcard__play, .vcard:focus-visible .vcard__play {
+  transform: scale(1.1); background: var(--ink); color: var(--bg);
+  box-shadow: 0 0 0 2px var(--bg), 0 12px 28px -12px rgba(0,0,0,.7);
+}
+.vcard:hover .vcard__t, .vcard:focus-visible .vcard__t { background-size: 100% 1px; }
+.vcard:focus-visible { outline: none; }
+.vcard:focus-visible .vcard__shot { outline: 2px solid var(--red); outline-offset: 3px; }
+
+/* المسرح: حبريّ فوق الصفحة، المقطع في الوسط ومعلوماته تحته */
+.vtheater {
+  position: fixed; inset: 0; z-index: 200;
+  display: grid; place-items: center;
+  padding: clamp(4rem, 7vw, 5rem) clamp(1rem, 7vw, 7rem) clamp(1.5rem, 4vw, 3rem);
+  background: rgba(20,20,20,.96);
+  overflow-y: auto; overscroll-behavior: contain;
+  animation: fade .3s ease both;
+}
+.vtheater__stage {
+  inline-size: min(100%, 68rem, calc((100svh - 14rem) * 16 / 9));
+  min-inline-size: min(100%, 20rem);
+  animation: vtheater-in .45s var(--ease-glass) both;
+}
+@keyframes vtheater-in { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
+.vtheater .vplayer { box-shadow: 0 40px 80px -40px rgba(0,0,0,.9); }
+.vtheater__info { padding-top: clamp(1rem, 2vw, 1.4rem); color: var(--bg); }
+.vtheater__meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .9rem;
+  margin: 0 0 .5rem;
+  font-family: var(--f-ui); font-size: .82rem; font-weight: 700; color: var(--on-ink);
+}
+.vtheater__no { letter-spacing: .12em; font-variant-numeric: tabular-nums; color: var(--bg); }
+.vtheater__album {
+  padding: .2rem .6rem;
+  border: var(--line) solid var(--rule-ink); border-radius: 6px;
+  color: var(--bg); text-decoration: none;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.vtheater__album:hover { border-color: var(--bg); background: rgba(252,252,250,.06); }
+.vtheater__album:focus-visible { outline: 2px solid var(--red-soft); outline-offset: 2px; }
+.vtheater__date { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+.vtheater__title { margin: 0; font-size: clamp(1.2rem, 2.2vw, 1.65rem); font-weight: 800; line-height: 1.4; color: var(--bg); }
+.vtheater__desc { margin: .5rem 0 0; max-width: 70ch; font-size: .96rem; line-height: 1.85; color: var(--on-ink); }
+/* أزرار العارض نفسها (.lightbox__close/.lightbox__nav)، ثابتة في المسرح المتمرّر */
+.vtheater :is(.lightbox__close, .lightbox__nav) { position: fixed; }
+.vtheater > button svg {
+  width: 20px; height: 20px; fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+html.is-ltr .vtheater .lightbox__nav svg { transform: scaleX(-1); }
+
+@media (max-width: 640px) {
+  /* الأسهم تحت المقطع لا فوق جانبيه — الشاشة أضيق من أن تتّسع لهما */
+  .vtheater .lightbox__nav { top: auto; bottom: 1rem; margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vcard:hover .vcard__play, .vcard:focus-visible .vcard__play { transform: none; }
+}
+@media print {
+  .vtabs, .vtheater, .vcard__play { display: none !important; }
 }
 
 /* =====================================================================
@@ -4407,3 +4574,43 @@ p, li, dd, figcaption { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   .err__list a, .err__list a::after { transition: none; }
 }
+
+/* =====================================================================
+   النصّ المنسَّق من محرّر اللوحة (.rich) — RichText.tsx
+   الوسوم والأنماط مُنقّاة في الخادم: ألوان اللوحة المقفلة وخطوط الموقع
+   وحدها. هنا الإيقاع فقط، بالرموز نفسها.
+   ===================================================================== */
+.rich > :first-child { margin-top: 0; }
+.rich > :last-child  { margin-bottom: 0; }
+.rich p { margin: 0 0 .75em; }
+.rich h2, .rich h3, .rich h4 { margin: 1.1em 0 .45em; line-height: 1.3; letter-spacing: -.02em; }
+.rich h2 { font-size: 1.45em; font-weight: 800; }
+.rich h3 { font-size: 1.22em; font-weight: 800; }
+.rich h4 { font-size: 1.06em; font-weight: 700; color: var(--olive); }
+.rich ul, .rich ol { margin: 0 0 .75em; padding-inline-start: 1.4em; }
+.rich ul { list-style: disc; }
+.rich ol { list-style: decimal; }
+.rich li { margin-block: .25em; }
+.rich li > p { margin: 0; }
+.rich blockquote {
+  margin: 1em 0; padding-inline-start: 1em;
+  border-inline-start: 2px solid var(--olive);
+  color: var(--ink-72);
+}
+.rich a { color: var(--green); text-decoration: underline; text-underline-offset: .2em; }
+.rich mark { color: inherit; padding: 0 .15em; border-radius: 3px; }
+.rich hr { border: 0; border-top: var(--line) solid var(--rule); margin: 1.5em 0; }
+.rich img { display: block; max-width: 100%; height: auto; border-radius: var(--r); margin: 1em 0; }
+.rich table { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: .95em; }
+.rich th, .rich td {
+  border: var(--line) solid var(--rule); padding: .5em .7em;
+  text-align: start; vertical-align: top;
+}
+.rich th { color: var(--olive); font-weight: 700; background: var(--olive-12); }
+.rich th > p, .rich td > p { margin: 0; }
+/* الأرضيات الداكنة: ألوان اللوحة مقيسة على الورق، فتُردّ إلى لون السياق */
+.band--dark .rich [style*="color"] { color: inherit !important; }
+.band--dark .rich mark { background: var(--rule-ink) !important; }
+.band--dark .rich a { color: var(--green-soft); }
+.band--dark .rich th, .band--dark .rich td { border-color: var(--rule-ink); }
+.band--dark .rich th { color: var(--on-ink); background: none; }

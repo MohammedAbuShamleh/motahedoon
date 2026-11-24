@@ -3,6 +3,8 @@
    renderSection · renderSectionBrief · arOnly. */
 
 import { Nums } from "@/lib/nums";
+import { isHtml, plainText } from "@/lib/rich";
+import { RichText } from "@/components/RichText";
 import { useSite, useU } from "@/lib/site";
 import { FigureCell, StatStrip } from "@/components/primitives";
 import type {
@@ -15,12 +17,30 @@ import type {
    كما هي أسفله. */
 const STAT_RE = /(\d[\d,]*)\s+([^\s،.:؛()«»]+(?:\s+[^\s،.:؛()«»]+)?)/;
 
+/* الكلمة الثانية تُلتقط لتكمل الوحدة («طالباً وطالبة»)، لكنها إن كانت حرف
+   جرّ أو عطف أو صلة بقيت الوحدة معلّقة: «105 مشاركين في». تُترك الكلمة
+   المعلّقة ولا يُضاف شيء — الرقم والوحدة يبقيان كما كُتبا حرفياً. */
+const DANGLING = new Set([
+  "في", "من", "على", "إلى", "الى", "عن", "مع", "ضمن", "خلال", "عبر", "لدى", "حتى",
+  "بين", "منذ", "نحو", "حول", "عند", "و", "أو", "ثم", "التي", "الذي", "الذين", "اللاتي",
+  "منها", "منهم", "منهن", "فيها", "فيه", "بها", "به", "لـ", "بـ",
+]);
+
+/* null: الرقم بلا وحدة بعده («من 317,000 في الربع الثاني» — المعدود قبله)،
+   فلا بطاقة له؛ لا تُخترع وحدة، والجملة كاملة تبقى أسفل الشريط. */
+function unitOf(raw: string): string | null {
+  const words = raw.split(/\s+/);
+  if (DANGLING.has(words[0])) return null;
+  return words.length > 1 && DANGLING.has(words[words.length - 1]) ? words[0] : raw;
+}
+
 export function statsOf(items: Entry[]): Stat[] {
   const out: Stat[] = [];
   items.forEach((it) => {
     if (it.term) return;                 // البنود المعنونة ليست أرقاماً
-    const m = STAT_RE.exec(it.text ?? "");
-    if (m && m[1].length <= 12) out.push({ value: m[1], unit: m[2] });
+    const m = STAT_RE.exec(plainText(it.text));   // المنسَّق يُقرأ نصّاً
+    const unit = m && m[1].length <= 12 ? unitOf(m[2]) : null;
+    if (m && unit) out.push({ value: m[1], unit });
   });
   return out;
 }
@@ -46,7 +66,7 @@ function EntryList({ items }: { items: Entry[] }) {
       {items.map((it, i) => (
         <li className={it.term ? "entry" : "entry entry--plain"} key={i}>
           {it.term ? <p className="entry__term">{it.term}</p> : null}
-          <p className="entry__text"><Nums text={it.text} /></p>
+          <RichText className="entry__text" value={it.text} nums />
         </li>
       ))}
     </ul>
@@ -71,7 +91,7 @@ export function Groups({ groups }: { groups: ReportGroup[] }) {
               <details className="more more--recap">
                 <summary><span>{g.title || U("خلاصة")}</span></summary>
                 <div className="prose" style={{ marginTop: ".9rem" }}>
-                  {g.items.map((it, i) => <p key={i}><Nums text={it.text} /></p>)}
+                  {g.items.map((it, i) => <RichText key={i} value={it.text} nums />)}
                 </div>
               </details>
             </div>
@@ -108,7 +128,7 @@ export function Groups({ groups }: { groups: ReportGroup[] }) {
                   <small>{recap.length} {U("فقرة")}</small>
                 </summary>
                 <div className="prose" style={{ marginTop: ".9rem" }}>
-                  {recap.map((it, i) => <p key={i}><Nums text={it.text} /></p>)}
+                  {recap.map((it, i) => <RichText key={i} value={it.text} nums />)}
                 </div>
               </details>
             )}
@@ -128,11 +148,15 @@ export function Blocks({ blocks }: { blocks: FigureBlock[] }) {
           <div className="figs figs--dense">
             {b.figures.map((f, k) => <FigureCell m={f} key={k} />)}
           </div>
-          {b.note && (
+          {b.note && (isHtml(b.note.text) ? (
+            <div className="block__note">
+              <b>{b.note.term}:</b> <RichText value={b.note.text} nums />
+            </div>
+          ) : (
             <p className="block__note">
               <b>{b.note.term}:</b> <Nums text={b.note.text} />
             </p>
-          )}
+          ))}
         </div>
       ))}
     </>
@@ -184,9 +208,7 @@ export function SectionBrief({ sec, stagger }: { sec: ReportSection; stagger?: b
   return (
     <>
       {sec.lead && (
-        <p className="lead" style={{ marginTop: "clamp(1.25rem,2.5vw,1.9rem)" }}>
-          {sec.lead}
-        </p>
+        <RichText className="lead" style={{ marginTop: "clamp(1.25rem,2.5vw,1.9rem)" }} value={sec.lead} />
       )}
       <StatStrip stats={stats} cls={stagger ? "stagger" : undefined} />
     </>
@@ -198,9 +220,7 @@ export function Section({ sec }: { sec: ReportSection }) {
   return (
     <>
       {sec.lead && (
-        <p className="lead" style={{ marginTop: "clamp(1.25rem,2.5vw,1.9rem)" }}>
-          {sec.lead}
-        </p>
+        <RichText className="lead" style={{ marginTop: "clamp(1.25rem,2.5vw,1.9rem)" }} value={sec.lead} />
       )}
       <div style={{ marginTop: "clamp(1.75rem,3.5vw,2.75rem)" }}>
         {sec.blocks ? <Blocks blocks={sec.blocks} /> : null}
@@ -233,7 +253,7 @@ export function TitledItems({ items }: { items: (Entry | string)[] }) {
         {(items as Entry[]).map((it, i) => (
           <li className={it.term ? "entry" : "entry entry--plain"} key={i}>
             {it.term ? <p className="entry__term">{it.term}</p> : null}
-            <p className="entry__text"><Nums text={it.text} /></p>
+            <RichText className="entry__text" value={it.text} nums />
           </li>
         ))}
       </ul>

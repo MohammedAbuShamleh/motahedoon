@@ -47,7 +47,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::put('social-links/whatsapp', [Admin\SocialLinkController::class, 'whatsapp'])->name('social-links.whatsapp');
         Route::resource('social-links', Admin\SocialLinkController::class)
             ->only(['index', 'store', 'update', 'destroy'])->parameters(['social-links' => 'link']);
+        Route::get('pillars/guide', [Admin\PillarDetailsController::class, 'guide'])->name('pillars.guide');
         Route::resource('pillars', Admin\PillarController::class)->except('show');
+        Route::get('pillars/{pillar}/details', [Admin\PillarDetailsController::class, 'edit'])->name('pillars.details');
+        Route::put('pillars/{pillar}/details', [Admin\PillarDetailsController::class, 'update'])->name('pillars.details.update');
+        Route::post('pillars/{pillar}/sections', [Admin\PillarDetailsController::class, 'addSection'])->name('pillars.sections.store');
+        Route::post('rich-media', Admin\RichMediaController::class)->name('rich-media.store');
 
         Route::get('field-photos', [Admin\FieldPhotoController::class, 'index'])->name('field-photos.index');
         Route::post('field-photos', [Admin\FieldPhotoController::class, 'store'])->name('field-photos.store');

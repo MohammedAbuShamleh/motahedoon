@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 
+use App\Models\Pillar;
 use App\Models\Report;
 use App\Models\ReportBlock;
 use App\Models\ReportGroup;
@@ -31,6 +32,12 @@ final class ReportSectionService
     public function create(Report $report, int $pillarId): ReportSection
     {
         return $report->sections()->create(['pillar_id' => $pillarId]);
+    }
+
+    /** الطريق نفسه من صفحة المجال: التقرير معرّفاً والمجال نموذجاً */
+    public function createFor(int $reportId, Pillar $pillar): ReportSection
+    {
+        return $this->create(Report::query()->findOrFail($reportId), $pillar->id);
     }
 
     /** @param array<string, mixed> $data */

@@ -9,7 +9,7 @@ export default function Index({ reports }: { reports: Report[] }) {
   return (
     <AdminLayout>
       <Head title="التقارير الربعية" />
-      <PageHeader title="التقارير الربعية" subtitle="كل تقرير يغطّي فترة محدّدة، وأرقامه تخصّ تلك الفترة وحدها. الأحدث أولاً." actions={<LinkButton href="/admin/reports/create" variant="primary">+ إضافة تقرير</LinkButton>} />
+      <PageHeader title="التقارير الربعية" subtitle="كل تقرير يغطّي فترة محدّدة، وأرقامه تخصّ تلك الفترة وحدها. الأحدث أولاً." actions={<><LinkButton href="/admin/pillars/guide">كيف أعدّل الأرباع؟</LinkButton><LinkButton href="/admin/reports/create" variant="primary">+ إضافة تقرير</LinkButton></>} />
       <Card flush>
         {reports.length === 0 ? <div className="p-5"><Empty>لا تقارير بعد.</Empty></div> : (
           <ul className="divide-y divide-rule">

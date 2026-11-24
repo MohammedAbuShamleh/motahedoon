@@ -1,3 +1,4 @@
+import { RichText } from "@/components/RichText";
 import { Link } from "@inertiajs/react";
 import type { CSSProperties, ReactNode } from "react";
 import { Layout } from "@/app/Layout";
@@ -72,7 +73,7 @@ function ReportList({ items, variant }: { items: (Entry | string)[]; variant: Li
           <span className="rp-item__no" aria-hidden="true">{ord(i)}</span>
           <div className="rp-item__body">
             {it.term ? <h3 className="rp-item__term">{it.term}</h3> : null}
-            <p className="rp-item__text"><Nums text={it.text} /></p>
+            <RichText className="rp-item__text" value={it.text} nums />
           </div>
         </li>
       ))}

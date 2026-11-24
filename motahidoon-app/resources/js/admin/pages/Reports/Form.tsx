@@ -65,7 +65,7 @@ export default function Form({ report: r, lineGroups, pillars }: Props) {
   return (
     <AdminLayout>
       <Head title={r ? r.label : "تقرير جديد"} />
-      <PageHeader title={r ? r.label : "تقرير جديد"} subtitle="الأرقام تُكتب كما في المصدر حرفياً: لا جمع، لا تقريب، لا اختصار." actions={<LinkButton href="/admin/reports">رجوع</LinkButton>} />
+      <PageHeader title={r ? r.label : "تقرير جديد"} subtitle="الأرقام تُكتب كما في المصدر حرفياً: لا جمع، لا تقريب، لا اختصار." actions={<><LinkButton href="/admin/pillars/guide">الدليل</LinkButton><LinkButton href="/admin/reports">رجوع</LinkButton></>} />
       <ErrorSummary errors={e} />
 
       <form onSubmit={submit} className="space-y-6">

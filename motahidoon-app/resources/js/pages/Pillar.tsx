@@ -1,3 +1,4 @@
+import { RichText } from "@/components/RichText";
 import { Link } from "@inertiajs/react";
 import type { CSSProperties } from "react";
 import { Layout } from "@/app/Layout";
@@ -88,7 +89,7 @@ export default function Pillar({
           <p className="pa-hero__orgs">{p.orgs}</p>
           <div className="pa-hero__def">
             {p.definition
-              ? <p>{p.definition}</p>
+              ? <RichText value={p.definition} />
               : <Slot label={U("التعريف الدائم بالمجال")} />}
           </div>
           <p className="pa-hero__cta">
@@ -152,7 +153,7 @@ export default function Pillar({
 
           {section && report ? (
             <>
-              {section.lead && <p className="pa-period__lead">{section.lead}</p>}
+              {section.lead && <RichText className="pa-period__lead" value={section.lead} />}
               {stats.length > 0 && (
                 <ul className="pa-stats">
                   {stats.map((s, i) => (

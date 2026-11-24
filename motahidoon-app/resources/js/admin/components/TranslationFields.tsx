@@ -1,4 +1,5 @@
 import type { Translations } from "../types";
+import { RichEditor } from "./RichEditor";
 import { LOCALE_NAME, LocaleTag, TextArea, TextField } from "./ui";
 
 /**
@@ -7,7 +8,8 @@ import { LOCALE_NAME, LocaleTag, TextArea, TextField } from "./ui";
  * العناوين عربية واللوح بالاتجاه العربي؛ خانات الكتابة وحدها لاتينية الاتجاه.
  */
 export function TranslationFields({ fields, value, onChange, errors = {} }: {
-  fields: { key: string; label: string; multiline?: boolean }[];
+  /** rich: محرّر منسَّق بالاتجاه اللاتيني، كحقله العربي */
+  fields: { key: string; label: string; multiline?: boolean; rich?: boolean }[];
   value: Translations;
   onChange: (t: Translations) => void;
   errors?: Record<string, string | undefined>;
@@ -31,6 +33,7 @@ export function TranslationFields({ fields, value, onChange, errors = {} }: {
               error: errors[`translations.${locale}.${f.key}`],
               dir: "ltr" as const,
             };
+            if (f.rich) return <RichEditor key={f.key} {...props} compact lazy />;
             return f.multiline ? <TextArea key={f.key} {...props} rows={3} /> : <TextField key={f.key} {...props} />;
           })}
         </div>

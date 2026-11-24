@@ -6,7 +6,8 @@ use Illuminate\Validation\Rule;
 
 final class PillarRequest extends AdminRequest
 {
-    public const TRANSLATABLE = ['title', 'short', 'cover_caption', 'orgs', 'definition'];
+    /** التعريف يُحرَّر في صفحة تفاصيل المجال (PillarDetailsRequest) لا هنا */
+    public const TRANSLATABLE = ['title', 'short', 'cover_caption', 'orgs'];
 
     public function rules(): array
     {
@@ -16,7 +17,6 @@ final class PillarRequest extends AdminRequest
             'title' => ['required', 'string', 'max:512'],
             'short' => ['required', 'string', 'max:255'],
             'orgs' => ['required', 'string', 'max:512'],
-            'definition' => ['nullable', 'string'],
             'cover_caption' => ['nullable', 'string', 'max:512'],
             'position' => ['nullable', 'integer', 'min:1', 'max:65000'],
             'is_published' => ['required', 'boolean'],

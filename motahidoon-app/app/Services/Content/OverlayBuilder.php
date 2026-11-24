@@ -74,7 +74,7 @@ final class OverlayBuilder
                 'short' => $p->translated('short', $locale),
                 'coverCaption' => $p->translated('cover_caption', $locale),
                 'orgs' => $p->translated('orgs', $locale),
-                'definition' => $p->translated('definition', $locale),
+                'definition' => RichText::clean($p->translated('definition', $locale)),
             ])])->filter()->all());
 
         $this->put($out, 'reports', $this->reports($with));
@@ -121,7 +121,7 @@ final class OverlayBuilder
                 $detail = $s->translated('detail', $this->locale);
 
                 return [$s->pillar->slug => $this->fields([
-                    'lead' => $s->translated('lead', $this->locale),
+                    'lead' => RichText::clean($s->translated('lead', $this->locale)),
                     'stats' => $stats === null ? null : json_decode($stats, true, 8, JSON_THROW_ON_ERROR),
                     // التفصيل الكامل كتلةً واحدة؛ مطابقته للعربية يفحصها LocalizeContent
                     'detail' => $detail === null ? null : json_decode($detail, true, 16, JSON_THROW_ON_ERROR),

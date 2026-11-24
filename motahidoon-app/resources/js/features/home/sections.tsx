@@ -2,6 +2,7 @@
    الترتيب والأصناف ومواضع الخانات المحجوزة كما هي، فـstyle.css يسري
    بلا تعديل حرف. */
 
+import { plainText } from "@/lib/rich";
 import { useEffect, useRef } from "react";
 import { ContactForm } from "./ContactForm";
 import { Link } from "@inertiajs/react";
@@ -279,7 +280,7 @@ export function Fields({ pillars }: { pillars: Pillar[] }) {
                       )}
                       <p className="pidx__orgs">{p.orgs}</p>
                       {p.definition
-                        ? <p className="pidx__def">{p.definition}</p>
+                        ? <p className="pidx__def">{plainText(p.definition)}</p>
                         : <Slot label={U("التعريف الدائم بالمجال")} />}
                       <p className="pidx__cta">
                         <Link className="pidx__more" href={path(`/p/${p.id}`)}>{U("تفاصيل المجال")}</Link>

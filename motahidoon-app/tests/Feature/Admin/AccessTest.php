@@ -32,7 +32,7 @@ final class AccessTest extends AdminTestCase
     {
         $this->actingAs($this->user(UserRole::Editor));
         foreach (['/admin', '/admin/settings', '/admin/content-lines', '/admin/partners', '/admin/partners/create',
-            '/admin/partners/1/edit', '/admin/pillars', '/admin/pillars/1/edit', '/admin/field-photos', '/admin/media',
+            '/admin/partners/1/edit', '/admin/pillars', '/admin/pillars/1/edit', '/admin/pillars/1/details', '/admin/pillars/guide', '/admin/field-photos', '/admin/media',
             '/admin/reports', '/admin/reports/create', '/admin/reports/1/edit', '/admin/sections/1/edit',
             '/admin/translations', '/admin/ui-strings'] as $url) {
             $this->get($url)->assertOk();

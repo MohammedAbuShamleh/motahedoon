@@ -110,7 +110,7 @@ final class SiteTreeBuilder
                 'title' => $p->title,
                 'short' => $p->short,
                 'orgs' => $p->orgs,
-                'definition' => $p->definition,
+                'definition' => RichText::clean($p->definition),
                 'cover' => $p->cover === null ? null : [
                     'src' => $p->cover->path,
                     'caption' => $p->cover_caption,

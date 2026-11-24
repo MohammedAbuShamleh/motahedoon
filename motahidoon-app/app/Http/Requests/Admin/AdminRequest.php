@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Enums\UserRole;
+use App\Services\Content\RichText;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -20,6 +21,39 @@ abstract class AdminRequest extends FormRequest
     public function authorize(): bool
     {
         return (bool) $this->user()?->hasRole(...$this->roles());
+    }
+
+    /**
+     * حقول النصّ المنسَّق بمسارات نقطية («*» لكل عنصر). تُنقّى في validated()
+     * فلا يصل الخدمةَ HTML غير منقّى أيّاً كان من يستدعيها.
+     *
+     * @return list<string>
+     */
+    protected function richFields(): array
+    {
+        return [];
+    }
+
+    /** المحرّر الفارغ (<p></p>) يصير null قبل التحقّق، فتعمل required وتبقى الخانة المحجوزة. */
+    protected function prepareForValidation(): void
+    {
+        $paths = $this->richFields();
+        if ($paths === []) {
+            return;
+        }
+        $mapped = RichText::mapPaths(
+            $this->input(), $paths,
+            fn (string $v) => RichText::isHtml($v) && RichText::isBlank($v) ? null : $v,
+        );
+        $roots = array_unique(array_map(fn (string $p) => explode('.', $p)[0], $paths));
+        $this->merge(array_intersect_key($mapped, array_flip($roots)));
+    }
+
+    public function validated($key = null, $default = null): mixed
+    {
+        $data = RichText::mapPaths(parent::validated(), $this->richFields(), RichText::clean(...));
+
+        return $key === null ? $data : data_get($data, $key, $default);
     }
 
     /** قواعد حقول الترجمة: translations[en|tr][field]. @param list<string> $fields */

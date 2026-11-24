@@ -103,7 +103,7 @@ final class ReportTreeBuilder
     private function section(ReportSection $s): array
     {
         $node = [];
-        $this->putValue($node, 'lead', $s->lead);
+        $this->putValue($node, 'lead', RichText::clean($s->lead));
         $this->putList($node, 'groups', $s->groups->map(fn (ReportGroup $g) => $this->group($g))->all());
         $this->putList($node, 'blocks', $s->blocks->map(fn (ReportBlock $b) => $this->block($b))->all());
         if ($s->table !== null) {
@@ -126,7 +126,7 @@ final class ReportTreeBuilder
         $node['items'] = $g->items->map(function (ReportGroupItem $i): array {
             $item = [];
             $this->putValue($item, 'term', $i->term);
-            $item['text'] = $i->body;
+            $item['text'] = RichText::clean($i->body);
             $this->putFlag($item, 'recap', $i->is_recap);
 
             return $item;
@@ -146,7 +146,7 @@ final class ReportTreeBuilder
         if ($b->note_body !== null) {
             $note = [];
             $this->putValue($note, 'term', $b->note_term);
-            $note['text'] = $b->note_body;
+            $note['text'] = RichText::clean($b->note_body);
             $node['note'] = $note;
         }
 
