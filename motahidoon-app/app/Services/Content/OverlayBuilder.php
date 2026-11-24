@@ -3,6 +3,7 @@
 namespace App\Services\Content;
 
 use App\Enums\ContentLineGroup;
+use App\Enums\ReportLineGroup;
 use App\Enums\TranslationStatus;
 use App\Models\ContentLine;
 use App\Models\Partner;
@@ -86,7 +87,9 @@ final class OverlayBuilder
     {
         $reports = Report::query()->published()->latestFirst()->with([
             ...$with,
-            'lines' => fn ($q) => $q->where('group', 'intro')->with($with),
+            'lines' => fn ($q) => $q->whereIn('group', [
+                ReportLineGroup::Intro->value, ReportLineGroup::Highlight->value, ReportLineGroup::Reading->value,
+            ])->with($with),
             'metrics.translations' => $with['translations'],
             'sections.pillar',
             'sections.translations' => $with['translations'],
@@ -98,7 +101,11 @@ final class OverlayBuilder
                 'range' => $r->translated('range', $this->locale),
                 'reportTitle' => $r->translated('report_title', $this->locale),
                 'metricsTitle' => $r->translated('metrics_title', $this->locale),
-                'intro' => $this->bodies($r->lines),
+                'intro' => $this->bodies($r->linesOf(ReportLineGroup::Intro)),
+                'readingTitle' => $r->translated('reading_title', $this->locale),
+                // بمواضعها لا مضغوطةً: LocalizeContent يقبلها كاملة أو يُسقطها كلّها
+                'highlights' => $this->aligned($r->linesOf(ReportLineGroup::Highlight), ['body']),
+                'reading' => $this->aligned($r->linesOf(ReportLineGroup::Reading), ['term', 'body']),
             ]);
 
             $metrics = $r->metrics->map(fn (ReportMetric $m) => $this->fields([
@@ -124,6 +131,21 @@ final class OverlayBuilder
 
             return $node === [] ? [] : [$r->slug => $node];
         })->all();
+    }
+
+    /**
+     * ترجمة كلّ سطر في موضعه (null حيث لم يُترجَم)، أو [] إن لم يُترجَم شيء.
+     *
+     * @param  list<string>  $fields
+     * @return list<array<string, string|null>>
+     */
+    private function aligned(Collection $lines, array $fields): array
+    {
+        $rows = $lines->map(fn ($l) => collect($fields)
+            ->mapWithKeys(fn (string $f) => [$f === 'body' ? 'text' : $f => $l->translated($f, $this->locale)])
+            ->all())->values();
+
+        return $rows->contains(fn (array $r) => $r['text'] !== null) ? $rows->all() : [];
     }
 
     /** @return list<string> */

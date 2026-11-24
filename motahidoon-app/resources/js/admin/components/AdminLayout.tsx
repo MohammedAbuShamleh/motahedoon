@@ -34,7 +34,10 @@ const NAV: { title: string; items: NavItem[] }[] = [
   {
     title: "التقارير الدورية",
     // محرّر قسم التقرير (/admin/sections/…) تابع للتقارير
-    items: [{ href: "/admin/reports", label: "التقارير الربعية", icon: "reports", roles: ["admin", "editor"], also: ["/admin/sections"] }],
+    items: [
+      { href: "/admin/impact", label: "الإنجازات والأثر", icon: "impact", roles: ["admin", "editor"] },
+      { href: "/admin/reports", label: "التقارير الربعية", icon: "reports", roles: ["admin", "editor"], also: ["/admin/sections"] },
+    ],
   },
   {
     title: "اللغات والترجمة",

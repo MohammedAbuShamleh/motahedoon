@@ -52,6 +52,64 @@ final class ReportEditingTest extends AdminTestCase
         $this->assertSame(count($data['metrics']), ReportMetric::query()->where('report_id', $report->id)->count());
     }
 
+    /** حمولة «الإنجازات والأثر» كما ترسلها اللوحة، من خصائص صفحتها نفسها. */
+    private function impactPayload(Report $report): array
+    {
+        $r = $this->get("/admin/impact?report={$report->id}")->assertOk()->viewData('page')['props']['report'];
+
+        return [
+            'home_metrics_count' => 3,
+            ...collect($r)->only(['metrics_title', 'reading_title', 'translations', 'metrics', 'highlight', 'reading'])->all(),
+        ];
+    }
+
+    /** @return array<string, mixed> التقرير كما يُرسَم بلغة */
+    private function shownReport(string $slug, string $lang): array
+    {
+        // الشجرة singleton لكلّ طلب؛ والاختبار يتشارك حاوية واحدة بين طلباته
+        $this->app->forgetInstance(\App\Services\SiteContent::class);
+        $this->app->forgetInstance(\App\Contracts\ContentSource::class);
+
+        return $this->get("/reports/{$slug}?lang={$lang}")->assertOk()->viewData('page')['props']['report'];
+    }
+
+    public function test_impact_translations_are_edited_in_place_and_shown_only_when_complete(): void
+    {
+        $this->actingAs($this->user(UserRole::Editor));
+        $report = Report::query()->where('slug', 'q3-2026')->firstOrFail();
+        $data = $this->impactPayload($report);
+        $this->assertNotEmpty($data['highlight']);
+
+        foreach ($data['highlight'] as $i => $line) {
+            $data['highlight'][$i]['translations']['en']['body'] = "Highlight {$i}";
+        }
+        $data['metrics'][0]['translations']['en']['label'] = 'Edited label';
+        // ناقص بند واحد: القائمة كلّها تُحذف من العرض الإنجليزي، لا تُخلط
+        $last = array_key_last($data['highlight']);
+        $data['highlight'][$last]['translations']['en']['body'] = '';
+
+        $this->put("/admin/impact/{$report->id}", $data)->assertSessionHasNoErrors();
+
+        $shown = $this->shownReport('q3-2026', 'en');
+        $this->assertNull($shown['highlights']);
+        $this->assertSame('Edited label', $shown['metrics'][0]['label']);
+        $this->assertSame('pending', Translation::query()->where('translatable_type', 'report_metric')
+            ->where('translatable_id', $data['metrics'][0]['id'])->where('locale', 'en')
+            ->where('field', 'label')->value('status')?->value);
+
+        // اكتملت: تظهر بترتيب العربية. والتركية بلا ترجمة تبقى محذوفة
+        $data['highlight'][$last]['translations']['en']['body'] = "Highlight {$last}";
+        $this->put("/admin/impact/{$report->id}", $data)->assertSessionHasNoErrors();
+
+        $this->assertSame(
+            array_map(fn ($i) => "Highlight {$i}", array_keys($data['highlight'])),
+            $this->shownReport('q3-2026', 'en')['highlights'],
+        );
+        $this->assertNull($this->shownReport('q3-2026', 'tr')['highlights']);
+        // العربية لم تُمسّ
+        $this->assertSame(array_column($data['highlight'], 'body'), $this->shownReport('q3-2026', 'ar')['highlights']);
+    }
+
     public function test_only_one_current_report(): void
     {
         $this->actingAs($this->user(UserRole::Editor));

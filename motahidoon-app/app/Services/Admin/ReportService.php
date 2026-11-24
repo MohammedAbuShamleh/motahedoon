@@ -4,12 +4,16 @@ namespace App\Services\Admin;
 
 use App\Enums\ReportLineGroup;
 use App\Enums\ReportStatus;
+use App\Http\Requests\Admin\ImpactRequest;
 use App\Http\Requests\Admin\ReportRequest;
 use App\Models\Report;
+use App\Models\SiteSetting;
 use App\Models\User;
 use App\Services\Media\MediaService;
 use App\Traits\SyncsChildren;
+use Closure;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -111,10 +115,49 @@ final class ReportService
         });
     }
 
-    /** @param array<string, list<array<string, mixed>>> $lines */
-    private function syncLines(Report $report, array $lines): void
+    /**
+     * «الإنجازات والأثر» وحدها: المؤشّرات وعنوانها، وأبرز الإنجازات، وقراءة
+     * الأثر وعنوانها، وعدد أرقام الرئيسية — بعربيّتها وترجماتها معاً.
+     * لا يمسّ باقي التقرير ولا ترجماته.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function saveImpact(Report $report, array $data, User $by): void
     {
-        foreach (ReportLineGroup::cases() as $group) {
+        DB::transaction(function () use ($report, $data, $by): void {
+            $report->update([
+                'metrics_title' => $data['metrics_title'],
+                'reading_title' => $data['reading_title'] ?? null,
+            ]);
+            $this->translations->syncFields($report, $data['translations'] ?? null, ImpactRequest::TRANSLATABLE, $by);
+
+            // ترجمة كلّ بند تُزامَن بعد حفظه، فالبند الجديد يأخذ ترجمته في الحفظ نفسه
+            $translate = fn (array $fields) => fn (Model $child, array $row) =>
+                $this->translations->syncFields($child, $row['translations'] ?? null, $fields, $by);
+
+            $this->syncChildren($report->metrics(), $data['metrics'] ?? [], fn (array $m) => [
+                'value' => $m['value'],
+                'prefix' => $m['prefix'] ?? null,
+                'unit' => $m['unit'] ?? null,
+                'label' => $m['label'],
+                'accent' => (bool) ($m['accent'] ?? false),
+            ], $translate(['label', 'unit']));
+            $this->syncLines($report, [
+                ReportLineGroup::Highlight->value => $data['highlight'] ?? [],
+                ReportLineGroup::Reading->value => $data['reading'] ?? [],
+            ], [ReportLineGroup::Highlight, ReportLineGroup::Reading], $translate(['term', 'body']));
+            SiteSetting::current()->update(['home_metrics_count' => (int) $data['home_metrics_count']]);
+        });
+    }
+
+    /**
+     * @param array<string, list<array<string, mixed>>> $lines
+     * @param list<ReportLineGroup>|null $only  المجموعات المُزامَنة؛ null = كلّها
+     * @param (Closure(Model, array<string, mixed>): void)|null $after  لمزامنة ترجمة كلّ سطر
+     */
+    private function syncLines(Report $report, array $lines, ?array $only = null, ?Closure $after = null): void
+    {
+        foreach ($only ?? ReportLineGroup::cases() as $group) {
             $this->syncChildren(
                 $report->lines()->where('group', $group->value),
                 $lines[$group->value] ?? [],
@@ -123,6 +166,7 @@ final class ReportService
                     'term' => $group->hasTerm() ? ($l['term'] ?? null) : null,
                     'body' => $l['body'],
                 ],
+                $after,
             );
         }
     }

@@ -69,6 +69,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::resource('media', Admin\MediaController::class)->only(['index', 'store', 'destroy'])
             ->parameters(['media' => 'media']);
 
+        Route::get('impact', [Admin\ImpactController::class, 'index'])->name('impact.index');
+        Route::put('impact/{report}', [Admin\ImpactController::class, 'update'])->name('impact.update');
         Route::resource('reports', Admin\ReportController::class)->except('show');
         Route::post('reports/{report}/sections', [Admin\ReportSectionController::class, 'store'])->name('sections.store');
         Route::get('sections/{section}/edit', [Admin\ReportSectionController::class, 'edit'])->name('sections.edit');

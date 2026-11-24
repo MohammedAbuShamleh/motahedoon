@@ -65,8 +65,10 @@ final class LocalizeContent
 
         foreach ($s['reports']['items'] ?? [] as $i => $r) {
             $tr = $t['reports'][$r['id']] ?? null;
+            $ar = $r;
 
-            // السرد الطويل غير مترجَم: يُسقَط كلياً من العرض الأجنبي
+            // السرد الطويل غير مترجَم: يُسقَط كلياً من العرض الأجنبي.
+            // أبرز الإنجازات وقراءة الأثر يعودان أدناه إن تُرجما كاملين
             foreach (['summary', 'appeal', 'reading', 'dataNotes',
                       'opportunities', 'closing', 'highlights', 'notice'] as $k) {
                 $r[$k] = null;
@@ -86,6 +88,11 @@ final class LocalizeContent
             }
             if (! empty($tr['intro'])) {
                 $r['intro'] = $tr['intro'];
+            }
+            $r['highlights'] = $this->lines($ar['highlights'] ?? null, $tr['highlights'] ?? null);
+            if (! empty($ar['reading']) && ! empty($tr['readingTitle'])) {
+                $items = $this->lines($ar['reading']['items'], $tr['reading'] ?? null);
+                $r['reading'] = $items === null ? null : ['title' => $tr['readingTitle'], 'items' => $items];
             }
             if (! empty($tr['metrics'])) {
                 foreach ($r['metrics'] as $m => $metric) {
@@ -123,6 +130,42 @@ final class LocalizeContent
         }
 
         return $s;
+    }
+
+    /**
+     * قائمة أسطر مترجَمة كاملةً بترتيب العربية، أو null إن نقص منها شيء.
+     *
+     * السطر العربي نصّ مجرّد (أبرز الإنجازات) أو {term, text} (قراءة الأثر).
+     * المطابقة تامّة كالتفصيل: العدد نفسه، وكلّ نصّ عربي له مقابل مترجَم —
+     * فلا قائمة نصفها عربي، ولا عنوان بند يسقط بصمت.
+     *
+     * @param  list<string|array<string, string|null>>|null  $ar
+     * @param  list<array<string, string|null>>|null         $tr
+     * @return list<string|array<string, string>>|null
+     */
+    private function lines(?array $ar, ?array $tr): ?array
+    {
+        if (empty($ar) || ! is_array($tr) || count($tr) !== count($ar)) {
+            return null;
+        }
+        $filled = fn (mixed $v): bool => is_string($v) && trim($v) !== '';
+        $out = [];
+        foreach (array_values($ar) as $i => $line) {
+            $tl = $tr[$i] ?? null;
+            if (! is_array($tl) || ! $filled($tl['text'] ?? null)) {
+                return null;
+            }
+            if (is_string($line)) {
+                $out[] = $tl['text'];
+                continue;
+            }
+            if (! empty($line['term']) && ! $filled($tl['term'] ?? null)) {
+                return null;
+            }
+            $out[] = ['term' => empty($line['term']) ? null : $tl['term'], 'text' => $tl['text']];
+        }
+
+        return $out;
     }
 
     /**
