@@ -18,9 +18,9 @@ final class VideoController extends Controller
         $albums = $library->albums();
 
         return Inertia::render('Videos', [
-            // الفهرس لا يحتاج مقاطع كلّ ألبوم كاملةً: الغلاف والعدد يكفيان
+            // الألبومات تبويباتٍ (اسم وعدد ووصف)، والمقاطع كلّها شبكةً واحدة تُصفّى بها
             'albums' => array_map(fn (array $a) => collect($a)->except('videos')->all(), $albums),
-            'latest' => $library->highlights(8),
+            'videos' => $library->highlights(),
         ])->withViewData(['meta' => $meta($content->ui()['مكتبة الفيديو'] ?? 'مكتبة الفيديو')]);
     }
 

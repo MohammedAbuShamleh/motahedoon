@@ -1,14 +1,14 @@
 import { Link } from "@inertiajs/react";
 import { Layout } from "@/app/Layout";
-import { AlbumGrid, FeaturePlaylist } from "@/components/video";
+import { VideoIndex } from "@/components/video";
 import { useSite, useU } from "@/lib/site";
 import type { VideoAlbumCard, VideoItem } from "@/types";
 
 /* =====================================================================
-   مكتبة الفيديو (/videos): رأس الصفحة بعدد الألبومات والمقاطع، ثم
-   الألبومات شبكةً، ثم «أحدث المقاطع» بمشغّلها وقائمتها.
+   مكتبة الفيديو (/videos): رأس الصفحة بعدد الألبومات والمقاطع، ثم فهرس
+   المقاطع كلّها — تبويب لكلّ ألبوم، وشبكة بطاقات، والتشغيل في مسرح.
    ===================================================================== */
-export default function Videos({ albums, latest }: { albums: VideoAlbumCard[]; latest: VideoItem[] }) {
+export default function Videos({ albums, videos }: { albums: VideoAlbumCard[]; videos: VideoItem[] }) {
   const U = useU();
   const { locale } = useSite();
   const path = (x: string) => (locale === "ar" ? x : `${x}?lang=${locale}`);
@@ -30,25 +30,11 @@ export default function Videos({ albums, latest }: { albums: VideoAlbumCard[]; l
             </p>
           </header>
 
-          {albums.length ? (
-            <>
-              <h2 className="vpage__h">{U("الألبومات")}</h2>
-              <AlbumGrid albums={albums} />
-            </>
-          ) : (
-            <p className="vpage__empty">{U("لا مقاطع منشورة بعد")}</p>
-          )}
+          {videos.length
+            ? <VideoIndex videos={videos} albums={albums} />
+            : <p className="vpage__empty">{U("لا مقاطع منشورة بعد")}</p>}
         </div>
       </section>
-
-      {latest.length > 0 && (
-        <section className="band vpage vpage--latest">
-          <div className="vpage__in reveal">
-            <h2 className="vpage__h">{U("أحدث المقاطع")}</h2>
-            <FeaturePlaylist videos={latest} />
-          </div>
-        </section>
-      )}
     </Layout>
   );
 }

@@ -35,11 +35,12 @@ final class VideoLibrary
     }
 
     /**
-     * قائمة قسم الرئيسية: المميّزة أوّلاً، ثم الأحدث تاريخاً، ثم الأحدث إضافةً.
+     * المقاطع كلّها مرتّبةً: المميّزة أوّلاً، ثم الأحدث تاريخاً، ثم الأحدث إضافةً.
+     * بحدٍّ لقسم الرئيسية، وبلا حدّ لصفحة المكتبة.
      *
      * @return list<array<string, mixed>>
      */
-    public function highlights(int $limit = 6): array
+    public function highlights(?int $limit = null): array
     {
         return collect($this->albums())
             ->flatMap(fn (array $a) => $a['videos'])
@@ -48,7 +49,7 @@ final class VideoLibrary
                 fn ($a, $b) => ($b['date'] ?? '') <=> ($a['date'] ?? ''),
                 fn ($a, $b) => $b['id'] <=> $a['id'],
             ])
-            ->take($limit)->values()->all();
+            ->when($limit !== null, fn ($c) => $c->take($limit))->values()->all();
     }
 
     /** @return list<array<string, mixed>> */

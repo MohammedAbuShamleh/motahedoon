@@ -1,15 +1,17 @@
 import { Link } from "@inertiajs/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSite, useU } from "@/lib/site";
 import type { VideoAlbumCard, VideoItem } from "@/types";
 
 /* =====================================================================
    مكوّنات مكتبة الفيديو — قسم الرئيسية وصفحتا المكتبة والألبوم.
+   الرئيسية: مشغّل وقائمة (FeaturePlaylist). الصفحتان: فهرس مركز إعلامي —
+   تبويبات بالألبومات وشبكة بطاقات، والتشغيل في مسرح فوق الصفحة (VideoIndex).
 
    المشغّل «واجهة قبل التحميل»: غلاف وزرّ تشغيل وحدهما، ولا يُحمَّل
    iframe يوتيوب/فيسبوك ولا يُجلب ملف الفيديو إلا بعد نقر الزائر — صفحة
    خفيفة لاتصال ضعيف، ولا ملفّات تتبّع قبل التشغيل (youtube-nocookie).
-   الغلاف محتوًى كاملاً بنسبته (لا قصّ) على أرضية حبرية.
+   الغلاف يملأ إطار 16:9 (cover) بلا حواشٍ سوداء.
    ===================================================================== */
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -150,5 +152,161 @@ export function AlbumGrid({ albums }: { albums: VideoAlbumCard[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+/* ---------- فهرس المقاطع: تبويبات وشبكة ومسرح ---------- */
+
+/** بطاقة مقطع: الغلاف كاملاً بنسبته، ثم الألبوم والتاريخ، ثم العنوان. */
+function VideoCard({ video, showAlbum, onOpen }: {
+  video: VideoItem; showAlbum: boolean; onOpen: (el: HTMLButtonElement) => void;
+}) {
+  const U = useU();
+  return (
+    <button type="button" className="vcard" onClick={(e) => onOpen(e.currentTarget)}
+            aria-label={`${U("تشغيل")}: ${video.title}`}>
+      <span className="vcard__shot" aria-hidden="true">
+        {video.poster
+          ? <img src={video.poster} alt="" loading="lazy" decoding="async" />
+          : <span className="vplayer__blank" />}
+        <span className="vcard__play"><PlayGlyph /></span>
+        {video.duration && <span className="vcard__dur">{video.duration}</span>}
+      </span>
+      <span className="vcard__body" aria-hidden="true">
+        {(showAlbum || video.date) && (
+          <span className="vcard__meta">
+            {showAlbum && <span>{video.album.title}</span>}
+            {video.date && <time dateTime={video.date}>{video.date}</time>}
+          </span>
+        )}
+        <span className="vcard__t">{video.title}</span>
+      </span>
+    </button>
+  );
+}
+
+/**
+ * فهرس المقاطع. albums (اختياري) يُظهر تبويبات تصفّي الشبكة في مكانها —
+ * «الكل» ثم ألبوم لكلّ تبويب بعدد مقاطعه. النقر على بطاقة يفتح المسرح،
+ * والتنقّل فيه داخل المقاطع الظاهرة في التبويب الحالي وحدها.
+ */
+export function VideoIndex({ videos, albums, showAlbum = true }: {
+  videos: VideoItem[]; albums?: VideoAlbumCard[]; showAlbum?: boolean;
+}) {
+  const U = useU();
+  const [tab, setTab] = useState<string | null>(null);
+  const [open, setOpen] = useState<number | null>(null);
+  const opener = useRef<HTMLButtonElement | null>(null);
+
+  const shown = tab === null ? videos : videos.filter((v) => v.album.slug === tab);
+  const album = albums?.find((a) => a.slug === tab);
+  const tabs = albums && albums.length > 1;
+
+  const close = useCallback(() => { setOpen(null); opener.current?.focus(); }, []);
+
+  return (
+    <>
+      {tabs && (
+        <div className="vtabs" role="tablist" aria-label={U("تصنيف المقاطع")}>
+          {[{ slug: null, title: U("الكل"), count: videos.length }, ...albums.map((a) => ({ slug: a.slug as string | null, title: a.title, count: a.count }))]
+            .map((t) => (
+              <button key={t.slug ?? "all"} type="button" role="tab" className="vtabs__t"
+                      aria-selected={tab === t.slug} onClick={() => setTab(t.slug)}>
+                {t.title}<span className="vtabs__n"><bdi>{t.count}</bdi></span>
+              </button>
+            ))}
+        </div>
+      )}
+
+      <div role={tabs ? "tabpanel" : undefined} aria-label={tabs ? (album?.title ?? U("الكل")) : undefined}>
+        {album?.description && <p className="vindex__lead">{album.description}</p>}
+        <ul key={tab ?? "all"} className="vindex">
+          {shown.map((v, i) => (
+            <li key={v.id} style={{ "--i": Math.min(i, 11) } as React.CSSProperties}>
+              <VideoCard video={v} showAlbum={showAlbum && tab === null}
+                         onOpen={(el) => { opener.current = el; setOpen(i); }} />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {open !== null && shown[open] && (
+        <VideoTheater videos={shown} index={open} onIndex={setOpen} onClose={close} showAlbum={showAlbum} />
+      )}
+    </>
+  );
+}
+
+/**
+ * المسرح: المقطع يعمل فوق الصفحة على الحبري، بأزرار العارض نفسها
+ * (إغلاق وسابق وتالٍ). يُغلق بـEsc أو بالنقر خارج المقطع، والأسهم
+ * تتنقّل بالاتجاه البصري. التمرير مقفول ومكان شريطه محجوز فلا تنزاح الصفحة.
+ */
+function VideoTheater({ videos, index, onIndex, onClose, showAlbum }: {
+  videos: VideoItem[]; index: number; onIndex: (i: number) => void; onClose: () => void; showAlbum: boolean;
+}) {
+  const U = useU();
+  const { locale } = useSite();
+  const path = (x: string) => (locale === "ar" ? x : `${x}?lang=${locale}`);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const n = videos.length;
+  const cur = videos[index];
+  const go = useCallback((d: number) => onIndex((index + d + n) % n), [index, n, onIndex]);
+
+  useEffect(() => {
+    closeRef.current?.focus();
+    const root = document.documentElement;
+    const prev = document.body.style.overflow;
+    const prevGutter = root.style.scrollbarGutter;
+    root.style.scrollbarGutter = "stable";
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (n < 2) return;
+      const rtl = root.dir === "rtl";
+      if (e.key === "ArrowLeft") go(rtl ? 1 : -1);
+      if (e.key === "ArrowRight") go(rtl ? -1 : 1);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      root.style.scrollbarGutter = prevGutter;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [go, n, onClose]);
+
+  return (
+    <div className="vtheater" role="dialog" aria-modal="true" aria-label={cur.title} onClick={onClose}>
+      <div className="vtheater__stage" onClick={(e) => e.stopPropagation()}>
+        <VideoPlayer key={cur.id} video={cur} playing onPlay={() => {}} />
+        <div className="vtheater__info">
+          <p className="vtheater__meta">
+            {n > 1 && <span className="vtheater__no"><bdi>{pad(index + 1)} / {pad(n)}</bdi></span>}
+            {showAlbum && (
+              <Link className="vtheater__album" href={path(`/videos/${cur.album.slug}`)}>{cur.album.title}</Link>
+            )}
+            {cur.date && <time className="vtheater__date" dateTime={cur.date}>{cur.date}</time>}
+          </p>
+          <h2 className="vtheater__title">{cur.title}</h2>
+          {cur.description && <p className="vtheater__desc">{cur.description}</p>}
+        </div>
+      </div>
+
+      <button ref={closeRef} type="button" className="lightbox__close" aria-label={U("إغلاق")} onClick={onClose}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+      {n > 1 && (
+        <>
+          <button type="button" className="lightbox__nav lightbox__nav--prev" aria-label={U("المقطع السابق")}
+            onClick={(e) => { e.stopPropagation(); go(-1); }}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+          <button type="button" className="lightbox__nav lightbox__nav--next" aria-label={U("المقطع التالي")}
+            onClick={(e) => { e.stopPropagation(); go(1); }}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+          </button>
+        </>
+      )}
+    </div>
   );
 }

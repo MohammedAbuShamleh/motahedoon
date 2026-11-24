@@ -1,12 +1,12 @@
 import { Link } from "@inertiajs/react";
 import { Layout } from "@/app/Layout";
-import { AlbumGrid, FeaturePlaylist } from "@/components/video";
+import { AlbumGrid, VideoIndex } from "@/components/video";
 import { useSite, useU } from "@/lib/site";
 import type { VideoAlbumCard, VideoAlbumFull } from "@/types";
 
 /* =====================================================================
    صفحة ألبوم (/videos/{slug}): رجوع إلى المكتبة، واسم الألبوم ووصفه
-   وعدد مقاطعه، ثم المشغّل والقائمة، ثم الألبومات الأخرى.
+   وعدد مقاطعه، ثم شبكة مقاطعه بمسرحها، ثم الألبومات الأخرى.
    ===================================================================== */
 export default function VideoAlbum({ album, others }: { album: VideoAlbumFull; others: VideoAlbumCard[] }) {
   const U = useU();
@@ -29,7 +29,7 @@ export default function VideoAlbum({ album, others }: { album: VideoAlbumFull; o
           </header>
           {album.description && <p className="vpage__lead">{album.description}</p>}
 
-          <FeaturePlaylist videos={album.videos} showAlbum={false} />
+          <VideoIndex videos={album.videos} showAlbum={false} />
         </div>
       </section>
 
