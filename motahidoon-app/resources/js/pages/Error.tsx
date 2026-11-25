@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { Layout } from "@/app/Layout";
 import { useSite, useU } from "@/lib/site";
 
@@ -20,7 +20,14 @@ const COPY: Record<Status, { title: string; text: string }> = {
   503: { title: "الموقع قيد الصيانة", text: "نعمل على تحديث الموقع، وسيعود خلال وقت قصير." },
 };
 
-export default function ErrorPage({ status, pillars }: { status: Status; pillars: { id: string; short: string }[] }) {
+export default function ErrorPage(props: { status?: Status; pillars?: { id: string; short: string }[] }) {
+  /* بلا الخصائص المشتركة (خادم بشيفرة قديمة يرسل الصفحة خارج وسيط Inertia):
+     لا ترويسة ولا تذييل يمكن رسمهما — تُرسم الصفحة مستقلّة بالعربية */
+  const shared = usePage<{ ui?: Record<string, string> }>().props;
+  return shared.ui ? <SitePage {...props} /> : <BarePage status={props.status ?? 404} />;
+}
+
+function SitePage({ status = 404, pillars = [] }: { status?: Status; pillars?: { id: string; short: string }[] }) {
   const U = useU();
   const { locale } = useSite();
   const path = (x: string) => (locale === "ar" ? x : `${x}?lang=${locale}`);
@@ -78,5 +85,39 @@ export default function ErrorPage({ status, pillars }: { status: Status; pillars
         </div>
       </section>
     </Layout>
+  );
+}
+
+/* الصفحة المستقلّة: الشعار واسم التجمّع ثم الرمز والعنوان والإجراءات —
+   بأصناف .err نفسها، بلا Layout (لا خطّافات تقرأ الخصائص الغائبة). */
+function BarePage({ status }: { status: Status }) {
+  const copy = COPY[status] ?? COPY[500];
+  const retry = status === 419 || status === 429 || status === 500 || status === 503;
+  return (
+    <div dir="rtl" lang="ar" className="err-bare">
+      <header className="err-bare__head">
+        <img src="/assets/img/logos/mutahidoon-mark.png" alt="" width={36} height={36} />
+        <b>تجمع متحدون من أجل غزة</b>
+      </header>
+      <main id="main">
+        <section className="band err" aria-labelledby="err-t">
+          <div className="err__in err__in--solo">
+            <div className="err__main">
+              <p className="err__k">خطأ <span dir="ltr">{status}</span></p>
+              <p className="err__code" aria-hidden="true" dir="ltr">{status}</p>
+              <h1 className="h-page err__t" id="err-t">{copy.title}</h1>
+              <p className="lead err__p">{copy.text}</p>
+              <div className="err__actions">
+                <a className="btn btn--green" href="/">العودة إلى الرئيسية</a>
+                <button type="button" className="btn btn--ghost"
+                  onClick={() => (retry ? window.location.reload() : window.history.back())}>
+                  {retry ? "تحديث الصفحة" : "الرجوع للصفحة السابقة"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }

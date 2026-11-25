@@ -12,7 +12,7 @@ export function useSite(): SharedProps {
  */
 export function useU(): (key: string) => string {
   const { ui } = useSite();
-  return (key) => ui[key] ?? key;
+  return (key) => ui?.[key] ?? key;
 }
 
 /** رابط يحافظ على اللغة الحالية. */

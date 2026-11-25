@@ -4651,3 +4651,14 @@ p, li, dd, figcaption { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   .impact__tab, .impact__tab::after { transition: none; }
 }
+
+/* صفحة الخطأ المستقلّة (بلا ترويسة الموقع): شريط شعار بسيط فوق الورقة */
+.err-bare { min-height: 100vh; background: var(--bg); color: var(--ink); }
+.err-bare__head {
+  display: flex; align-items: center; gap: .75rem;
+  padding: 1.1rem var(--edge); border-block-end: var(--line) solid var(--rule);
+  font-family: var(--f-ui);
+}
+.err-bare__head img { inline-size: 36px; block-size: 36px; object-fit: contain; }
+.err-bare #main > .err { padding-block: clamp(3rem, 8vw, 6rem); }
+.err__in--solo { grid-template-columns: minmax(0, 1fr); }
