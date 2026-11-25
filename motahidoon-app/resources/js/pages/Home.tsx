@@ -5,7 +5,7 @@ import {
 } from "@/features/home/sections";
 import { FieldGallery } from "@/features/home/Gallery";
 import { Videos } from "@/features/home/Videos";
-import type { ReportCard } from "@/features/home/sections";
+import type { ImpactReport, ReportCard } from "@/features/home/sections";
 import type { Founding, Identity, Partner, Pillar, Report, VideoItem } from "@/types";
 
 interface Props {
@@ -18,12 +18,13 @@ interface Props {
   videos: VideoItem[];
   metricsCount: number;
   currentReport: Report | null;
+  impactReports: ImpactReport[];
   reports: ReportCard[];
 }
 
 export default function Home({
   identity, founding, governance, partners, pillars,
-  fieldPhotos, videos, metricsCount, currentReport, reports,
+  fieldPhotos, videos, metricsCount, currentReport, impactReports, reports,
 }: Props) {
   return (
     <Layout active="home">
@@ -34,7 +35,9 @@ export default function Home({
       <Partners partners={partners} />
       <Fields pillars={pillars} />
       <FieldGallery photos={fieldPhotos} />
-      {currentReport && <Impact report={currentReport} count={metricsCount} />}
+      {impactReports.length > 0 && (
+        <Impact reports={impactReports} currentId={currentReport?.id ?? null} count={metricsCount} />
+      )}
       <Reports reports={reports} reportFile={currentReport?.reportFile ?? null} />
       <Support />
     </Layout>

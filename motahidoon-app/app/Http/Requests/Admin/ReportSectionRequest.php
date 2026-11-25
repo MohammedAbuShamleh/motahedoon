@@ -19,11 +19,19 @@ final class ReportSectionRequest extends AdminRequest
         return [
             'lead' => ['nullable', 'string', $rich],
 
+            // بطاقات الأرقام: القيمة حرفية كما في النصّ (نصّ لا رقم)، والوصف تحتها
+            'stats' => ['nullable', 'array', 'max:12'],
+            'stats.*.value' => ['required', 'string', 'max:64'],
+            'stats.*.unit' => ['required', 'string', 'max:128'],
+
             'groups' => ['nullable', 'array'],
             'groups.*.id' => ['nullable', 'integer'],
             'groups.*.num' => ['nullable', 'string', 'max:8'],
             'groups.*.title' => ['nullable', 'string', 'max:512'],
             'groups.*.is_recap' => ['nullable', 'boolean'],
+            'groups.*.stats' => ['nullable', 'array', 'max:12'],
+            'groups.*.stats.*.value' => ['required', 'string', 'max:64'],
+            'groups.*.stats.*.unit' => ['required', 'string', 'max:128'],
             'groups.*.items' => ['nullable', 'array'],
             'groups.*.items.*.id' => ['nullable', 'integer'],
             'groups.*.items.*.term' => ['nullable', 'string', 'max:512'],
@@ -52,6 +60,18 @@ final class ReportSectionRequest extends AdminRequest
             'gallery.*.caption' => ['required', 'string', 'max:512'],
 
             ...$this->translationRules(['lead'], self::RICH_MAX),
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'stats.max' => 'حتى 12 بطاقة أرقام للقسم.',
+            'stats.*.value.required' => 'اكتب الرقم في كلّ بطاقة، أو احذف البطاقة.',
+            'stats.*.unit.required' => 'اكتب الوصف تحت الرقم في كلّ بطاقة.',
+            'groups.*.stats.max' => 'حتى 12 بطاقة أرقام للمجموعة.',
+            'groups.*.stats.*.value.required' => 'اكتب الرقم في كلّ بطاقة، أو احذف البطاقة.',
+            'groups.*.stats.*.unit.required' => 'اكتب الوصف تحت الرقم في كلّ بطاقة.',
         ];
     }
 }

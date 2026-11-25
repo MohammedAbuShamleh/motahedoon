@@ -104,6 +104,7 @@ final class ReportTreeBuilder
     {
         $node = [];
         $this->putValue($node, 'lead', RichText::clean($s->lead));
+        $this->putList($node, 'stats', $s->stats ?? []);
         $this->putList($node, 'groups', $s->groups->map(fn (ReportGroup $g) => $this->group($g))->all());
         $this->putList($node, 'blocks', $s->blocks->map(fn (ReportBlock $b) => $this->block($b))->all());
         if ($s->table !== null) {
@@ -132,6 +133,7 @@ final class ReportTreeBuilder
             return $item;
         })->all();
         $this->putFlag($node, 'recap', $g->is_recap);
+        $this->putList($node, 'stats', $g->stats ?? []);
 
         return $node;
     }

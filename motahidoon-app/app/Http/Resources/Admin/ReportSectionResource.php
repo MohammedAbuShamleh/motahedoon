@@ -21,8 +21,10 @@ final class ReportSectionResource extends JsonResource
             'report' => ['id' => $this->report->id, 'label' => $this->report->label],
             'pillar' => $this->pillar->title,
             'lead' => $this->lead,
+            'stats' => $this->stats ?? [],
             'groups' => $this->groups->map(fn (ReportGroup $g) => [
                 ...$g->only(['id', 'num', 'title', 'is_recap']),
+                'stats' => $g->stats ?? [],
                 'items' => $g->items->map(fn (ReportGroupItem $i) => $i->only(['id', 'term', 'body', 'is_recap']))->all(),
             ])->all(),
             'blocks' => $this->blocks->map(fn (ReportBlock $b) => [

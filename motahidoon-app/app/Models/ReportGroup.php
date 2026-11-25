@@ -12,11 +12,11 @@ class ReportGroup extends Model
 {
     use FlushesContentCache, HasPosition;
 
-    protected $fillable = ['report_section_id', 'num', 'title', 'is_recap', 'position'];
+    protected $fillable = ['report_section_id', 'num', 'title', 'is_recap', 'stats', 'position'];
 
     protected function casts(): array
     {
-        return ['is_recap' => 'boolean', 'position' => 'integer'];
+        return ['is_recap' => 'boolean', 'position' => 'integer', 'stats' => 'array'];
     }
 
     protected function positionScope(): array

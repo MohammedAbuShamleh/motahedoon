@@ -44,12 +44,13 @@ final class ReportSectionService
     public function update(ReportSection $section, array $data, User $by): void
     {
         DB::transaction(function () use ($section, $data, $by): void {
-            $section->update(['lead' => $data['lead'] ?? null]);
+            $section->update(['lead' => $data['lead'] ?? null, 'stats' => self::stats($data['stats'] ?? null)]);
 
             $this->syncChildren($section->groups(), $data['groups'] ?? [], fn (array $g) => [
                 'num' => $g['num'] ?? null,
                 'title' => $g['title'] ?? null,
                 'is_recap' => (bool) ($g['is_recap'] ?? false),
+                'stats' => self::stats($g['stats'] ?? null),
             ], function (Model $group, array $g): void {
                 /** @var ReportGroup $group */
                 $this->syncChildren($group->items(), $g['items'] ?? [], fn (array $i) => [
@@ -86,6 +87,23 @@ final class ReportSectionService
 
             $this->translations->syncFields($section, $data['translations'] ?? null, ['lead'], $by);
         });
+    }
+
+    /**
+     * بطاقات الأرقام كما كُتبت: {value, unit} مقصوصة الأطراف. القائمة الفارغة
+     * null — فيعود العرض إلى الاستخراج التلقائي من البنود.
+     *
+     * @param  list<array<string, mixed>>|null  $rows
+     * @return list<array{value: string, unit: string}>|null
+     */
+    private static function stats(?array $rows): ?array
+    {
+        $out = collect($rows ?? [])
+            ->map(fn (array $r) => ['value' => trim((string) $r['value']), 'unit' => trim((string) $r['unit'])])
+            ->filter(fn (array $r) => $r['value'] !== '' && $r['unit'] !== '')
+            ->values()->all();
+
+        return $out === [] ? null : $out;
     }
 
     public function delete(ReportSection $section): void

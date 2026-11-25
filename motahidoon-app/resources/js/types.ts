@@ -69,6 +69,8 @@ export interface ReportGroup {
   title?: string;
   items: Entry[];
   recap?: boolean;
+  /** بطاقات محرَّرة من اللوحة؛ غيابها = استخراج من البنود */
+  stats?: Stat[] | null;
 }
 
 export interface FigureBlock {

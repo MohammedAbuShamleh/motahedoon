@@ -3,7 +3,8 @@
    renderSection · renderSectionBrief · arOnly. */
 
 import { Nums } from "@/lib/nums";
-import { isHtml, plainText } from "@/lib/rich";
+import { statsOf } from "@/lib/stats";
+import { isHtml } from "@/lib/rich";
 import { RichText } from "@/components/RichText";
 import { useSite, useU } from "@/lib/site";
 import { FigureCell, StatStrip } from "@/components/primitives";
@@ -11,44 +12,14 @@ import type {
   Entry, FigureBlock, GalleryItem, ReportGroup, ReportSection, ReportTable, Stat,
 } from "@/types";
 
-/* ---------- استخراج الأرقام ----------
-   يلتقط أول رقم في كل بند مع وحدته **كما كُتبت**، ويعرضه بطاقةً.
-   استخراج لا اشتقاق: لا جمع ولا حساب ولا تقريب، والجملة الكاملة تبقى
-   كما هي أسفله. */
-const STAT_RE = /(\d[\d,]*)\s+([^\s،.:؛()«»]+(?:\s+[^\s،.:؛()«»]+)?)/;
-
-/* الكلمة الثانية تُلتقط لتكمل الوحدة («طالباً وطالبة»)، لكنها إن كانت حرف
-   جرّ أو عطف أو صلة بقيت الوحدة معلّقة: «105 مشاركين في». تُترك الكلمة
-   المعلّقة ولا يُضاف شيء — الرقم والوحدة يبقيان كما كُتبا حرفياً. */
-const DANGLING = new Set([
-  "في", "من", "على", "إلى", "الى", "عن", "مع", "ضمن", "خلال", "عبر", "لدى", "حتى",
-  "بين", "منذ", "نحو", "حول", "عند", "و", "أو", "ثم", "التي", "الذي", "الذين", "اللاتي",
-  "منها", "منهم", "منهن", "فيها", "فيه", "بها", "به", "لـ", "بـ",
-]);
-
-/* null: الرقم بلا وحدة بعده («من 317,000 في الربع الثاني» — المعدود قبله)،
-   فلا بطاقة له؛ لا تُخترع وحدة، والجملة كاملة تبقى أسفل الشريط. */
-function unitOf(raw: string): string | null {
-  const words = raw.split(/\s+/);
-  if (DANGLING.has(words[0])) return null;
-  return words.length > 1 && DANGLING.has(words[words.length - 1]) ? words[0] : raw;
-}
-
-export function statsOf(items: Entry[]): Stat[] {
-  const out: Stat[] = [];
-  items.forEach((it) => {
-    if (it.term) return;                 // البنود المعنونة ليست أرقاماً
-    const m = STAT_RE.exec(plainText(it.text));   // المنسَّق يُقرأ نصّاً
-    const unit = m && m[1].length <= 12 ? unitOf(m[2]) : null;
-    if (m && unit) out.push({ value: m[1], unit });
-  });
-  return out;
-}
+/* استخراج الأرقام من البنود في @/lib/stats — مشترك مع اللوحة لتعرض
+   للمحرِّر البطاقات التلقائية نفسها التي يرسمها الموقع. */
+export { statsOf } from "@/lib/stats";
 
 /** كل أرقام المجال في فترة واحدة، مجموعة من مجموعاته وكتله. */
 export function sectionStats(sec: ReportSection): Stat[] {
   let out: Stat[] = [];
-  (sec.groups ?? []).forEach((g) => { out = out.concat(statsOf(g.items)); });
+  (sec.groups ?? []).forEach((g) => { out = out.concat(g.stats?.length ? g.stats : statsOf(g.items)); });
   (sec.blocks ?? []).forEach((b) => {
     (b.figures ?? []).forEach((f) =>
       out.push({
@@ -82,7 +53,8 @@ export function Groups({ groups }: { groups: ReportGroup[] }) {
            تُطوى ولا تُحذف: النص باقٍ في المصدر وفي الإفصاح. */
         const main = g.items.filter((it) => !it.recap);
         const recap = g.items.filter((it) => it.recap);
-        const stats = statsOf(main);
+        // البطاقات المحرَّرة من اللوحة أوّلاً، وإلا المستخرجة من البنود
+        const stats = g.stats?.length ? g.stats : statsOf(main);
 
         // مجموعة كلها خلاصة: لا تُعرض إلا مطويّة.
         if (g.recap) {

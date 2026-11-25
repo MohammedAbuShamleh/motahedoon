@@ -28,6 +28,12 @@ final class HomeController extends Controller
             'videos'      => $videos->highlights(6),
             'metricsCount' => $content->get('homeMetrics'),
             'currentReport' => $current,
+            // «لمحة أثر» بكلّ الأرباع المنشورة: لكلّ ربع أرقامه وختم فترته
+            'impactReports' => collect($content->get('reports.items'))
+                ->filter(fn (array $r) => ! empty($r['metrics']))
+                ->map(fn (array $r) => [
+                    'id' => $r['id'], 'label' => $r['label'], 'metrics' => $r['metrics'],
+                ])->values()->all(),
             'reports'     => collect($content->get('reports.items'))
                 ->map(fn (array $r) => [
                     'id' => $r['id'], 'label' => $r['label'],

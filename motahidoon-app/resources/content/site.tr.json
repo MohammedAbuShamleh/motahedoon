@@ -129,7 +129,8 @@
     "حدث خطأ غير متوقّع": "Beklenmeyen bir hata oluştu",
     "تعذّر عرض هذه الصفحة الآن. حاول مرة أخرى بعد قليل.": "Bu sayfa şu anda gösterilemiyor. Lütfen biraz sonra tekrar deneyin.",
     "الموقع قيد الصيانة": "Site bakımda",
-    "نعمل على تحديث الموقع، وسيعود خلال وقت قصير.": "Siteyi güncelliyoruz, kısa süre içinde geri döneceğiz."
+    "نعمل على تحديث الموقع، وسيعود خلال وقت قصير.": "Siteyi güncelliyoruz, kısa süre içinde geri döneceğiz.",
+    "الفترات": "Dönemler"
   },
   "org": {
     "name": "Gazze İçin Mutahidoon Koalisyonu",
@@ -876,7 +877,7 @@
           }
         },
         "health": {
-          "lead": "Han Yunus'un el-Mevâsî bölgesindeki El-Hamd Tıp Merkezi, üçüncü çeyrekte 12 klinik ve bölüm aracılığıyla 7.567 ziyaret ve tıbbi hizmet kaydetti; kayıtlı işletme geliri ve insani projelerin tutarı 152.607 şekel oldu.",
+          "lead": "Han Yunus'un el-Mevâsî bölgesindeki El-Hamd Tıp Merkezi, üçüncü çeyrekte 12 klinik ve bölüm aracılığıyla 7.567 ziyaret ve tıbbi hizmet kaydetti; kayıtlı işletme geliri ve insani projelerin tutarı 152.607 oldu.",
           "stats": [
             {
               "value": "7,567",
@@ -914,19 +915,19 @@
                 "title": "Gelirler ve İnsani Programlar",
                 "items": [
                   {
-                    "text": "Toplam gelir: 152,607 şekel."
+                    "text": "Toplam gelir: 152,607."
                   },
                   {
-                    "text": "Uzman tıp klinikleri: raporda yer alan mali göstergeye göre 46,586 şekel."
+                    "text": "Uzman tıp klinikleri: raporda yer alan mali göstergeye göre 46,586."
                   },
                   {
-                    "text": "Diş kliniği: 44,339 şekel."
+                    "text": "Diş kliniği: 44,339."
                   },
                   {
-                    "text": "Eczane: 32,604 şekel."
+                    "text": "Eczane: 32,604."
                   },
                   {
-                    "text": "Laboratuvar: 29,078 şekel."
+                    "text": "Laboratuvar: 29,078."
                   },
                   {
                     "text": "Cuzûr projesi kapsamında 639, yoksul hastalara 108, kefaletli yetimlere 143, tıbbi sünnet programı kapsamında 86 ve El-Vifâk Çocuk ve Kadın Derneği'ne 24 tıbbi hizmet sunulması."
@@ -947,7 +948,7 @@
                     "text": "Muhasebe ve idari takip araçlarının geliştirilmesi ve bunların işletme kayıtları ile günlük stok hareketlerine bağlanması."
                   },
                   {
-                    "text": "Mali rapor 152,607 şekel tutarında bir toplam bildirmekte ve bazı insani hizmetlerin projeler ve ortaklıklarla desteklendiğini belirtmektedir. Nihai mali sunumda, ek ayrıntılı veriler mevcut olduğu takdirde işletme gelirleri ile finansman veya ayni destek tutarı birbirinden ayrılmalıdır."
+                    "text": "Mali rapor 152,607 tutarında bir toplam bildirmekte ve bazı insani hizmetlerin projeler ve ortaklıklarla desteklendiğini belirtmektedir. Nihai mali sunumda, ek ayrıntılı veriler mevcut olduğu takdirde işletme gelirleri ile finansman veya ayni destek tutarı birbirinden ayrılmalıdır."
                   }
                 ]
               }

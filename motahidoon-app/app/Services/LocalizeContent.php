@@ -219,6 +219,7 @@ final class LocalizeContent
                     }
                     $g['items'][$ii] = $it;
                 }
+                unset($g['stats']);
                 $out['groups'][$gi] = $g;
             }
         }

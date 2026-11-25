@@ -4614,3 +4614,40 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .band--dark .rich a { color: var(--green-soft); }
 .band--dark .rich th, .band--dark .rich td { border-color: var(--rule-ink); }
 .band--dark .rich th { color: var(--on-ink); background: none; }
+
+/* ---------- لمحة أثر: شريط الفترات ----------
+   كلّ الأرباع المنشورة على سطر واحد فوق الأرقام؛ المختار بخطّ الختم الأحمر
+   تحته (لا مساحة حمراء) ونصّ أبيض، والبقية بلون الحبري الخافت. زوايا مربّعة.
+   اللوح يذوب في شبكة القسم (display: contents) فيبقى تخطيط العمودين كما كان. */
+.band--dark.impact .impact__panel { display: contents; }
+.band--dark.impact .impact__tabs {
+  display: flex; flex-wrap: wrap; gap: 0;
+  margin-block: calc(clamp(1rem, 2vw, 1.35rem) * -.35) clamp(1rem, 2vw, 1.35rem);
+  border-block-end: var(--line) solid var(--rule-ink);
+}
+.impact__tab {
+  position: relative; display: inline-flex; align-items: center; gap: .55rem;
+  padding: .7rem 1.1rem; margin-block-end: -1px;
+  font-family: var(--f-ui); font-size: .92rem; font-weight: 700;
+  color: var(--on-ink); background: none; border: 0; border-radius: 0; cursor: pointer;
+  transition: color .2s, background-color .2s;
+}
+.impact__tab::after {
+  content: ""; position: absolute; inset-inline: 0; inset-block-end: 0;
+  block-size: 2px; background: var(--red); transform: scaleX(0); transition: transform .3s;
+}
+.impact__tab:hover { color: var(--bg); background: rgba(252,252,250,.05); }
+.impact__tab.is-on { color: var(--bg); }
+.impact__tab.is-on::after { transform: scaleX(1); }
+.impact__tab:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
+.impact__now {
+  font-size: .68rem; font-weight: 700; letter-spacing: .04em;
+  padding: .12rem .45rem; border: var(--line) solid var(--rule-ink); color: var(--on-ink);
+}
+.impact__tab.is-on .impact__now { border-color: var(--green); color: var(--bg); background: var(--green); }
+@media (min-width: 900px) {
+  .band--dark.impact .impact__tabs { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .impact__tab, .impact__tab::after { transition: none; }
+}

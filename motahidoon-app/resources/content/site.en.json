@@ -129,7 +129,8 @@
     "حدث خطأ غير متوقّع": "Something went wrong",
     "تعذّر عرض هذه الصفحة الآن. حاول مرة أخرى بعد قليل.": "This page cannot be shown right now. Please try again shortly.",
     "الموقع قيد الصيانة": "The site is under maintenance",
-    "نعمل على تحديث الموقع، وسيعود خلال وقت قصير.": "We are updating the site. It will be back shortly."
+    "نعمل على تحديث الموقع، وسيعود خلال وقت قصير.": "We are updating the site. It will be back shortly.",
+    "الفترات": "Periods"
   },
   "org": {
     "name": "Mutahidoon for Gaza Coalition",
@@ -876,7 +877,7 @@
           }
         },
         "health": {
-          "lead": "Al-Hamd Medical Centre in Al-Mawasi, Khan Younis recorded 7,567 medical visits and services during the third quarter, across 12 clinics and departments, with recorded operating revenue and humanitarian projects amounting to ILS 152,607.",
+          "lead": "Al-Hamd Medical Centre in Al-Mawasi, Khan Younis recorded 7,567 medical visits and services during the third quarter, across 12 clinics and departments, with recorded operating revenue and humanitarian projects amounting to 152,607.",
           "stats": [
             {
               "value": "7,567",
@@ -914,19 +915,19 @@
                 "title": "Revenue and humanitarian programmes",
                 "items": [
                   {
-                    "text": "Total revenue: ILS 152,607."
+                    "text": "Total revenue: 152,607."
                   },
                   {
-                    "text": "Specialist medical clinics: ILS 46,586, according to the financial indicator given in the report."
+                    "text": "Specialist medical clinics: 46,586, according to the financial indicator given in the report."
                   },
                   {
-                    "text": "Dental clinic: ILS 44,339."
+                    "text": "Dental clinic: 44,339."
                   },
                   {
-                    "text": "Pharmacy: ILS 32,604."
+                    "text": "Pharmacy: 32,604."
                   },
                   {
-                    "text": "Laboratory: ILS 29,078."
+                    "text": "Laboratory: 29,078."
                   },
                   {
                     "text": "Providing 639 medical services under the Judhoor project, 108 services for patients from poor households, 143 services for sponsored orphans, 86 services under the medical circumcision programme, and 24 services for Al-Wifaq Society for Children and Women."
@@ -947,7 +948,7 @@
                     "text": "Developing accounting and administrative follow-up tools and linking them to operational records and daily inventory movements."
                   },
                   {
-                    "text": "The financial report gives a total of ILS 152,607, and also states that some humanitarian services are supported by projects and partnerships. In the final financial presentation, operating revenue should be separated from the value of funding or in-kind support, if additional detailed data become available."
+                    "text": "The financial report gives a total of 152,607, and also states that some humanitarian services are supported by projects and partnerships. In the final financial presentation, operating revenue should be separated from the value of funding or in-kind support, if additional detailed data become available."
                   }
                 ]
               }

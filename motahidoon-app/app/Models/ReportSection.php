@@ -15,11 +15,11 @@ class ReportSection extends Model
 {
     use FlushesContentCache, HasPosition, HasTranslations;
 
-    protected $fillable = ['report_id', 'pillar_id', 'lead', 'position'];
+    protected $fillable = ['report_id', 'pillar_id', 'lead', 'stats', 'position'];
 
     protected function casts(): array
     {
-        return ['position' => 'integer'];
+        return ['position' => 'integer', 'stats' => 'array'];
     }
 
     protected function positionScope(): array

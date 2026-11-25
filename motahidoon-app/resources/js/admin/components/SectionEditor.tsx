@@ -3,6 +3,9 @@ import type { FormEvent } from "react";
 import { FigureFields, newFigure } from "./FigureFields";
 import { Repeater } from "./Repeater";
 import { RichEditor } from "./RichEditor";
+import { StatsEditor, type StatRow } from "./StatsEditor";
+import { statsOf } from "@/lib/stats";
+import type { Stat } from "@/types";
 import { TableEditor } from "./TableEditor";
 import { TranslationFields } from "./TranslationFields";
 import { Card, ErrorSummary, ErrorText, SubmitBar, TextField, Toggle, fileInputClass } from "./ui";
@@ -10,13 +13,13 @@ import { send, str } from "../lib/form";
 import type { FigureRow, TableData, Translations } from "../types";
 
 type ItemRow = { id?: number; term: string; body: string; is_recap: boolean };
-type GroupRow = { id?: number; num: string; title: string; is_recap: boolean; items: ItemRow[] };
+type GroupRow = { id?: number; num: string; title: string; is_recap: boolean; stats: StatRow[]; items: ItemRow[] };
 type BlockRow = { id?: number; title: string; note_term: string; note_body: string; figures: FigureRow[] };
 type PhotoRow = { id?: number; media_id: number | null; url?: string; file: File | null; caption: string };
 
 export type Section = {
-  id: number; report: { id: number; label: string }; pillar: string; lead: string | null;
-  groups: { id: number; num: string | null; title: string | null; is_recap: boolean; items: { id: number; term: string | null; body: string; is_recap: boolean }[] }[];
+  id: number; report: { id: number; label: string }; pillar: string; lead: string | null; stats: StatRow[];
+  groups: { id: number; num: string | null; title: string | null; is_recap: boolean; stats: StatRow[]; items: { id: number; term: string | null; body: string; is_recap: boolean }[] }[];
   blocks: { id: number; title: string; note_term: string | null; note_body: string | null; figures: (FigureRow & { id: number })[] }[];
   table: TableData | null;
   gallery: { id: number; media_id: number; url: string; caption: string }[];
@@ -32,7 +35,8 @@ export type Section = {
 export function SectionEditor({ section: s }: { section: Section }) {
   const form = useForm({
     lead: str(s.lead),
-    groups: s.groups.map((g) => ({ id: g.id, num: str(g.num), title: str(g.title), is_recap: g.is_recap,
+    stats: s.stats as StatRow[],
+    groups: s.groups.map((g) => ({ id: g.id, num: str(g.num), title: str(g.title), is_recap: g.is_recap, stats: g.stats,
       items: g.items.map((i) => ({ id: i.id, term: str(i.term), body: i.body, is_recap: i.is_recap })) })) as GroupRow[],
     blocks: s.blocks.map((b) => ({ id: b.id, title: b.title, note_term: str(b.note_term), note_body: str(b.note_body),
       figures: b.figures.map((f) => ({ ...f, prefix: str(f.prefix), unit: str(f.unit) })) })) as BlockRow[],
@@ -42,6 +46,19 @@ export function SectionEditor({ section: s }: { section: Section }) {
   });
   const { data, setData } = form;
   const e = form.errors as Record<string, string | undefined>;
+
+  /* ما يرسمه الموقع تلقائياً — نفس منطق العرض: بطاقات المجموعة من بنودها
+     غير الملخّصة، وبطاقات القسم من كلّ مجموعة (محرَّرة أو مستخرجة) ثم كتل
+     الأرقام، أوّل 8 */
+  const groupAuto = (g: GroupRow): Stat[] =>
+    statsOf(g.items.filter((it) => !it.is_recap).map((it) => ({ term: it.term, text: it.body })));
+  const sectionAuto: Stat[] = [
+    ...data.groups.flatMap((g) => (g.stats.length ? g.stats
+      : statsOf(g.items.map((it) => ({ term: it.term, text: it.body }))))),
+    ...data.blocks.flatMap((b) => b.figures.map((f) => ({
+      value: (f.prefix ? `${f.prefix} ` : "") + f.value, unit: f.unit || f.label,
+    }))),
+  ].slice(0, 8);
 
   const submit = (ev: FormEvent) => {
     ev.preventDefault();
@@ -56,9 +73,14 @@ export function SectionEditor({ section: s }: { section: Section }) {
           <RichEditor label="نصّ الافتتاحية" value={data.lead} onChange={(v) => setData("lead", v)} error={e.lead} />
         </Card>
 
+        <Card title="بطاقات الأرقام">
+          <StatsEditor value={data.stats} onChange={(rows) => setData("stats", rows)} auto={sectionAuto} errors={e} prefix="stats"
+            hint="تظهر بطاقاتٍ داكنة مرقّمة أعلى حصيلة المجال في صفحته، وفي ملخّصه داخل صفحة التقرير. حتى 12 بطاقة." />
+        </Card>
+
         <Card title="المجموعات">
           <Repeater<GroupRow> items={data.groups} onChange={(g) => setData("groups", g)} addLabel="مجموعة"
-            make={() => ({ num: "", title: "", is_recap: false, items: [] })}
+            make={() => ({ num: "", title: "", is_recap: false, stats: [], items: [] })}
             render={(g, update, gi) => (
               <div className="space-y-3">
                 <div className="grid gap-3 sm:grid-cols-[6rem_1fr_auto]">
@@ -75,6 +97,17 @@ export function SectionEditor({ section: s }: { section: Section }) {
                       <div className="flex items-end pb-2"><Toggle label="ملخّص" checked={it.is_recap} onChange={(v) => upd({ is_recap: v })} /></div>
                     </div>
                   )} />
+                {!g.is_recap && (
+                  <details className="rounded-lg border border-rule bg-white px-4 py-3" open={g.stats.length > 0}>
+                    <summary className="cursor-pointer text-sm font-bold">
+                      شريط الأرقام تحت هذه المجموعة
+                      <span className="ms-2 text-xs font-normal text-ink/60">{g.stats.length ? `${g.stats.length} محرَّرة` : "تلقائي"}</span>
+                    </summary>
+                    <div className="mt-3">
+                      <StatsEditor value={g.stats} onChange={(rows) => update({ stats: rows })} auto={groupAuto(g)} errors={e} prefix={`groups.${gi}.stats`} />
+                    </div>
+                  </details>
+                )}
               </div>
             )} />
         </Card>

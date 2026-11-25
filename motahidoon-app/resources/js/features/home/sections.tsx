@@ -3,7 +3,7 @@
    بلا تعديل حرف. */
 
 import { plainText } from "@/lib/rich";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ContactForm } from "./ContactForm";
 import { Link } from "@inertiajs/react";
 import { useSpotlight } from "@/hooks/useSpotlight";
@@ -323,18 +323,38 @@ export function Fields({ pillars }: { pillars: Pillar[] }) {
 /* «من الميدان» صار معرضاً في Gallery.tsx (FieldGallery). */
 
 /* ---------- لمحة أثر ----------
-   القسم الوحيد المؤرَّخ في الرئيسية، ويحمل ختمه. قسم داكن ببطاقة لكلّ
-   مؤشّر: رقم ترتيب محفور في ركنها، والقيمة كما كُتبت حرفياً (لا جمع ولا
-   تقريب)، ثم التسمية. عدد البطاقات من عدد المؤشّرات المختارة (--n). */
-export function Impact({ report, count }: { report: Report; count: number }) {
+   القسم الوحيد المؤرَّخ في الرئيسية: كلّ الأرباع المنشورة، ربع واحد ظاهر
+   في كلّ مرّة يُبدَّل من شريط الفترات (الحالي أوّلاً). ختم الفترة يتبع
+   الربع المختار — كلّ رقم مؤرَّخ يحمل فترته — والقيم كما كُتبت حرفياً
+   (لا جمع بين الأرباع ولا تقريب). عدد البطاقات من عدد المؤشّرات المختارة. */
+export interface ImpactReport {
+  id: string; label: string; metrics: Report["metrics"];
+}
+
+export function Impact({ reports, currentId, count }: {
+  reports: ImpactReport[]; currentId: string | null; count: number;
+}) {
   const U = useU();
   const path = usePath();
+  const [sel, setSel] = useState(() =>
+    reports.some((r) => r.id === currentId) ? (currentId as string) : reports[0].id);
+  const report = reports.find((r) => r.id === sel) ?? reports[0];
   const metrics = report.metrics.slice(0, count);
   const lead = metrics.filter((m) => m.accent);
   const rest = metrics.filter((m) => !m.accent);
-  /* شريحة الأرقام بلغة صفحة التقرير (rp-kpi): ختم الفترة في الرأس (كل رقم
-     مؤرَّخ يحمل فترته)، ثم المؤشّر الموسوم accent يتصدّر، ثم بطاقات مرقّمة.
-     القيم كما هي حرفياً — FigureCell لا يحسب ولا يختصر. */
+
+  /* أسهم لوحة المفاتيح بين الفترات (نمط tablist) */
+  const onKey = (e: React.KeyboardEvent<HTMLButtonElement>, i: number) => {
+    const step = { ArrowLeft: 1, ArrowRight: -1, Home: -i, End: reports.length - 1 - i }[e.key];
+    if (step === undefined) return;
+    e.preventDefault();
+    const rtl = document.documentElement.dir === "rtl";
+    const d = e.key === "ArrowLeft" || e.key === "ArrowRight" ? (rtl ? step : -step) : step;
+    const next = (i + d + reports.length) % reports.length;
+    setSel(reports[next].id);
+    (e.currentTarget.parentElement?.children[next] as HTMLElement | undefined)?.focus();
+  };
+
   return (
     <section className="band band--dark rp-kpi impact" id="impact">
       <div className="rp-sec__in reveal">
@@ -343,27 +363,45 @@ export function Impact({ report, count }: { report: Report; count: number }) {
           <Seal value={report.label} />
         </header>
 
-        {lead.length > 0 && (
-          <div className="rp-kpi__lead">
-            <div className="rp-kpi__figs">
-              {lead.map((m, i) => <FigureCell m={m} key={`${m.label}-${i}`} />)}
-            </div>
-          </div>
-        )}
-
-        {rest.length > 0 && (
-          <div className="rp-kpi__grid stagger rp-stag">
-            {rest.map((m, i) => (
-              <div className="rp-kpi__card" key={`${m.label}-${i}`}>
-                <span className="rp-kpi__no" aria-hidden="true">{ord(i + 1)}</span>
-                <FigureCell m={m} />
-              </div>
+        {reports.length > 1 && (
+          <div className="impact__tabs" role="tablist" aria-label={U("الفترات")}>
+            {reports.map((r, i) => (
+              <button key={r.id} type="button" role="tab" id={`impact-tab-${r.id}`}
+                aria-selected={r.id === report.id} aria-controls="impact-panel"
+                tabIndex={r.id === report.id ? 0 : -1}
+                className={r.id === report.id ? "impact__tab is-on" : "impact__tab"}
+                onClick={() => setSel(r.id)} onKeyDown={(e) => onKey(e, i)}>
+                {r.label}
+                {r.id === currentId && <span className="impact__now">{U("أحدث تقرير")}</span>}
+              </button>
             ))}
           </div>
         )}
 
+        <div className="impact__panel" id="impact-panel" role={reports.length > 1 ? "tabpanel" : undefined}
+          aria-labelledby={reports.length > 1 ? `impact-tab-${report.id}` : undefined}>
+          {lead.length > 0 && (
+            <div className="rp-kpi__lead">
+              <div className="rp-kpi__figs">
+                {lead.map((m, i) => <FigureCell m={m} key={`${report.id}-${m.label}-${i}`} />)}
+              </div>
+            </div>
+          )}
+
+          {rest.length > 0 && (
+            <div className="rp-kpi__grid stagger rp-stag">
+              {rest.map((m, i) => (
+                <div className="rp-kpi__card" key={`${report.id}-${m.label}-${i}`}>
+                  <span className="rp-kpi__no" aria-hidden="true">{ord(i + 1)}</span>
+                  <FigureCell m={m} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <p className="impact__cta">
-          <Link className="btn btn--light" href={path("/reports")}>
+          <Link className="btn btn--light" href={path(`/reports/${report.id}`)}>
             {U("الإنجازات الكاملة")}
           </Link>
         </p>
