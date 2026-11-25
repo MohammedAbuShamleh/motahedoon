@@ -130,7 +130,10 @@
     "تعذّر عرض هذه الصفحة الآن. حاول مرة أخرى بعد قليل.": "This page cannot be shown right now. Please try again shortly.",
     "الموقع قيد الصيانة": "The site is under maintenance",
     "نعمل على تحديث الموقع، وسيعود خلال وقت قصير.": "We are updating the site. It will be back shortly.",
-    "الفترات": "Periods"
+    "الفترات": "Periods",
+    "أرشيف مرئي": "Visual archive",
+    "قائمة العرض": "Playlist",
+    "حسب الألبوم": "By album"
   },
   "org": {
     "name": "Mutahidoon for Gaza Coalition",

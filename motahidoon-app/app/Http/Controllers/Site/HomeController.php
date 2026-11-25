@@ -26,6 +26,8 @@ final class HomeController extends Controller
             'fieldPhotos' => $content->get('fieldPhotos'),
             // قسم الفيديو قبل «المؤسسات الشريكة»: المميّزة فالأحدث
             'videos'      => $videos->highlights(6),
+            // صفّ «حسب الألبوم» تحت القسم: الغلاف والاسم والعدد، بلا المقاطع
+            'videoAlbums' => array_map(fn (array $a) => collect($a)->only(['slug', 'title', 'cover', 'count'])->all(), $videos->albums()),
             'metricsCount' => $content->get('homeMetrics'),
             'currentReport' => $current,
             // «لمحة أثر» بكلّ الأرباع المنشورة: لكلّ ربع أرقامه وختم فترته
