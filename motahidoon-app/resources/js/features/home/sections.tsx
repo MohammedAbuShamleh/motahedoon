@@ -9,7 +9,7 @@ import { Link } from "@inertiajs/react";
 import { useSpotlight } from "@/hooks/useSpotlight";
 import { SpotCount } from "@/components/spot";
 import { Nums } from "@/lib/nums";
-import { useSite, useU } from "@/lib/site";
+import { COUNTS, useCount, useSite, useU } from "@/lib/site";
 import { Icon } from "@/components/Icon";
 import {
   Fact, FigureCell, Filled, Seal, Section, SectionHead, Slot,
@@ -157,6 +157,7 @@ export function About({
 /* ---------- المؤسسات الشريكة ---------- */
 export function Partners({ partners }: { partners: Partner[] }) {
   const U = useU();
+  const C = useCount();
   const allBare = partners.every((p) => !p.role && !p.about);
   return (
     <Section
@@ -167,7 +168,7 @@ export function Partners({ partners }: { partners: Partner[] }) {
           side={
             <>
               {allBare && <Slot label={U("نبذة كل مؤسسة")} />}
-              <Fact value={String(partners.length)} label={U("مؤسسة في المظلة")} />
+              <Fact value={String(partners.length)} label={C(partners.length, COUNTS.umbrella)} />
             </>
           }
         />
@@ -217,6 +218,7 @@ const FIELD_DWELL = 7000;
 
 export function Fields({ pillars }: { pillars: Pillar[] }) {
   const U = useU();
+  const C = useCount();
   const path = usePath();
   const s = useSpotlight(pillars.length, { axis: "y" });
   const listRef = useRef<HTMLOListElement>(null);
@@ -237,7 +239,7 @@ export function Fields({ pillars }: { pillars: Pillar[] }) {
       <div className="sec__in reveal">
         <SectionHead
           title={U("مجالات العمل")}
-          side={<Fact value={String(n)} label={U("مجالات دائمة")} />}
+          side={<Fact value={String(n)} label={C(n, COUNTS.areas)} />}
         />
 
         <div
@@ -430,6 +432,7 @@ export function Reports({
   reportFile: string | null;
 }) {
   const U = useU();
+  const C = useCount();
   const path = usePath();
   const cur = reports[0];
   return (
@@ -465,7 +468,7 @@ export function Reports({
         <nav className="rhub__index" aria-label={U("تقارير منشورة")}>
           <p className="rhub__count">
             <b>{reports.length}</b>
-            <span>{U("تقارير منشورة")}</span>
+            <span>{C(reports.length, COUNTS.reports)}</span>
           </p>
           <ol className="rhub__list stagger">
             {reports.map((r, i) => (

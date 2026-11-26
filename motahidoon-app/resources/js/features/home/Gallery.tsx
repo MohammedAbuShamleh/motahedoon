@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { useU } from "@/lib/site";
+import { COUNTS, useCount, useU } from "@/lib/site";
 import { Fact, SectionHead } from "@/components/primitives";
 import { useSpotlight } from "@/hooks/useSpotlight";
 
@@ -34,6 +34,7 @@ function visibleRect(img: HTMLImageElement): DOMRect {
 
 export function FieldGallery({ photos }: { photos: string[] }) {
   const U = useU();
+  const C = useCount();
   const [open, setOpen] = useState<number | null>(null);
   const s = useSpotlight(photos.length);
   const opener = useRef<HTMLButtonElement | null>(null);
@@ -58,7 +59,7 @@ export function FieldGallery({ photos }: { photos: string[] }) {
       <div className="sec__in">
         <SectionHead
           title={U("من الميدان")}
-          side={<Fact value={String(n)} label={U("صور معتمدة")} />}
+          side={<Fact value={String(n)} label={C(n, COUNTS.photos)} />}
         />
 
         <div

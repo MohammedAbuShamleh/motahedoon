@@ -4283,6 +4283,11 @@ html.js-reveal .rp-closing .reveal:not(.is-in)::after { opacity: 0; transform: s
    في الرئيسية — وهو يستعير rp-kpi — يبقى كما هو. الأحمر يبقى لمسته النادرة. */
 #main:has(> .rp-cover) { --green: var(--ink); }
 #main:has(> .rp-cover) .band--dark { --green: var(--bg); }
+/* شارات «أبرز الإنجازات» على الحبري: «الأخضر» صار أبيض هنا، فرقمها الأبيض
+   كان يختفي في أرضيتها ولا يظهر إلا عند المرور. الرقم حبريّ دائماً على
+   الشارة البيضاء، وعند المرور تنقلب الشارة مفرَّغة برقم أبيض. */
+#main:has(> .rp-cover) .rp-list--brief .rp-item__no { color: var(--ink); }
+#main:has(> .rp-cover) .rp-list--brief .rp-item:hover .rp-item__no { background: transparent; border-color: var(--bg); color: var(--bg); }
 #main:has(> .rp-cover) .btn--green:hover { background: var(--bg); color: var(--ink); border-color: var(--ink); }
 #main:has(> .rp-cover) .rp-toc a:hover, #main:has(> .rp-cover) .rp-toc a:focus-visible { background: rgba(26,26,26,.05); }
 

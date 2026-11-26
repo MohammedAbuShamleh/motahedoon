@@ -6,7 +6,7 @@ import { Nums } from "@/lib/nums";
 import { statsOf } from "@/lib/stats";
 import { isHtml } from "@/lib/rich";
 import { RichText } from "@/components/RichText";
-import { useSite, useU } from "@/lib/site";
+import { COUNTS, useCount, useSite, useU } from "@/lib/site";
 import { FigureCell, StatStrip } from "@/components/primitives";
 import type {
   Entry, FigureBlock, GalleryItem, ReportGroup, ReportSection, ReportTable, Stat,
@@ -46,6 +46,7 @@ function EntryList({ items }: { items: Entry[] }) {
 
 export function Groups({ groups }: { groups: ReportGroup[] }) {
   const U = useU();
+  const C = useCount();
   return (
     <>
       {groups.map((g, gi) => {
@@ -86,7 +87,7 @@ export function Groups({ groups }: { groups: ReportGroup[] }) {
               <details className="more">
                 <summary>
                   <span>{U("التفاصيل الكاملة")}</span>
-                  <small>{main.length} {U("بنداً")}</small>
+                  <small>{main.length} {C(main.length, COUNTS.items)}</small>
                 </summary>
                 <EntryList items={main} />
               </details>
@@ -97,7 +98,7 @@ export function Groups({ groups }: { groups: ReportGroup[] }) {
               <details className="more more--recap">
                 <summary>
                   <span>{U("خلاصة القسم")}</span>
-                  <small>{recap.length} {U("فقرة")}</small>
+                  <small>{recap.length} {C(recap.length, COUNTS.paras)}</small>
                 </summary>
                 <div className="prose" style={{ marginTop: ".9rem" }}>
                   {recap.map((it, i) => <RichText key={i} value={it.text} nums />)}

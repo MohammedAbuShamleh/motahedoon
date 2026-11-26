@@ -38,10 +38,17 @@ class Report extends Model
         return $query->where('status', ReportStatus::Published);
     }
 
-    /** الأحدث أولاً؛ id يكسر التعادل فيبقى الترتيب ثابتاً. */
+    /**
+     * الأحدث أولاً: التقرير الحالي (is_current) دائماً في المقدّمة، ثم بتاريخ
+     * النشر، وid يكسر التعادل فيبقى الترتيب ثابتاً.
+     *
+     * كان الترتيب بتاريخ النشر وحده، والتقارير المستوردة بلا تاريخ نشر، فصار
+     * آخر ما استُورد (الربع الثاني) «أحدث تقرير» في قسم التقارير وفي «إنجازات
+     * الفترة»، بينما التذييل يقرأ is_current (الربع الثالث) — تناقض ظاهر.
+     */
     public function scopeLatestFirst(Builder $query): Builder
     {
-        return $query->orderByDesc('published_at')->orderByDesc('id');
+        return $query->orderByDesc('is_current')->orderByDesc('published_at')->orderByDesc('id');
     }
 
     public function reportFile(): BelongsTo

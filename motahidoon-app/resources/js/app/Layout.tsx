@@ -8,6 +8,7 @@ import {
 import { useSmoothWheel } from "@/hooks/useSmoothWheel";
 import { useFilmstrip, useReveal, useStagger } from "@/hooks/useReveal";
 import { useVisitStats } from "@/hooks/useVisitStats";
+import { useHashScroll } from "@/hooks/useHashScroll";
 import { usePage } from "@inertiajs/react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
@@ -36,7 +37,8 @@ export function Layout({
   useReveal(key);
   useStagger(key);
   useFilmstrip(key);
-  useVisitStats(key, locale, track);   // عدّ الزيارات والأقسام الظاهرة
+  useVisitStats(key, locale, track);
+  useHashScroll(key);           // /#about من صفحة أخرى: إلى القسم من أوّل نقرة   // عدّ الزيارات والأقسام الظاهرة
 
   return (
     <>

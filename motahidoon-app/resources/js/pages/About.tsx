@@ -2,7 +2,7 @@ import { Link } from "@inertiajs/react";
 import { Layout } from "@/app/Layout";
 import { Band, Fact, Filled, Mark, Slot, Statement } from "@/components/primitives";
 import { Nums } from "@/lib/nums";
-import { useSite, useU } from "@/lib/site";
+import { COUNTS, useCount, useSite, useU } from "@/lib/site";
 import type { Entry, Founding, Identity } from "@/types";
 
 interface Props {
@@ -21,6 +21,7 @@ export default function About({
   partnerCount, pillarCount,
 }: Props) {
   const U = useU();
+  const C = useCount();
   const { locale } = useSite();
   const path = (x: string) => (locale === "ar" ? x : `${x}?lang=${locale}`);
 
@@ -45,8 +46,8 @@ export default function About({
               ? <div className="facts"><Fact value={F.year} label={U("سنة التأسيس")} /></div>
               : <Slot label={U("سنة التأسيس")} />}
             <div className="facts" style={{ marginTop: "1.5rem" }}>
-              <Fact value={String(partnerCount)} label={U("مؤسسات شريكة")} />
-              <Fact value={String(pillarCount)} label={U("مجالات عمل")} />
+              <Fact value={String(partnerCount)} label={C(partnerCount, COUNTS.partners)} />
+              <Fact value={String(pillarCount)} label={C(pillarCount, COUNTS.pillars)} />
             </div>
           </>
         }
